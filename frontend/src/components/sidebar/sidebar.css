@@ -1,0 +1,220 @@
+/* sidebar.css */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    background-color: #1a1a2e;
+    color: #e6e6e6;
+    padding: 20px;
+    transition: width 0.3s cubic-bezier(0.25, 0.1, 0.25, 1); /* Improved easing function */
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    font-family: Poppins;
+    overflow: hidden;
+}
+
+.sidebar.open {
+    width: 250px;
+}
+
+.sidebar.closed {
+    width: 80px;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.sidebar-header img {
+    /* Ensure transitions work in both directions */
+    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    width: auto;
+    height: auto;
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 1);
+}
+
+.sidebar.closed .sidebar-header img {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.sidebar-toggle-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 10px 0;
+}
+
+.sidebar-toggle {
+    background: none;
+    border: none;
+    color: #4da6ff;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: color 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    outline: none;
+}
+
+.sidebar-toggle:hover {
+    color: #80c1ff;
+    transform: none;
+}
+
+.sidebar-toggle:focus {
+    outline: none;
+}
+.sidebar-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding-top: 3vh;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    margin-bottom: 4px;
+}
+
+/* Make item highlight extend to edges in closed state */
+.sidebar.closed .sidebar-item {
+    margin-left: -20px;
+    margin-right: -20px;
+    border-radius: 0;
+    width: calc(100% + 40px); /* Ensure full width coverage */
+}
+
+.sidebar-item:hover {
+    background-color: #292945;
+}
+
+.sidebar-item:active {
+    background-color: #4361ee;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-menu a {
+    color: inherit; /* Inherit color from parent */
+    text-decoration: none; /* Remove underline if needed */
+    transition: color 0.3s ease;
+}
+
+.sidebar-menu a:visited {
+    color: #e6e6e6; /* Maintain the same color for visited links */
+}
+
+.sidebar-icon {
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
+
+/* Add left padding for icon when sidebar is closed */
+.sidebar.closed .sidebar-icon {
+    margin-left: 10px;
+}
+
+.sidebar-label {
+    font-size: 1.1rem;
+    font-weight: 400;
+    /* Fix transitions in both directions */
+    transition: opacity 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), visibility 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    /* Default state for closed sidebar */
+    opacity: 0;
+    visibility: hidden;
+}
+
+.sidebar.open .sidebar-label {
+    opacity: 1;
+    visibility: visible;
+    /* Add delay only when opening */
+    transition: opacity 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) 0.1s, visibility 0s linear 0s;
+}
+
+/* Main content transitions */
+.main-content {
+    margin-left: 250px;
+    transition: margin-left 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.sidebar.closed ~ .main-content {
+    margin-left: 80px;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .sidebar-header img {
+        max-width: 120px;
+        max-height: 120px;
+    }
+
+    .sidebar.closed .sidebar-header img {
+        max-width: 40px;
+        max-height: 40px;
+    }
+
+    .sidebar-menu {
+        font-size: 0.9rem;
+    }
+
+    .sidebar-toggle {
+        font-size: 1.2rem;
+    }
+
+    .sidebar-item {
+        padding: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    /* Ensure full width in mobile closed state too */
+    .sidebar.closed .sidebar-item {
+        padding-left: 10px;
+        width: calc(100% + 20px);
+    }
+
+    .sidebar-label {
+        display: none;
+    }
+
+    .sidebar.open .sidebar-label {
+        display: inline-block;
+    }
+    
+    .main-content {
+        margin-left: 200px;
+    }
+    
+    .sidebar.closed ~ .main-content {
+        margin-left: 80px;
+    }
+}

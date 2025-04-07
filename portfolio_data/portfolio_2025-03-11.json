@@ -1,0 +1,575 @@
+{
+  "date": "2025-03-11",
+  "trades": [
+    {
+      "ticker": "TSLA",
+      "action": "short",
+      "shares": 133.5537718079935,
+      "price": 225.30999755859375,
+      "cost": -30091.000000000004
+    },
+    {
+      "ticker": "PLTR",
+      "action": "buy",
+      "shares": 0.41960808159067503,
+      "price": 75.78500366210938,
+      "cost": 31.799999999999997
+    },
+    {
+      "ticker": "MSTR",
+      "action": "short",
+      "shares": 5.570204081632653,
+      "price": 245.0,
+      "cost": -1364.7
+    },
+    {
+      "ticker": "BABA",
+      "action": "short",
+      "shares": 0.11218876367365718,
+      "price": 138.16000366210938,
+      "cost": -15.5
+    },
+    {
+      "ticker": "SPY",
+      "action": "short",
+      "shares": 1.1898394812438713,
+      "price": 557.7222898220398,
+      "cost": -663.5999999999998
+    },
+    {
+      "ticker": "PRAA",
+      "action": "buy",
+      "shares": 9.1,
+      "price": 19.0,
+      "cost": 172.9
+    },
+    {
+      "ticker": "NVDA",
+      "action": "buy",
+      "shares": 0.47111539844099465,
+      "price": 106.98015850635034,
+      "cost": 50.4
+    },
+    {
+      "ticker": "KR",
+      "action": "buy",
+      "shares": 0.05752212130466691,
+      "price": 67.80000305175781,
+      "cost": 3.9
+    },
+    {
+      "ticker": "QQQ",
+      "action": "buy",
+      "shares": 0.23788995461306384,
+      "price": 471.6466493194181,
+      "cost": 112.2
+    },
+    {
+      "ticker": "LUNR",
+      "action": "short",
+      "shares": 27.083334178915127,
+      "price": 6.71999979019165,
+      "cost": -182.0
+    },
+    {
+      "ticker": "YETI",
+      "action": "short",
+      "shares": 0.0,
+      "price": 34.939998626708984,
+      "cost": -0.0
+    },
+    {
+      "ticker": "ELF",
+      "action": "buy",
+      "shares": 0.28024606387393636,
+      "price": 73.1500015258789,
+      "cost": 20.500000000000004
+    },
+    {
+      "ticker": "KSS",
+      "action": "short",
+      "shares": 5.4488825067556474,
+      "price": 10.277336670513622,
+      "cost": -56.0
+    },
+    {
+      "ticker": "RDFN",
+      "action": "buy",
+      "shares": 49.06542235067772,
+      "price": 9.20199966430664,
+      "cost": 451.49999999999994
+    }
+  ],
+  "positions": {
+    "long": {
+      "IBKR": {
+        "shares": 0.10518766742536252,
+        "close_price": 170.33999633789062,
+        "position_cost": 17.58317087203234,
+        "position_pnl": 0.3344960119951672
+      },
+      "IBIT": {
+        "shares": 0.9975480491496127,
+        "close_price": 47.2400016784668,
+        "position_cost": 44.79988273509535,
+        "position_pnl": 2.324288781083631
+      },
+      "NVDA": {
+        "shares": 13.791541934115221,
+        "close_price": 108.75,
+        "position_cost": 1475.288176943935,
+        "position_pnl": 24.54200839109535
+      },
+      "SMCI": {
+        "shares": 1.1395458989193359,
+        "close_price": 40.84000015258789,
+        "position_cost": 42.04924540893254,
+        "position_pnl": 4.489809276814043
+      },
+      "SPY": {
+        "shares": 19.014783480664367,
+        "close_price": 554.252685546875,
+        "position_cost": 10627.33857959553,
+        "position_pnl": -88.34377034494901
+      },
+      "MSTR": {
+        "shares": 14.439935188713367,
+        "close_price": 260.5899963378906,
+        "position_cost": 3455.0433542975065,
+        "position_pnl": 307.8593036486877
+      },
+      "SOUN": {
+        "shares": 3.6645961244437464,
+        "close_price": 8.539999961853027,
+        "position_cost": 31.40558766813692,
+        "position_pnl": -0.1099369051805752
+      },
+      "QQQ": {
+        "shares": 2.1550316696100564,
+        "close_price": 470.89776611328125,
+        "position_cost": 1017.1409125549454,
+        "position_pnl": -2.3413134321950793
+      },
+      "INTC": {
+        "shares": 9.494232089963218,
+        "close_price": 19.780000686645508,
+        "position_cost": 189.22004845037662,
+        "position_pnl": -1.4241311917323571
+      },
+      "COST": {
+        "shares": 0.10934261420864375,
+        "close_price": 930.489990234375,
+        "position_cost": 102.17082920625164,
+        "position_pnl": -0.428621179049685
+      },
+      "DNUT": {
+        "shares": 5.03961969704744,
+        "close_price": 5.40500020980835,
+        "position_cost": 29.733756693195485,
+        "position_pnl": -2.494611173299777
+      },
+      "GOOG": {
+        "shares": 0.1642345533463535,
+        "close_price": 165.97999572753906,
+        "position_cost": 27.56019999608832,
+        "position_pnl": -0.30054953334627754
+      },
+      "BBAI": {
+        "shares": 8.204193054625716,
+        "close_price": 3.180000066757202,
+        "position_cost": 25.76116705217885,
+        "position_pnl": 0.3281674092199012
+      },
+      "AVGO": {
+        "shares": 0.045057185804096664,
+        "close_price": 189.5165252685547,
+        "position_cost": 8.285725374212404,
+        "position_pnl": 0.25335591775964517
+      },
+      "PLTR": {
+        "shares": 0.780985821818373,
+        "close_price": 78.05000305175781,
+        "position_cost": 59.402030806037956,
+        "position_pnl": 1.5539149702656374
+      },
+      "MSTY": {
+        "shares": 0.5614379468501586,
+        "close_price": 18.664949417114258,
+        "position_cost": 9.621202049032815,
+        "position_pnl": 0.8580088297738779
+      },
+      "FUBO": {
+        "shares": 43.256579490166956,
+        "close_price": 3.0899999141693115,
+        "position_cost": 130.20230385287564,
+        "position_pnl": 3.4605230589982625
+      },
+      "AAPL": {
+        "shares": 12.398157566171571,
+        "close_price": 220.83999633789062,
+        "position_cost": 2820.332830182065,
+        "position_pnl": -82.32375867214432
+      },
+      "JWN": {
+        "shares": 0.1658998376620916,
+        "close_price": 24.229999542236328,
+        "position_cost": 4.01975299060956,
+        "position_pnl": 0.0
+      },
+      "TSLQ": {
+        "shares": 1.9996086632662047,
+        "close_price": 65.12000274658203,
+        "position_cost": 140.97241076026742,
+        "position_pnl": -10.75788911628294
+      },
+      "NVDL": {
+        "shares": 2.9061326103328353,
+        "close_price": 38.06999969482422,
+        "position_cost": 107.46878259978631,
+        "position_pnl": 3.167684988703442
+      },
+      "EUAD": {
+        "shares": 9.978632989890237,
+        "close_price": 33.119998931884766,
+        "position_cost": 325.8023823461018,
+        "position_pnl": 4.689931620732921
+      },
+      "SENS": {
+        "shares": 44.06294700712203,
+        "close_price": 0.6000000238418579,
+        "position_cost": 25.732760673963956,
+        "position_pnl": 0.7050085808517821
+      },
+      "HOOD": {
+        "shares": 4.123642315914648,
+        "close_price": 36.36000061035156,
+        "position_cost": 146.92538012056409,
+        "position_pnl": 3.010257002964039
+      },
+      "ASTS": {
+        "shares": 10.840130303335325,
+        "close_price": 28.65999984741211,
+        "position_cost": 315.8813904229009,
+        "position_pnl": -5.203257583383106
+      },
+      "BABA": {
+        "shares": 43.856844524389096,
+        "close_price": 139.02000427246094,
+        "position_cost": 5812.785878813502,
+        "position_pnl": 284.19283434372574
+      },
+      "CNBS": {
+        "shares": 1.393629130052643,
+        "close_price": 17.84000015258789,
+        "position_cost": 25.057451120393736,
+        "position_pnl": -0.1951072276036534
+      },
+      "GTLB": {
+        "shares": 0.406683489257484,
+        "close_price": 51.939998626708984,
+        "position_cost": 20.736791799843843,
+        "position_pnl": 0.3863480736950926
+      },
+      "GOOGL": {
+        "shares": 0.12916570818558942,
+        "close_price": 164.0399932861328,
+        "position_cost": 21.424715386051783,
+        "position_pnl": -0.23637348248910328
+      },
+      "FLOW": {
+        "shares": 0.44634067300550767,
+        "close_price": 30.579999923706055,
+        "position_cost": 13.952609540311443,
+        "position_pnl": -0.30351179385610827
+      },
+      "TNK": {
+        "shares": 0.369704742437424,
+        "close_price": 35.91999816894531,
+        "position_cost": 13.549679374456257,
+        "position_pnl": -0.26988570305358905
+      },
+      "EBAY": {
+        "shares": 0.7534759052701254,
+        "close_price": 64.92562103271484,
+        "position_cost": 51.1476152126535,
+        "position_pnl": -2.2277241298035833
+      },
+      "IWM": {
+        "shares": 0.058255890468873445,
+        "close_price": 200.30052185058594,
+        "position_cost": 11.669847961748287,
+        "position_pnl": -0.001162699962360847
+      },
+      "MP": {
+        "shares": 3.6436215097359614,
+        "close_price": 24.010000228881836,
+        "position_cost": 88.97723754573843,
+        "position_pnl": -1.4938842630192113
+      },
+      "RIVN": {
+        "shares": 80.36697528968514,
+        "close_price": 10.789999961853027,
+        "position_cost": 880.822052240706,
+        "position_pnl": -13.662391930760009
+      },
+      "NOK": {
+        "shares": 9.575289892607616,
+        "close_price": 5.150000095367432,
+        "position_cost": 49.21698876956402,
+        "position_pnl": 0.09575509053600939
+      },
+      "CAPR": {
+        "shares": 4.235668648299578,
+        "close_price": 12.579999923706055,
+        "position_cost": 52.268151766328536,
+        "position_pnl": 1.0165595061242811
+      },
+      "LLY": {
+        "shares": 0.042046023248690785,
+        "close_price": 824.0599975585938,
+        "position_cost": 34.88810866143936,
+        "position_pnl": -0.23966284577465302
+      },
+      "V": {
+        "shares": 0.0689412395829118,
+        "close_price": 332.1400146484375,
+        "position_cost": 23.542055250183804,
+        "position_pnl": -0.6439109252340387
+      },
+      "RDDT": {
+        "shares": 1.7181996086105675,
+        "close_price": 122.7300033569336,
+        "position_cost": 184.34563758088652,
+        "position_pnl": 26.52900615177043
+      },
+      "GIS": {
+        "shares": 0.6274870262921047,
+        "close_price": 62.33000183105469,
+        "position_cost": 40.97490473181287,
+        "position_pnl": -1.8636372340629208
+      },
+      "PARA": {
+        "shares": 5.092437924190651,
+        "close_price": 11.420941352844238,
+        "position_cost": 60.84788164988672,
+        "position_pnl": -2.6874467747054425
+      },
+      "ORCL": {
+        "shares": 0.6012090661921065,
+        "close_price": 144.17999267578125,
+        "position_cost": 89.4538929222857,
+        "position_pnl": -2.7715741620945096
+      },
+      "GRRR": {
+        "shares": 3.1171171171171173,
+        "close_price": 26.989999771118164,
+        "position_cost": 75.43423661240587,
+        "position_pnl": 8.696753665133642
+      },
+      "PRAA": {
+        "shares": 9.1,
+        "close_price": 18.979999542236328,
+        "position_cost": 172.9,
+        "position_pnl": -0.18200416564943112
+      },
+      "KR": {
+        "shares": 0.05752212130466691,
+        "close_price": 66.55000305175781,
+        "position_cost": 3.9,
+        "position_pnl": -0.07190265163083387
+      },
+      "ELF": {
+        "shares": 0.28024606387393636,
+        "close_price": 69.5199966430664,
+        "position_cost": 20.500000000000004,
+        "position_pnl": -1.0172945802513738
+      },
+      "RDFN": {
+        "shares": 49.06542235067772,
+        "close_price": 9.760000228881836,
+        "position_cost": 451.49999999999994,
+        "position_pnl": 27.378533372798586
+      }
+    },
+    "short": {
+      "IBIT": {
+        "shares": -1.2082310463490389,
+        "close_price": 47.2400016784668,
+        "position_value": -57.07683665750429,
+        "position_cost": -54.26165610717391,
+        "position_pnl": 2.815180550330375
+      },
+      "NVDA": {
+        "shares": -18.05921630649178,
+        "close_price": 108.75,
+        "position_value": -1963.939773330981,
+        "position_cost": -1931.7972837489763,
+        "position_pnl": 32.14248958200483
+      },
+      "ABNB": {
+        "shares": -0.32492519018035904,
+        "close_price": 125.44000244140625,
+        "position_value": -40.75861664949863,
+        "position_cost": -42.93886189914847,
+        "position_pnl": -2.1802452496498432
+      },
+      "SPY": {
+        "shares": -2.04124511518975,
+        "close_price": 554.252685546875,
+        "position_value": -1131.3655869533593,
+        "position_cost": -1139.449538319428,
+        "position_pnl": -8.083951366068732
+      },
+      "MSTR": {
+        "shares": -38.01141150636693,
+        "close_price": 260.5899963378906,
+        "position_value": -9905.393585242213,
+        "position_cost": -9126.907839119964,
+        "position_pnl": 778.4857461222491
+      },
+      "QQQ": {
+        "shares": -0.028780736444817323,
+        "close_price": 470.89776611328125,
+        "position_value": -13.552784498959577,
+        "position_cost": -13.585258564162649,
+        "position_pnl": -0.032474065203071945
+      },
+      "INTC": {
+        "shares": -25.74,
+        "close_price": 19.780000686645508,
+        "position_value": -509.13721767425534,
+        "position_cost": -512.9982078552246,
+        "position_pnl": -3.8609901809692246
+      },
+      "RKLB": {
+        "shares": -0.32015066258364744,
+        "close_price": 17.829999923706055,
+        "position_value": -5.708286289440877,
+        "position_cost": -5.480979612113173,
+        "position_pnl": 0.2273066773277037
+      },
+      "HD": {
+        "shares": -0.7012351904811709,
+        "close_price": 365.83837890625,
+        "position_value": -256.538745317647,
+        "position_cost": -261.06105745625945,
+        "position_pnl": -4.522312138612449
+      },
+      "AVGO": {
+        "shares": -1.6913770926818936,
+        "close_price": 189.5165252685547,
+        "position_value": -320.54390952390264,
+        "position_cost": -311.03332008191626,
+        "position_pnl": 9.510589441986383
+      },
+      "AMD": {
+        "shares": -3.0073395389972397,
+        "close_price": 96.76000213623047,
+        "position_value": -290.9901802177433,
+        "position_cost": -290.59921139339855,
+        "position_pnl": 0.3909688243447249
+      },
+      "BTC": {
+        "shares": -10.60760071248311,
+        "close_price": 36.81999969482422,
+        "position_value": -390.57185499644527,
+        "position_cost": -371.15996673428964,
+        "position_pnl": 19.411888262155628
+      },
+      "JWN": {
+        "shares": -0.49334899279664324,
+        "close_price": 24.229999542236328,
+        "position_value": -11.95384586962542,
+        "position_cost": -11.95384586962542,
+        "position_pnl": 0.0
+      },
+      "TSLA": {
+        "shares": -164.91356709119145,
+        "close_price": 230.5800018310547,
+        "position_value": -38025.77060185269,
+        "position_cost": -37057.578330757424,
+        "position_pnl": 968.192271095264
+      },
+      "BABA": {
+        "shares": -2.2326581083168837,
+        "close_price": 139.02000427246094,
+        "position_value": -310.38413975715775,
+        "position_cost": -296.5469927024637,
+        "position_pnl": 13.837147054694071
+      },
+      "ARM": {
+        "shares": -0.3033099297893681,
+        "close_price": 111.48999786376953,
+        "position_value": -33.816023424276736,
+        "position_cost": -35.29920879582106,
+        "position_pnl": -1.483185371544323
+      },
+      "RIVN": {
+        "shares": -4.77192998424095,
+        "close_price": 10.789999961853027,
+        "position_value": -51.48912434792517,
+        "position_cost": -52.3003528093155,
+        "position_pnl": -0.8112284613903284
+      },
+      "PFE": {
+        "shares": -28.538372205583492,
+        "close_price": 25.989999771118164,
+        "position_value": -741.7122870912,
+        "position_cost": -760.2622181383042,
+        "position_pnl": -18.549931047104224
+      },
+      "GM": {
+        "shares": -0.8727501269436753,
+        "close_price": 48.279998779296875,
+        "position_value": -42.13637506347183,
+        "position_cost": -41.961827701505115,
+        "position_pnl": 0.1745473619667166
+      },
+      "LUNR": {
+        "shares": -451.1308421257262,
+        "close_price": 6.480000019073486,
+        "position_value": -2923.327865579344,
+        "position_cost": -3057.0421928480864,
+        "position_pnl": -133.71432726874264
+      },
+      "FDX": {
+        "shares": -0.21587381749082762,
+        "close_price": 242.9600067138672,
+        "position_value": -52.44870414691962,
+        "position_cost": -53.21505356383362,
+        "position_pnl": -0.7663494169140037
+      },
+      "APH": {
+        "shares": -0.15535164618604583,
+        "close_price": 61.48073196411133,
+        "position_value": -9.551132919347742,
+        "position_cost": -9.574376048753956,
+        "position_pnl": -0.023243129406214535
+      },
+      "JPM": {
+        "shares": -3.1116378608394086,
+        "close_price": 229.13999938964844,
+        "position_value": -713.0006975335491,
+        "position_cost": -722.5845478425135,
+        "position_pnl": -9.58385030896443
+      },
+      "SOXL": {
+        "shares": -6.535222777034965,
+        "close_price": 17.356111526489258,
+        "position_value": -113.4260553686717,
+        "position_cost": -117.20475456447065,
+        "position_pnl": -3.77869919579895
+      },
+      "KSS": {
+        "shares": -5.4488825067556474,
+        "close_price": 9.016071319580078,
+        "position_value": -49.12751329292119,
+        "position_cost": -56.0,
+        "position_pnl": -6.8724867070788065
+      }
+    }
+  },
+  "today_profit": 2115.2020960560917,
+  "total_profit": -3679.1634208169176,
+  "total_investment": 91506.80000000002
+}

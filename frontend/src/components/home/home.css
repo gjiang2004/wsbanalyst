@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+.logo {
+  height: 7em;
+  padding-bottom: 2em;
+  will-change: filter;
+  transition: filter 300ms;
+  animation: rotate 1s ease-in-out infinite;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 1em lightgrey);
+}
+
+.top {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  font-family: 'Poppins', sans-serif;
+  padding: 2rem 0; 
+}
+
+.top h1 {
+  padding-top: 5%;
+  max-width: 80%;
+  font-size: 3rem;
+}
+
+.down {
+  margin-top: 10rem;
+  width: 2rem;
+  height: auto;
+  animation: bounce 1s ease-in-out infinite;
+  cursor: pointer;
+}
+
+.content-section {
+  min-height: 100vh;
+  margin-top: 15%;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.content-section h2 {
+  font-size: 2.5rem;
+}
+
+.content-section p {
+  padding-top: 2%;
+  font-size: 1.5rem;
+}
+
+.card {
+  padding: 2em;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  margin: 6rem 0;
+  max-width: 800px;
+  width: 100%;
+}
+
+.disclaimer {
+  color: #888;
+  margin-top: 2rem;
+  font-size: 1rem;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+.feature-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+}
+
+.feature-card p {
+  font-size: 1.2rem;
+}
+
+.feature-card:hover {
+  transform: scale(1.05);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+}
+
+footer {
+  padding: 1.5rem;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  margin-top: 1.5rem;
+  font-size: 1.2rem;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+  100% {
+    transform: rotate(-2deg);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 768px) {
+  .top h1 {
+    font-size: 1.5rem;
+  }
+  
+  .features {
+    grid-template-columns: 1fr;
+  }
+  
+  .logo {
+    width: 16rem !important;
+    height: auto;
+  }
+}

@@ -1,0 +1,3537 @@
+[
+  {
+    "post_id": "1jmo7sk",
+    "ticker": "NVDA",
+    "sentiment_score": 0.2,
+    "upvotes": 400,
+    "created_at": "2025-03-29 11:03:14"
+  },
+  {
+    "post_id": "1jmm61a",
+    "ticker": "AAPL",
+    "sentiment_score": 0.1,
+    "upvotes": 658,
+    "created_at": "2025-03-29 09:22:16"
+  },
+  {
+    "post_id": "1jmkmdh",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 5142,
+    "created_at": "2025-03-29 07:53:55"
+  },
+  {
+    "post_id": "1jmi0ni",
+    "ticker": "AMD",
+    "sentiment_score": -0.7,
+    "upvotes": 135,
+    "created_at": "2025-03-29 04:44:21"
+  },
+  {
+    "post_id": "1jmff4z",
+    "ticker": "SPY",
+    "sentiment_score": -0.8,
+    "upvotes": 250,
+    "created_at": "2025-03-29 01:30:42"
+  },
+  {
+    "post_id": "1jmbxap",
+    "ticker": "AMD",
+    "sentiment_score": -0.7,
+    "upvotes": 110,
+    "created_at": "2025-03-28 22:04:41"
+  },
+  {
+    "post_id": "1jmamu6",
+    "ticker": "NVDA",
+    "sentiment_score": 0.8,
+    "upvotes": 468,
+    "created_at": "2025-03-28 20:58:16"
+  },
+  {
+    "post_id": "1jm85ur",
+    "ticker": "NVDA",
+    "sentiment_score": 0.6,
+    "upvotes": 20,
+    "created_at": "2025-03-28 18:58:24"
+  },
+  {
+    "post_id": "1jm6ey1",
+    "ticker": "TSLA",
+    "sentiment_score": -0.2,
+    "upvotes": 6610,
+    "created_at": "2025-03-28 17:39:47"
+  },
+  {
+    "post_id": "1jm66g1",
+    "ticker": "TSLA",
+    "sentiment_score": -0.4,
+    "upvotes": 251,
+    "created_at": "2025-03-28 17:28:57"
+  },
+  {
+    "post_id": "1jm63n8",
+    "ticker": "LMT",
+    "sentiment_score": 0.7,
+    "upvotes": 247,
+    "created_at": "2025-03-28 17:25:21"
+  },
+  {
+    "post_id": "1jm423v",
+    "ticker": "GOOGL",
+    "sentiment_score": -0.3,
+    "upvotes": 183,
+    "created_at": "2025-03-28 15:57:19"
+  },
+  {
+    "post_id": "1jm3tgw",
+    "ticker": "MSTR",
+    "sentiment_score": 0.8,
+    "upvotes": 505,
+    "created_at": "2025-03-28 15:47:15"
+  },
+  {
+    "post_id": "1jm3rkp",
+    "ticker": "LULU",
+    "sentiment_score": 0.5,
+    "upvotes": 48,
+    "created_at": "2025-03-28 15:44:57"
+  },
+  {
+    "post_id": "1jm3564",
+    "ticker": "GOOG",
+    "sentiment_score": 0.7,
+    "upvotes": 1582,
+    "created_at": "2025-03-28 15:18:23"
+  },
+  {
+    "post_id": "1jm1qtl",
+    "ticker": "AMD",
+    "sentiment_score": -0.5,
+    "upvotes": 458,
+    "created_at": "2025-03-28 14:19:26"
+  },
+  {
+    "post_id": "1jm1cm1",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 31,
+    "created_at": "2025-03-28 14:02:40"
+  },
+  {
+    "post_id": "1jm0538",
+    "ticker": "QQQ",
+    "sentiment_score": 0.5,
+    "upvotes": 3075,
+    "created_at": "2025-03-28 13:12:02"
+  },
+  {
+    "post_id": "1jlzqwv",
+    "ticker": "NKLA",
+    "sentiment_score": -0.9,
+    "upvotes": 14522,
+    "created_at": "2025-03-28 12:56:07"
+  },
+  {
+    "post_id": "1jlxfsq",
+    "ticker": "SPY",
+    "sentiment_score": -0.7,
+    "upvotes": 174,
+    "created_at": "2025-03-28 11:16:04"
+  },
+  {
+    "post_id": "1jlxd7h",
+    "ticker": "BHP",
+    "sentiment_score": 0.3,
+    "upvotes": 15,
+    "created_at": "2025-03-28 11:12:54"
+  },
+  {
+    "post_id": "1jlxd13",
+    "ticker": "SPX",
+    "sentiment_score": -1.0,
+    "upvotes": 4856,
+    "created_at": "2025-03-28 11:12:40"
+  },
+  {
+    "post_id": "1jlx7tb",
+    "ticker": "SQQQ",
+    "sentiment_score": 0.5,
+    "upvotes": 162,
+    "created_at": "2025-03-28 11:06:20"
+  },
+  {
+    "post_id": "1jlx38g",
+    "ticker": "AAL",
+    "sentiment_score": 0.5,
+    "upvotes": 12,
+    "created_at": "2025-03-28 11:00:57"
+  },
+  {
+    "post_id": "1jlwrgs",
+    "ticker": "QQQ",
+    "sentiment_score": 0.5,
+    "upvotes": 85,
+    "created_at": "2025-03-28 10:46:41"
+  },
+  {
+    "post_id": "1jlw88u",
+    "ticker": "QQQ",
+    "sentiment_score": 0.5,
+    "upvotes": 17,
+    "created_at": "2025-03-28 10:22:17"
+  },
+  {
+    "post_id": "1jlw6sg",
+    "ticker": "NDX",
+    "sentiment_score": 0.5,
+    "upvotes": 15,
+    "created_at": "2025-03-28 10:20:25"
+  },
+  {
+    "post_id": "1jlw1xn",
+    "ticker": "NVO",
+    "sentiment_score": -0.5,
+    "upvotes": 23,
+    "created_at": "2025-03-28 10:14:18"
+  },
+  {
+    "post_id": "1jlvz57",
+    "ticker": "TSLA",
+    "sentiment_score": 0.5,
+    "upvotes": 56,
+    "created_at": "2025-03-28 10:10:44"
+  },
+  {
+    "post_id": "1jlvz21",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 39,
+    "created_at": "2025-03-28 10:10:37"
+  },
+  {
+    "post_id": "1jlvou4",
+    "ticker": "YUM",
+    "sentiment_score": 0.5,
+    "upvotes": 414,
+    "created_at": "2025-03-28 09:57:49"
+  },
+  {
+    "post_id": "1jlv19w",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 1166,
+    "created_at": "2025-03-28 09:26:24"
+  },
+  {
+    "post_id": "1jlulf8",
+    "ticker": "TQQQ",
+    "sentiment_score": -1.0,
+    "upvotes": 139,
+    "created_at": "2025-03-28 09:04:36"
+  },
+  {
+    "post_id": "1jlsxw4",
+    "ticker": "QUBT",
+    "sentiment_score": -0.5,
+    "upvotes": 36,
+    "created_at": "2025-03-28 07:33:16"
+  },
+  {
+    "post_id": "1jlsl0y",
+    "ticker": "APP",
+    "sentiment_score": -1.0,
+    "upvotes": 62,
+    "created_at": "2025-03-28 07:10:07"
+  },
+  {
+    "post_id": "1jlsbkb",
+    "ticker": "RKLB",
+    "sentiment_score": -0.5,
+    "upvotes": 39005,
+    "created_at": "2025-03-28 06:53:19"
+  },
+  {
+    "post_id": "1jls977",
+    "ticker": "CBA",
+    "sentiment_score": -0.5,
+    "upvotes": 0,
+    "created_at": "2025-03-28 06:49:02"
+  },
+  {
+    "post_id": "1jlri83",
+    "ticker": "ASML",
+    "sentiment_score": 0.5,
+    "upvotes": 8,
+    "created_at": "2025-03-28 05:57:17"
+  },
+  {
+    "post_id": "1jlqees",
+    "ticker": "META",
+    "sentiment_score": -0.3,
+    "upvotes": 292,
+    "created_at": "2025-03-28 04:31:44"
+  },
+  {
+    "post_id": "1jlp3x8",
+    "ticker": "AAPL",
+    "sentiment_score": -0.7,
+    "upvotes": 1823,
+    "created_at": "2025-03-28 02:50:58"
+  },
+  {
+    "post_id": "1jln75x",
+    "ticker": "SPY",
+    "sentiment_score": 0.3,
+    "upvotes": 3981,
+    "created_at": "2025-03-28 00:41:39"
+  },
+  {
+    "post_id": "1jllrah",
+    "ticker": "NVDA",
+    "sentiment_score": -0.6,
+    "upvotes": 1197,
+    "created_at": "2025-03-27 23:19:27"
+  },
+  {
+    "post_id": "1jli1pj",
+    "ticker": "TSLA",
+    "sentiment_score": -0.9,
+    "upvotes": 290,
+    "created_at": "2025-03-27 20:11:51"
+  },
+  {
+    "post_id": "1jlgzzc",
+    "ticker": "SNAP",
+    "sentiment_score": 0.7,
+    "upvotes": 0,
+    "created_at": "2025-03-27 19:23:42"
+  },
+  {
+    "post_id": "1jlfts0",
+    "ticker": "AGQ",
+    "sentiment_score": 0.5,
+    "upvotes": 0,
+    "created_at": "2025-03-27 18:33:02"
+  },
+  {
+    "post_id": "1jlf3q9",
+    "ticker": "RKLB",
+    "sentiment_score": 0.3,
+    "upvotes": 461,
+    "created_at": "2025-03-27 18:02:09"
+  },
+  {
+    "post_id": "1jlc4t6",
+    "ticker": "LULU",
+    "sentiment_score": -0.5,
+    "upvotes": 224,
+    "created_at": "2025-03-27 15:57:29"
+  },
+  {
+    "post_id": "1jlbzqj",
+    "ticker": "APP",
+    "sentiment_score": -0.7,
+    "upvotes": 214,
+    "created_at": "2025-03-27 15:39:12"
+  },
+  {
+    "post_id": "1jladhp",
+    "ticker": "TSLA",
+    "sentiment_score": 0.8,
+    "upvotes": 40,
+    "created_at": "2025-03-27 14:06:10"
+  },
+  {
+    "post_id": "1jl8q3f",
+    "ticker": "TSLA",
+    "sentiment_score": -0.6,
+    "upvotes": 107,
+    "created_at": "2025-03-27 12:58:04"
+  },
+  {
+    "post_id": "1jl6nrr",
+    "ticker": "STLA",
+    "sentiment_score": 0.5,
+    "upvotes": 45,
+    "created_at": "2025-03-27 11:31:13"
+  },
+  {
+    "post_id": "1jl0f5j",
+    "ticker": "AMD",
+    "sentiment_score": -0.7,
+    "upvotes": 121,
+    "created_at": "2025-03-27 06:02:34"
+  },
+  {
+    "post_id": "1jksh12",
+    "ticker": "SPY",
+    "sentiment_score": -0.7,
+    "upvotes": 139,
+    "created_at": "2025-03-26 21:26:31"
+  },
+  {
+    "post_id": "1jkryfy",
+    "ticker": "VTS",
+    "sentiment_score": 0.6,
+    "upvotes": 30,
+    "created_at": "2025-03-26 21:00:41"
+  },
+  {
+    "post_id": "1jkq6eg",
+    "ticker": "NVDA",
+    "sentiment_score": -0.5,
+    "upvotes": 175,
+    "created_at": "2025-03-26 19:36:32"
+  },
+  {
+    "post_id": "1jkni5w",
+    "ticker": "F",
+    "sentiment_score": -0.3,
+    "upvotes": 25753,
+    "created_at": "2025-03-26 17:39:54"
+  },
+  {
+    "post_id": "1jkl16p",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 352,
+    "created_at": "2025-03-26 15:57:06"
+  },
+  {
+    "post_id": "1jkkgzw",
+    "ticker": "TSLA",
+    "sentiment_score": -0.8,
+    "upvotes": 1184,
+    "created_at": "2025-03-26 15:34:07"
+  },
+  {
+    "post_id": "1jkjfsa",
+    "ticker": "HOOD",
+    "sentiment_score": 0.7,
+    "upvotes": 79,
+    "created_at": "2025-03-26 14:51:49"
+  },
+  {
+    "post_id": "1jkfptm",
+    "ticker": "PLTR",
+    "sentiment_score": -0.7,
+    "upvotes": 871,
+    "created_at": "2025-03-26 12:20:12"
+  },
+  {
+    "post_id": "1jkcg4t",
+    "ticker": "UVIX",
+    "sentiment_score": 0.5,
+    "upvotes": 54,
+    "created_at": "2025-03-26 10:00:21"
+  },
+  {
+    "post_id": "1jkbugr",
+    "ticker": "NVDA",
+    "sentiment_score": 0.5,
+    "upvotes": 90,
+    "created_at": "2025-03-26 09:31:57"
+  },
+  {
+    "post_id": "1jkbp86",
+    "ticker": "RIVN",
+    "sentiment_score": -0.5,
+    "upvotes": 64,
+    "created_at": "2025-03-26 09:24:56"
+  },
+  {
+    "post_id": "1jk5pp7",
+    "ticker": "AVXL",
+    "sentiment_score": 0.8,
+    "upvotes": 285,
+    "created_at": "2025-03-26 02:48:31"
+  },
+  {
+    "post_id": "1jk4v8e",
+    "ticker": "COIN",
+    "sentiment_score": -0.5,
+    "upvotes": 146,
+    "created_at": "2025-03-26 01:46:32"
+  },
+  {
+    "post_id": "1jk4tj8",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 886,
+    "created_at": "2025-03-26 01:43:08"
+  },
+  {
+    "post_id": "1jk2bbt",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 5933,
+    "created_at": "2025-03-25 23:11:40"
+  },
+  {
+    "post_id": "1jjwfvq",
+    "ticker": "TQQQ",
+    "sentiment_score": -0.3,
+    "upvotes": 74,
+    "created_at": "2025-03-25 18:32:46"
+  },
+  {
+    "post_id": "1jjuhna",
+    "ticker": "ASTS",
+    "sentiment_score": 0.6,
+    "upvotes": 66,
+    "created_at": "2025-03-25 17:11:54"
+  },
+  {
+    "post_id": "1jjth2l",
+    "ticker": "TTD",
+    "sentiment_score": 0.8,
+    "upvotes": 92,
+    "created_at": "2025-03-25 16:30:22"
+  },
+  {
+    "post_id": "1jjt9qf",
+    "ticker": "TSLA",
+    "sentiment_score": -0.8,
+    "upvotes": 4200,
+    "created_at": "2025-03-25 16:22:12"
+  },
+  {
+    "post_id": "1jjsug7",
+    "ticker": "AMD",
+    "sentiment_score": 0.7,
+    "upvotes": 425,
+    "created_at": "2025-03-25 16:04:57"
+  },
+  {
+    "post_id": "1jjsnrj",
+    "ticker": "TSLA",
+    "sentiment_score": -0.2,
+    "upvotes": 264,
+    "created_at": "2025-03-25 15:57:32"
+  },
+  {
+    "post_id": "1jjnq72",
+    "ticker": "TSLA",
+    "sentiment_score": 0.5,
+    "upvotes": 2889,
+    "created_at": "2025-03-25 12:38:18"
+  },
+  {
+    "post_id": "1jjmmnx",
+    "ticker": "STRK",
+    "sentiment_score": -0.5,
+    "upvotes": 26,
+    "created_at": "2025-03-25 11:52:12"
+  },
+  {
+    "post_id": "1jjm6v9",
+    "ticker": "TSLA",
+    "sentiment_score": -0.8,
+    "upvotes": 248,
+    "created_at": "2025-03-25 11:34:10"
+  },
+  {
+    "post_id": "1jjm4gg",
+    "ticker": "TSLZ",
+    "sentiment_score": 0.5,
+    "upvotes": 193,
+    "created_at": "2025-03-25 11:31:25"
+  },
+  {
+    "post_id": "1jjlu3t",
+    "ticker": "TTD",
+    "sentiment_score": 0.8,
+    "upvotes": 38,
+    "created_at": "2025-03-25 11:19:38"
+  },
+  {
+    "post_id": "1jjjppr",
+    "ticker": "TSLA",
+    "sentiment_score": 0.5,
+    "upvotes": 770,
+    "created_at": "2025-03-25 09:45:51"
+  },
+  {
+    "post_id": "1jjah0s",
+    "ticker": "TSLA",
+    "sentiment_score": 0.5,
+    "upvotes": 196,
+    "created_at": "2025-03-24 23:40:51"
+  },
+  {
+    "post_id": "1jj9s02",
+    "ticker": "IONQ",
+    "sentiment_score": -0.3,
+    "upvotes": 1052,
+    "created_at": "2025-03-24 23:02:52"
+  },
+  {
+    "post_id": "1jj9lvf",
+    "ticker": "SMCI",
+    "sentiment_score": 0.3,
+    "upvotes": 43,
+    "created_at": "2025-03-24 22:53:36"
+  },
+  {
+    "post_id": "1jj8n0y",
+    "ticker": "VAL",
+    "sentiment_score": 0.9,
+    "upvotes": 99,
+    "created_at": "2025-03-24 22:03:22"
+  },
+  {
+    "post_id": "1jj61nx",
+    "ticker": "DIA",
+    "sentiment_score": 0.2,
+    "upvotes": 34,
+    "created_at": "2025-03-24 19:58:33"
+  },
+  {
+    "post_id": "1jj547j",
+    "ticker": "NVDA",
+    "sentiment_score": 0.7,
+    "upvotes": 175,
+    "created_at": "2025-03-24 19:17:30"
+  },
+  {
+    "post_id": "1jj3xiy",
+    "ticker": "FUBO",
+    "sentiment_score": 0.4,
+    "upvotes": 70,
+    "created_at": "2025-03-24 18:27:38"
+  },
+  {
+    "post_id": "1jj0773",
+    "ticker": "TSLA",
+    "sentiment_score": -1.0,
+    "upvotes": 291,
+    "created_at": "2025-03-24 15:57:32"
+  },
+  {
+    "post_id": "1jiyxoi",
+    "ticker": "TSLL",
+    "sentiment_score": 0.5,
+    "upvotes": 416,
+    "created_at": "2025-03-24 15:07:28"
+  },
+  {
+    "post_id": "1jiyfuz",
+    "ticker": "NVDA",
+    "sentiment_score": 0.8,
+    "upvotes": 195,
+    "created_at": "2025-03-24 14:48:28"
+  },
+  {
+    "post_id": "1jivogw",
+    "ticker": "KSS",
+    "sentiment_score": 0.7,
+    "upvotes": 204,
+    "created_at": "2025-03-24 13:00:43"
+  },
+  {
+    "post_id": "1jivd7c",
+    "ticker": "HIMS",
+    "sentiment_score": 0.9,
+    "upvotes": 35,
+    "created_at": "2025-03-24 12:48:35"
+  },
+  {
+    "post_id": "1jivc89",
+    "ticker": "LUNR",
+    "sentiment_score": 0.5,
+    "upvotes": 498,
+    "created_at": "2025-03-24 12:47:29"
+  },
+  {
+    "post_id": "1jiuuwl",
+    "ticker": "SPY",
+    "sentiment_score": 0.6,
+    "upvotes": 177,
+    "created_at": "2025-03-24 12:27:48"
+  },
+  {
+    "post_id": "1jitwaf",
+    "ticker": "HUYA",
+    "sentiment_score": 0.9,
+    "upvotes": 33,
+    "created_at": "2025-03-24 11:49:19"
+  },
+  {
+    "post_id": "1jis61q",
+    "ticker": "JD",
+    "sentiment_score": 0.5,
+    "upvotes": 46,
+    "created_at": "2025-03-24 10:37:52"
+  },
+  {
+    "post_id": "1jis4vd",
+    "ticker": "LUNR",
+    "sentiment_score": 0.5,
+    "upvotes": 196,
+    "created_at": "2025-03-24 10:36:24"
+  },
+  {
+    "post_id": "1jiqjas",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 4173,
+    "created_at": "2025-03-24 09:22:21"
+  },
+  {
+    "post_id": "1jiq5j5",
+    "ticker": "SPX",
+    "sentiment_score": 0.5,
+    "upvotes": 245,
+    "created_at": "2025-03-24 09:03:57"
+  },
+  {
+    "post_id": "1jiq3ur",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 3813,
+    "created_at": "2025-03-24 09:01:45"
+  },
+  {
+    "post_id": "1jipve6",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 468,
+    "created_at": "2025-03-24 08:49:44"
+  },
+  {
+    "post_id": "1jin1ut",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 257,
+    "created_at": "2025-03-24 05:57:32"
+  },
+  {
+    "post_id": "1jin1ut",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 257,
+    "created_at": "2025-03-24 05:57:32"
+  },
+  {
+    "post_id": "1jig2tp",
+    "ticker": "PLTR",
+    "sentiment_score": 0.5,
+    "upvotes": 3056,
+    "created_at": "2025-03-23 22:03:07"
+  },
+  {
+    "post_id": "1jieudv",
+    "ticker": "DISH",
+    "sentiment_score": -0.7,
+    "upvotes": 19,
+    "created_at": "2025-03-23 20:59:48"
+  },
+  {
+    "post_id": "1ji8bie",
+    "ticker": "SPY",
+    "sentiment_score": -0.7,
+    "upvotes": 422,
+    "created_at": "2025-03-23 16:04:30"
+  },
+  {
+    "post_id": "1ji8051",
+    "ticker": "UBER",
+    "sentiment_score": 0.5,
+    "upvotes": 215,
+    "created_at": "2025-03-23 15:51:03"
+  },
+  {
+    "post_id": "1jhowbv",
+    "ticker": "SAVEQ",
+    "sentiment_score": -1.0,
+    "upvotes": 0,
+    "created_at": "2025-03-22 22:12:04"
+  },
+  {
+    "post_id": "1jhdnw2",
+    "ticker": "SOFI",
+    "sentiment_score": 0.5,
+    "upvotes": 61,
+    "created_at": "2025-03-22 13:25:36"
+  },
+  {
+    "post_id": "1jhaxzj",
+    "ticker": "NVDA",
+    "sentiment_score": 0.5,
+    "upvotes": 2532,
+    "created_at": "2025-03-22 11:26:30"
+  },
+  {
+    "post_id": "1jhai40",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 3466,
+    "created_at": "2025-03-22 11:06:33"
+  },
+  {
+    "post_id": "1jh1ewm",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 204,
+    "created_at": "2025-03-22 01:27:06"
+  },
+  {
+    "post_id": "1jgtpkf",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 191,
+    "created_at": "2025-03-21 18:42:09"
+  },
+  {
+    "post_id": "1jgr95w",
+    "ticker": "SPY",
+    "sentiment_score": 0.8,
+    "upvotes": 635,
+    "created_at": "2025-03-21 16:53:10"
+  },
+  {
+    "post_id": "1jgqj81",
+    "ticker": "QQQ",
+    "sentiment_score": 0.5,
+    "upvotes": 10,
+    "created_at": "2025-03-21 16:22:01"
+  },
+  {
+    "post_id": "1jgqeuu",
+    "ticker": "SPX",
+    "sentiment_score": 0.8,
+    "upvotes": 275,
+    "created_at": "2025-03-21 16:16:50"
+  },
+  {
+    "post_id": "1jgoe64",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 238,
+    "created_at": "2025-03-21 14:52:07"
+  },
+  {
+    "post_id": "1jgo9u4",
+    "ticker": "K",
+    "sentiment_score": -0.3,
+    "upvotes": 5,
+    "created_at": "2025-03-21 14:47:06"
+  },
+  {
+    "post_id": "1jgkyap",
+    "ticker": "SPY",
+    "sentiment_score": 0.8,
+    "upvotes": 52,
+    "created_at": "2025-03-21 12:29:46"
+  },
+  {
+    "post_id": "1jgkgat",
+    "ticker": "RIVN",
+    "sentiment_score": 0.4,
+    "upvotes": 67,
+    "created_at": "2025-03-21 12:08:55"
+  },
+  {
+    "post_id": "1jgk4fj",
+    "ticker": "FDX",
+    "sentiment_score": -0.8,
+    "upvotes": 300,
+    "created_at": "2025-03-21 11:55:21"
+  },
+  {
+    "post_id": "1jgjek7",
+    "ticker": "MU",
+    "sentiment_score": -0.7,
+    "upvotes": 116,
+    "created_at": "2025-03-21 11:24:40"
+  },
+  {
+    "post_id": "1jgj3mo",
+    "ticker": "SPY",
+    "sentiment_score": -0.2,
+    "upvotes": 278,
+    "created_at": "2025-03-21 11:11:39"
+  },
+  {
+    "post_id": "1jgidkw",
+    "ticker": "SPY",
+    "sentiment_score": -0.4,
+    "upvotes": 3355,
+    "created_at": "2025-03-21 10:40:09"
+  },
+  {
+    "post_id": "1jgia98",
+    "ticker": "NTES",
+    "sentiment_score": 0.4,
+    "upvotes": 11,
+    "created_at": "2025-03-21 10:35:50"
+  },
+  {
+    "post_id": "1jggpjv",
+    "ticker": "AZN",
+    "sentiment_score": 0.6,
+    "upvotes": 93,
+    "created_at": "2025-03-21 09:23:03"
+  },
+  {
+    "post_id": "1jggau9",
+    "ticker": "BA",
+    "sentiment_score": 0.7,
+    "upvotes": 6,
+    "created_at": "2025-03-21 09:02:52"
+  },
+  {
+    "post_id": "1jgd8fd",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 240,
+    "created_at": "2025-03-21 05:57:33"
+  },
+  {
+    "post_id": "1jgcr81",
+    "ticker": "SPY",
+    "sentiment_score": -0.2,
+    "upvotes": 3,
+    "created_at": "2025-03-21 05:21:41"
+  },
+  {
+    "post_id": "1jgbis1",
+    "ticker": "MU",
+    "sentiment_score": -0.4,
+    "upvotes": 28,
+    "created_at": "2025-03-21 03:46:14"
+  },
+  {
+    "post_id": "1jg7qyi",
+    "ticker": "SPY",
+    "sentiment_score": 0.6,
+    "upvotes": 196,
+    "created_at": "2025-03-20 23:32:32"
+  },
+  {
+    "post_id": "1jg61nz",
+    "ticker": "NVDA",
+    "sentiment_score": -0.3,
+    "upvotes": 112,
+    "created_at": "2025-03-20 22:01:56"
+  },
+  {
+    "post_id": "1jg47kv",
+    "ticker": "SPY",
+    "sentiment_score": 0.7,
+    "upvotes": 278,
+    "created_at": "2025-03-20 20:27:58"
+  },
+  {
+    "post_id": "1jg246f",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 28,
+    "created_at": "2025-03-20 18:51:05"
+  },
+  {
+    "post_id": "1jg1ont",
+    "ticker": "FDX",
+    "sentiment_score": -0.7,
+    "upvotes": 613,
+    "created_at": "2025-03-20 18:32:24"
+  },
+  {
+    "post_id": "1jfwuvf",
+    "ticker": "TSLA",
+    "sentiment_score": -0.6,
+    "upvotes": 3212,
+    "created_at": "2025-03-20 15:11:02"
+  },
+  {
+    "post_id": "1jfwcij",
+    "ticker": "LYFT",
+    "sentiment_score": 0.3,
+    "upvotes": 132,
+    "created_at": "2025-03-20 14:50:24"
+  },
+  {
+    "post_id": "1jfwdvh",
+    "ticker": "NVDA",
+    "sentiment_score": 0.4,
+    "upvotes": 1188,
+    "created_at": "2025-03-20 14:52:00"
+  },
+  {
+    "post_id": "1jfvpf8",
+    "ticker": "NKE",
+    "sentiment_score": 0.6,
+    "upvotes": 30,
+    "created_at": "2025-03-20 14:23:27"
+  },
+  {
+    "post_id": "1jfvhwc",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 60,
+    "created_at": "2025-03-20 14:14:48"
+  },
+  {
+    "post_id": "1jfvft3",
+    "ticker": "AAPL",
+    "sentiment_score": -0.5,
+    "upvotes": 1327,
+    "created_at": "2025-03-20 14:12:22"
+  },
+  {
+    "post_id": "1jfv3i8",
+    "ticker": "AMD",
+    "sentiment_score": 0.5,
+    "upvotes": 57,
+    "created_at": "2025-03-20 13:58:25"
+  },
+  {
+    "post_id": "1jfuqze",
+    "ticker": "TSLA",
+    "sentiment_score": 1.0,
+    "upvotes": 26578,
+    "created_at": "2025-03-20 13:44:26"
+  },
+  {
+    "post_id": "1jfrtjb",
+    "ticker": "TSLA",
+    "sentiment_score": 0.5,
+    "upvotes": 477,
+    "created_at": "2025-03-20 11:41:31"
+  },
+  {
+    "post_id": "1jfpjjo",
+    "ticker": "MU",
+    "sentiment_score": 0.7,
+    "upvotes": 105,
+    "created_at": "2025-03-20 09:59:32"
+  },
+  {
+    "post_id": "1jfp2eb",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 132,
+    "created_at": "2025-03-20 09:36:31"
+  },
+  {
+    "post_id": "1jflrx5",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 4694,
+    "created_at": "2025-03-20 06:27:29"
+  },
+  {
+    "post_id": "1jflc6z",
+    "ticker": "TSLA",
+    "sentiment_score": -0.6,
+    "upvotes": 233,
+    "created_at": "2025-03-20 05:57:33"
+  },
+  {
+    "post_id": "1jfl46v",
+    "ticker": "GO",
+    "sentiment_score": 0.6,
+    "upvotes": 0,
+    "created_at": "2025-03-20 05:41:06"
+  },
+  {
+    "post_id": "1jfh1yd",
+    "ticker": "NOVA",
+    "sentiment_score": 0.4,
+    "upvotes": 22,
+    "created_at": "2025-03-20 00:38:13"
+  },
+  {
+    "post_id": "1jfgouq",
+    "ticker": "SNAP",
+    "sentiment_score": 0.7,
+    "upvotes": 4,
+    "created_at": "2025-03-20 00:15:41"
+  },
+  {
+    "post_id": "1jffxz3",
+    "ticker": "MSTR",
+    "sentiment_score": 0.5,
+    "upvotes": 83,
+    "created_at": "2025-03-19 23:31:59"
+  },
+  {
+    "post_id": "1jffnfb",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 6551,
+    "created_at": "2025-03-19 23:16:14"
+  },
+  {
+    "post_id": "1jfe8q1",
+    "ticker": "TQQQ",
+    "sentiment_score": 0.5,
+    "upvotes": 62,
+    "created_at": "2025-03-19 22:01:42"
+  },
+  {
+    "post_id": "1jfbb0u",
+    "ticker": "AVXL",
+    "sentiment_score": 0.8,
+    "upvotes": 76,
+    "created_at": "2025-03-19 19:38:47"
+  },
+  {
+    "post_id": "1jf9qq8",
+    "ticker": "TSLA",
+    "sentiment_score": -0.6,
+    "upvotes": 462,
+    "created_at": "2025-03-19 18:28:58"
+  },
+  {
+    "post_id": "1jf8ags",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 951,
+    "created_at": "2025-03-19 17:25:58"
+  },
+  {
+    "post_id": "1jf6dtk",
+    "ticker": "NVDA",
+    "sentiment_score": -0.5,
+    "upvotes": 4,
+    "created_at": "2025-03-19 16:06:16"
+  },
+  {
+    "post_id": "1jf66cf",
+    "ticker": "PLTR",
+    "sentiment_score": 0.5,
+    "upvotes": 501,
+    "created_at": "2025-03-19 15:58:05"
+  },
+  {
+    "post_id": "1jf5jma",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 556,
+    "created_at": "2025-03-19 15:32:30"
+  },
+  {
+    "post_id": "1jf5339",
+    "ticker": "CRWD",
+    "sentiment_score": 0.6,
+    "upvotes": 2,
+    "created_at": "2025-03-19 15:13:37"
+  },
+  {
+    "post_id": "1jf4ag1",
+    "ticker": "INTC",
+    "sentiment_score": -0.7,
+    "upvotes": 4279,
+    "created_at": "2025-03-19 14:41:19"
+  },
+  {
+    "post_id": "1jf112w",
+    "ticker": "TSLA",
+    "sentiment_score": 0.4,
+    "upvotes": 0,
+    "created_at": "2025-03-19 12:26:54"
+  },
+  {
+    "post_id": "1jf0b73",
+    "ticker": "AAPL",
+    "sentiment_score": 0.5,
+    "upvotes": 427,
+    "created_at": "2025-03-19 11:56:44"
+  },
+  {
+    "post_id": "1jeyy03",
+    "ticker": "TSLA",
+    "sentiment_score": -1.0,
+    "upvotes": 203,
+    "created_at": "2025-03-19 10:58:31"
+  },
+  {
+    "post_id": "1jex13o",
+    "ticker": "TLT",
+    "sentiment_score": 0.8,
+    "upvotes": 37,
+    "created_at": "2025-03-19 09:31:42"
+  },
+  {
+    "post_id": "1jetf5f",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 232,
+    "created_at": "2025-03-19 05:57:31"
+  },
+  {
+    "post_id": "1jeqaiz",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 1628,
+    "created_at": "2025-03-19 01:54:26"
+  },
+  {
+    "post_id": "1jenukd",
+    "ticker": "SPY",
+    "sentiment_score": -0.7,
+    "upvotes": 326,
+    "created_at": "2025-03-18 23:20:08"
+  },
+  {
+    "post_id": "1jelxeq",
+    "ticker": "SPX",
+    "sentiment_score": -0.3,
+    "upvotes": 74,
+    "created_at": "2025-03-18 21:38:44"
+  },
+  {
+    "post_id": "1jellbc",
+    "ticker": "TSLA",
+    "sentiment_score": 1.0,
+    "upvotes": 383,
+    "created_at": "2025-03-18 21:21:52"
+  },
+  {
+    "post_id": "1jejb3f",
+    "ticker": "CRSP",
+    "sentiment_score": 0.7,
+    "upvotes": 29,
+    "created_at": "2025-03-18 19:32:38"
+  },
+  {
+    "post_id": "1jeis5p",
+    "ticker": "MSTR",
+    "sentiment_score": -0.3,
+    "upvotes": 3030,
+    "created_at": "2025-03-18 19:08:58"
+  },
+  {
+    "post_id": "1jehn7n",
+    "ticker": "NVDA",
+    "sentiment_score": 0.5,
+    "upvotes": 385,
+    "created_at": "2025-03-18 18:18:53"
+  },
+  {
+    "post_id": "1jegtp1",
+    "ticker": "TQQQ",
+    "sentiment_score": -0.4,
+    "upvotes": 221,
+    "created_at": "2025-03-18 17:43:35"
+  },
+  {
+    "post_id": "1jegqga",
+    "ticker": "SPY",
+    "sentiment_score": -0.2,
+    "upvotes": 313,
+    "created_at": "2025-03-18 17:39:37"
+  },
+  {
+    "post_id": "1jegi7v",
+    "ticker": "RDDT",
+    "sentiment_score": -0.6,
+    "upvotes": 124,
+    "created_at": "2025-03-18 17:29:46"
+  },
+  {
+    "post_id": "1jeg0wq",
+    "ticker": "SPY",
+    "sentiment_score": 0.6,
+    "upvotes": 1510,
+    "created_at": "2025-03-18 17:09:32"
+  },
+  {
+    "post_id": "1jef6gt",
+    "ticker": "NVDA",
+    "sentiment_score": 0.8,
+    "upvotes": 2,
+    "created_at": "2025-03-18 16:34:54"
+  },
+  {
+    "post_id": "1jee8vg",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 258,
+    "created_at": "2025-03-18 15:57:26"
+  },
+  {
+    "post_id": "1jed83g",
+    "ticker": "NVDA",
+    "sentiment_score": 0.7,
+    "upvotes": 34,
+    "created_at": "2025-03-18 15:16:09"
+  },
+  {
+    "post_id": "1jebn8s",
+    "ticker": "TSLA",
+    "sentiment_score": 0.6,
+    "upvotes": 184,
+    "created_at": "2025-03-18 14:12:35"
+  },
+  {
+    "post_id": "1jeb7d8",
+    "ticker": "SPY",
+    "sentiment_score": -0.8,
+    "upvotes": 2800,
+    "created_at": "2025-03-18 13:54:52"
+  },
+  {
+    "post_id": "1je9lr3",
+    "ticker": "NVDA",
+    "sentiment_score": 0.9,
+    "upvotes": 48,
+    "created_at": "2025-03-18 12:50:27"
+  },
+  {
+    "post_id": "1je9gyu",
+    "ticker": "HIMS",
+    "sentiment_score": 0.4,
+    "upvotes": 32,
+    "created_at": "2025-03-18 12:44:58"
+  },
+  {
+    "post_id": "1je97nl",
+    "ticker": "RDDT",
+    "sentiment_score": -0.7,
+    "upvotes": 78,
+    "created_at": "2025-03-18 12:34:14"
+  },
+  {
+    "post_id": "1je8owy",
+    "ticker": "TSLA",
+    "sentiment_score": 0.8,
+    "upvotes": 464,
+    "created_at": "2025-03-18 12:13:02"
+  },
+  {
+    "post_id": "1je8gh4",
+    "ticker": "NTLA",
+    "sentiment_score": 0.3,
+    "upvotes": 12,
+    "created_at": "2025-03-18 12:03:14"
+  },
+  {
+    "post_id": "1je7cvu",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 79,
+    "created_at": "2025-03-18 11:16:29"
+  },
+  {
+    "post_id": "1je58wh",
+    "ticker": "QUBT",
+    "sentiment_score": -0.5,
+    "upvotes": 45,
+    "created_at": "2025-03-18 09:42:41"
+  },
+  {
+    "post_id": "1je54f3",
+    "ticker": "TSLA",
+    "sentiment_score": 1.0,
+    "upvotes": 1179,
+    "created_at": "2025-03-18 09:36:49"
+  },
+  {
+    "post_id": "1je4hzm",
+    "ticker": "FNMA",
+    "sentiment_score": 0.5,
+    "upvotes": 85,
+    "created_at": "2025-03-18 09:06:36"
+  },
+  {
+    "post_id": "1je3bod",
+    "ticker": "GOOG",
+    "sentiment_score": 0.5,
+    "upvotes": 1257,
+    "created_at": "2025-03-18 08:03:22"
+  },
+  {
+    "post_id": "1je2nwu",
+    "ticker": "NIO",
+    "sentiment_score": 0.5,
+    "upvotes": 330,
+    "created_at": "2025-03-18 07:23:13"
+  },
+  {
+    "post_id": "1je1d6j",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 257,
+    "created_at": "2025-03-18 05:57:32"
+  },
+  {
+    "post_id": "1jdvgo4",
+    "ticker": "TSLA",
+    "sentiment_score": -0.8,
+    "upvotes": 202,
+    "created_at": "2025-03-17 23:00:55"
+  },
+  {
+    "post_id": "1jdpk0s",
+    "ticker": "IBIT",
+    "sentiment_score": -0.4,
+    "upvotes": 0,
+    "created_at": "2025-03-17 18:19:02"
+  },
+  {
+    "post_id": "1jdp3ug",
+    "ticker": "GOOG",
+    "sentiment_score": 0.5,
+    "upvotes": 746,
+    "created_at": "2025-03-17 17:59:58"
+  },
+  {
+    "post_id": "1jdl847",
+    "ticker": "BRKB",
+    "sentiment_score": 0.7,
+    "upvotes": 58,
+    "created_at": "2025-03-17 15:21:24"
+  },
+  {
+    "post_id": "1jdl7th",
+    "ticker": "RDDT",
+    "sentiment_score": 0.6,
+    "upvotes": 132,
+    "created_at": "2025-03-17 15:21:03"
+  },
+  {
+    "post_id": "1jdktfm",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 643,
+    "created_at": "2025-03-17 15:05:17"
+  },
+  {
+    "post_id": "1jdixjl",
+    "ticker": "IBIT",
+    "sentiment_score": 0.5,
+    "upvotes": 36,
+    "created_at": "2025-03-17 13:50:59"
+  },
+  {
+    "post_id": "1jdhy56",
+    "ticker": "SPY",
+    "sentiment_score": -0.3,
+    "upvotes": 105,
+    "created_at": "2025-03-17 13:12:01"
+  },
+  {
+    "post_id": "1jdfue1",
+    "ticker": "OSCR",
+    "sentiment_score": 0.7,
+    "upvotes": 152,
+    "created_at": "2025-03-17 11:47:51"
+  },
+  {
+    "post_id": "1jdf0i0",
+    "ticker": "AAPL",
+    "sentiment_score": 0.6,
+    "upvotes": 74,
+    "created_at": "2025-03-17 11:14:06"
+  },
+  {
+    "post_id": "1jddg4u",
+    "ticker": "TSLQ",
+    "sentiment_score": 0.5,
+    "upvotes": 326,
+    "created_at": "2025-03-17 10:06:19"
+  },
+  {
+    "post_id": "1jd903u",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 230,
+    "created_at": "2025-03-17 05:57:31"
+  },
+  {
+    "post_id": "1jd6l7y",
+    "ticker": "HIMS",
+    "sentiment_score": -0.7,
+    "upvotes": 303,
+    "created_at": "2025-03-17 02:49:11"
+  },
+  {
+    "post_id": "1jd2b7h",
+    "ticker": "LMT",
+    "sentiment_score": -0.8,
+    "upvotes": 426,
+    "created_at": "2025-03-16 22:21:36"
+  },
+  {
+    "post_id": "1jc7uj0",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 57,
+    "created_at": "2025-03-15 19:16:20"
+  },
+  {
+    "post_id": "1jc5uvv",
+    "ticker": "LUNR",
+    "sentiment_score": -0.5,
+    "upvotes": 16,
+    "created_at": "2025-03-15 17:37:34"
+  },
+  {
+    "post_id": "1jbwn1k",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 342,
+    "created_at": "2025-03-15 10:44:31"
+  },
+  {
+    "post_id": "1jbvnxh",
+    "ticker": "TSLA",
+    "sentiment_score": 0.7,
+    "upvotes": 270,
+    "created_at": "2025-03-15 09:57:25"
+  },
+  {
+    "post_id": "1jbphu1",
+    "ticker": "BMW",
+    "sentiment_score": -0.7,
+    "upvotes": 1865,
+    "created_at": "2025-03-15 03:04:27"
+  },
+  {
+    "post_id": "1jbnob5",
+    "ticker": "HIMS",
+    "sentiment_score": 0.3,
+    "upvotes": 276,
+    "created_at": "2025-03-15 00:59:06"
+  },
+  {
+    "post_id": "1jbgcic",
+    "ticker": "SPY",
+    "sentiment_score": 0.6,
+    "upvotes": 200,
+    "created_at": "2025-03-14 18:33:52"
+  },
+  {
+    "post_id": "1jbfs0i",
+    "ticker": "TSLA",
+    "sentiment_score": -0.4,
+    "upvotes": 24562,
+    "created_at": "2025-03-14 18:08:28"
+  },
+  {
+    "post_id": "1jbfrf9",
+    "ticker": "SPY",
+    "sentiment_score": -0.9,
+    "upvotes": 3075,
+    "created_at": "2025-03-14 18:07:42"
+  },
+  {
+    "post_id": "1jbec3d",
+    "ticker": "AAOI",
+    "sentiment_score": 0.5,
+    "upvotes": 52,
+    "created_at": "2025-03-14 17:05:06"
+  },
+  {
+    "post_id": "1jbdquk",
+    "ticker": "LUNR",
+    "sentiment_score": -0.8,
+    "upvotes": 149,
+    "created_at": "2025-03-14 16:39:41"
+  },
+  {
+    "post_id": "1jbd6ow",
+    "ticker": "PLTR",
+    "sentiment_score": -0.6,
+    "upvotes": 125,
+    "created_at": "2025-03-14 16:15:35"
+  },
+  {
+    "post_id": "1jbcr4f",
+    "ticker": "SPY",
+    "sentiment_score": -0.3,
+    "upvotes": 202,
+    "created_at": "2025-03-14 15:57:35"
+  },
+  {
+    "post_id": "1jbbghd",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 114,
+    "created_at": "2025-03-14 15:02:57"
+  },
+  {
+    "post_id": "1jbbah8",
+    "ticker": "TSLA",
+    "sentiment_score": -0.3,
+    "upvotes": 52,
+    "created_at": "2025-03-14 14:56:06"
+  },
+  {
+    "post_id": "1jbb07n",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 5693,
+    "created_at": "2025-03-14 14:43:49"
+  },
+  {
+    "post_id": "1jb5zwj",
+    "ticker": "MU",
+    "sentiment_score": 0.5,
+    "upvotes": 171,
+    "created_at": "2025-03-14 11:03:51"
+  },
+  {
+    "post_id": "1jb5shk",
+    "ticker": "TSLA",
+    "sentiment_score": 0.8,
+    "upvotes": 1379,
+    "created_at": "2025-03-14 10:55:09"
+  },
+  {
+    "post_id": "1jb5ji9",
+    "ticker": "QBTS",
+    "sentiment_score": -0.7,
+    "upvotes": 72,
+    "created_at": "2025-03-14 10:43:57"
+  },
+  {
+    "post_id": "1jb3dsh",
+    "ticker": "RHM",
+    "sentiment_score": 0.7,
+    "upvotes": 4945,
+    "created_at": "2025-03-14 09:02:32"
+  },
+  {
+    "post_id": "1jb1z8z",
+    "ticker": "RYCEY",
+    "sentiment_score": 0.6,
+    "upvotes": 440,
+    "created_at": "2025-03-14 07:45:27"
+  },
+  {
+    "post_id": "1jb0bwm",
+    "ticker": "SPY",
+    "sentiment_score": -0.2,
+    "upvotes": 237,
+    "created_at": "2025-03-14 05:57:32"
+  },
+  {
+    "post_id": "1jaqgfu",
+    "ticker": "DG",
+    "sentiment_score": -0.5,
+    "upvotes": 3695,
+    "created_at": "2025-03-13 19:49:15"
+  },
+  {
+    "post_id": "1jal4g5",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 303,
+    "created_at": "2025-03-13 15:57:31"
+  },
+  {
+    "post_id": "1jal2y6",
+    "ticker": "ADBE",
+    "sentiment_score": 0.5,
+    "upvotes": 64,
+    "created_at": "2025-03-13 15:55:47"
+  },
+  {
+    "post_id": "1jakfr9",
+    "ticker": "GOOGL",
+    "sentiment_score": -0.5,
+    "upvotes": 73,
+    "created_at": "2025-03-13 15:28:08"
+  },
+  {
+    "post_id": "1jaker3",
+    "ticker": "AAL",
+    "sentiment_score": 0.8,
+    "upvotes": 47,
+    "created_at": "2025-03-13 15:26:55"
+  },
+  {
+    "post_id": "1jajcw4",
+    "ticker": "PATH",
+    "sentiment_score": -0.6,
+    "upvotes": 21,
+    "created_at": "2025-03-13 14:43:09"
+  },
+  {
+    "post_id": "1jag9fl",
+    "ticker": "DRI",
+    "sentiment_score": -0.7,
+    "upvotes": 51,
+    "created_at": "2025-03-13 12:36:46"
+  },
+  {
+    "post_id": "1jaeudt",
+    "ticker": "QQQ",
+    "sentiment_score": 0.8,
+    "upvotes": 313,
+    "created_at": "2025-03-13 11:37:49"
+  },
+  {
+    "post_id": "1jadrqt",
+    "ticker": "SPY",
+    "sentiment_score": -0.2,
+    "upvotes": 183,
+    "created_at": "2025-03-13 10:51:46"
+  },
+  {
+    "post_id": "1jacsj2",
+    "ticker": "INTC",
+    "sentiment_score": 0.6,
+    "upvotes": 1627,
+    "created_at": "2025-03-13 10:07:56"
+  },
+  {
+    "post_id": "1jabt08",
+    "ticker": "PLTR",
+    "sentiment_score": 0.3,
+    "upvotes": 203,
+    "created_at": "2025-03-13 09:21:10"
+  },
+  {
+    "post_id": "1jaa378",
+    "ticker": "SMCI",
+    "sentiment_score": -0.5,
+    "upvotes": 80,
+    "created_at": "2025-03-13 07:47:45"
+  },
+  {
+    "post_id": "1ja8eyw",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 273,
+    "created_at": "2025-03-13 05:57:33"
+  },
+  {
+    "post_id": "1ja8504",
+    "ticker": "SPX",
+    "sentiment_score": 0.7,
+    "upvotes": 40,
+    "created_at": "2025-03-13 05:36:51"
+  },
+  {
+    "post_id": "1ja5sw1",
+    "ticker": "AMD",
+    "sentiment_score": -0.6,
+    "upvotes": 3280,
+    "created_at": "2025-03-13 02:31:51"
+  },
+  {
+    "post_id": "1ja5ruy",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 96,
+    "created_at": "2025-03-13 02:29:50"
+  },
+  {
+    "post_id": "1ja3qkv",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 382,
+    "created_at": "2025-03-13 00:13:31"
+  },
+  {
+    "post_id": "1j9ykki",
+    "ticker": "NVDA",
+    "sentiment_score": -0.5,
+    "upvotes": 211,
+    "created_at": "2025-03-12 19:51:13"
+  },
+  {
+    "post_id": "1j9yh13",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 29,
+    "created_at": "2025-03-12 19:46:42"
+  },
+  {
+    "post_id": "1j9v90b",
+    "ticker": "CORZ",
+    "sentiment_score": 1.0,
+    "upvotes": 22,
+    "created_at": "2025-03-12 17:24:46"
+  },
+  {
+    "post_id": "1j9urks",
+    "ticker": "ADBE",
+    "sentiment_score": -0.5,
+    "upvotes": 66,
+    "created_at": "2025-03-12 17:01:06"
+  },
+  {
+    "post_id": "1j9tvrt",
+    "ticker": "TSLA",
+    "sentiment_score": -1.0,
+    "upvotes": 4743,
+    "created_at": "2025-03-12 16:23:02"
+  },
+  {
+    "post_id": "1j9tukt",
+    "ticker": "INTC",
+    "sentiment_score": 0.8,
+    "upvotes": 412,
+    "created_at": "2025-03-12 16:21:43"
+  },
+  {
+    "post_id": "1j9tjkw",
+    "ticker": "SPX",
+    "sentiment_score": -0.5,
+    "upvotes": 90,
+    "created_at": "2025-03-12 16:09:02"
+  },
+  {
+    "post_id": "1j9sthl",
+    "ticker": "MSFT",
+    "sentiment_score": -0.3,
+    "upvotes": 597,
+    "created_at": "2025-03-12 15:39:12"
+  },
+  {
+    "post_id": "1j9qke2",
+    "ticker": "META",
+    "sentiment_score": -0.7,
+    "upvotes": 36,
+    "created_at": "2025-03-12 14:08:50"
+  },
+  {
+    "post_id": "1j9pa2f",
+    "ticker": "VIX",
+    "sentiment_score": 0.3,
+    "upvotes": 40,
+    "created_at": "2025-03-12 13:16:49"
+  },
+  {
+    "post_id": "1j9ocml",
+    "ticker": "TNA",
+    "sentiment_score": 0.4,
+    "upvotes": 41,
+    "created_at": "2025-03-12 12:39:24"
+  },
+  {
+    "post_id": "1j9lccn",
+    "ticker": "SPY",
+    "sentiment_score": 0.6,
+    "upvotes": 133,
+    "created_at": "2025-03-12 10:27:22"
+  },
+  {
+    "post_id": "1j9gihu",
+    "ticker": "TSLA",
+    "sentiment_score": 0.6,
+    "upvotes": 253,
+    "created_at": "2025-03-12 05:57:32"
+  },
+  {
+    "post_id": "1j9cnan",
+    "ticker": "AMD",
+    "sentiment_score": 0.5,
+    "upvotes": 782,
+    "created_at": "2025-03-12 01:51:23"
+  },
+  {
+    "post_id": "1j9cirg",
+    "ticker": "NVDA",
+    "sentiment_score": 0.3,
+    "upvotes": 24,
+    "created_at": "2025-03-12 01:44:56"
+  },
+  {
+    "post_id": "1j9boqi",
+    "ticker": "TSLA",
+    "sentiment_score": -0.8,
+    "upvotes": 204,
+    "created_at": "2025-03-12 01:03:02"
+  },
+  {
+    "post_id": "1j9aid1",
+    "ticker": "INTC",
+    "sentiment_score": -0.4,
+    "upvotes": 240,
+    "created_at": "2025-03-12 00:00:02"
+  },
+  {
+    "post_id": "1j99v9g",
+    "ticker": "SPY",
+    "sentiment_score": 0.7,
+    "upvotes": 598,
+    "created_at": "2025-03-11 23:23:30"
+  },
+  {
+    "post_id": "1j99fhe",
+    "ticker": "RKLB",
+    "sentiment_score": 0.5,
+    "upvotes": 158,
+    "created_at": "2025-03-11 23:00:18"
+  },
+  {
+    "post_id": "1j96owe",
+    "ticker": "NVDA",
+    "sentiment_score": 0.5,
+    "upvotes": 3458,
+    "created_at": "2025-03-11 20:48:05"
+  },
+  {
+    "post_id": "1j961a0",
+    "ticker": "NVDA",
+    "sentiment_score": 0.7,
+    "upvotes": 107,
+    "created_at": "2025-03-11 20:17:24"
+  },
+  {
+    "post_id": "1j95rfg",
+    "ticker": "NVDA",
+    "sentiment_score": 0.5,
+    "upvotes": 1856,
+    "created_at": "2025-03-11 20:04:36"
+  },
+  {
+    "post_id": "1j920gv",
+    "ticker": "MSTR",
+    "sentiment_score": 0.5,
+    "upvotes": 69,
+    "created_at": "2025-03-11 17:21:08"
+  },
+  {
+    "post_id": "1j91dk4",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 0,
+    "created_at": "2025-03-11 16:55:05"
+  },
+  {
+    "post_id": "1j8zzig",
+    "ticker": "TSLA",
+    "sentiment_score": -0.3,
+    "upvotes": 293,
+    "created_at": "2025-03-11 15:57:40"
+  },
+  {
+    "post_id": "1j8za7d",
+    "ticker": "FBTC",
+    "sentiment_score": 0.5,
+    "upvotes": 22,
+    "created_at": "2025-03-11 15:28:59"
+  },
+  {
+    "post_id": "1j8x8ra",
+    "ticker": "NVDA",
+    "sentiment_score": 0.5,
+    "upvotes": 432,
+    "created_at": "2025-03-11 14:05:16"
+  },
+  {
+    "post_id": "1j8x45r",
+    "ticker": "MSTR",
+    "sentiment_score": 0.5,
+    "upvotes": 683,
+    "created_at": "2025-03-11 14:00:24"
+  },
+  {
+    "post_id": "1j8uv2o",
+    "ticker": "NVDA",
+    "sentiment_score": -0.7,
+    "upvotes": 103,
+    "created_at": "2025-03-11 12:28:45"
+  },
+  {
+    "post_id": "1j8sdv9",
+    "ticker": "SPY",
+    "sentiment_score": 0.8,
+    "upvotes": 218,
+    "created_at": "2025-03-11 10:44:04"
+  },
+  {
+    "post_id": "1j8s8z4",
+    "ticker": "TSLA",
+    "sentiment_score": 0.7,
+    "upvotes": 719,
+    "created_at": "2025-03-11 10:38:07"
+  },
+  {
+    "post_id": "1j8rzw5",
+    "ticker": "RDDT",
+    "sentiment_score": -0.6,
+    "upvotes": 2321,
+    "created_at": "2025-03-11 10:26:37"
+  },
+  {
+    "post_id": "1j8rrrf",
+    "ticker": "SPY",
+    "sentiment_score": 0.6,
+    "upvotes": 63,
+    "created_at": "2025-03-11 10:16:25"
+  },
+  {
+    "post_id": "1j8n736",
+    "ticker": "TSLA",
+    "sentiment_score": 0.5,
+    "upvotes": 288,
+    "created_at": "2025-03-11 05:57:19"
+  },
+  {
+    "post_id": "1j8k5ai",
+    "ticker": "MSTR",
+    "sentiment_score": -0.8,
+    "upvotes": 1363,
+    "created_at": "2025-03-11 02:03:16"
+  },
+  {
+    "post_id": "1j8hs9k",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 1760,
+    "created_at": "2025-03-10 23:35:35"
+  },
+  {
+    "post_id": "1j8h3vo",
+    "ticker": "TSLA",
+    "sentiment_score": -0.6,
+    "upvotes": 770,
+    "created_at": "2025-03-10 22:59:02"
+  },
+  {
+    "post_id": "1j8gxfo",
+    "ticker": "PLTR",
+    "sentiment_score": 0.6,
+    "upvotes": 53,
+    "created_at": "2025-03-10 22:49:38"
+  },
+  {
+    "post_id": "1j8f0bv",
+    "ticker": "MSTR",
+    "sentiment_score": -0.5,
+    "upvotes": 83,
+    "created_at": "2025-03-10 21:13:38"
+  },
+  {
+    "post_id": "1j8e7gj",
+    "ticker": "TSLA",
+    "sentiment_score": 0.7,
+    "upvotes": 198,
+    "created_at": "2025-03-10 20:34:48"
+  },
+  {
+    "post_id": "1j8djjd",
+    "ticker": "TSLA",
+    "sentiment_score": 0.4,
+    "upvotes": 127,
+    "created_at": "2025-03-10 20:02:58"
+  },
+  {
+    "post_id": "1j8cggh",
+    "ticker": "TSLA",
+    "sentiment_score": -0.9,
+    "upvotes": 6775,
+    "created_at": "2025-03-10 19:13:18"
+  },
+  {
+    "post_id": "1j8cd3q",
+    "ticker": "TSLA",
+    "sentiment_score": -0.4,
+    "upvotes": 342,
+    "created_at": "2025-03-10 19:09:14"
+  },
+  {
+    "post_id": "1j8b3z0",
+    "ticker": "BABA",
+    "sentiment_score": -0.5,
+    "upvotes": 31,
+    "created_at": "2025-03-10 18:16:48"
+  },
+  {
+    "post_id": "1j8acus",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 36,
+    "created_at": "2025-03-10 17:44:39"
+  },
+  {
+    "post_id": "1j8acg9",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 892,
+    "created_at": "2025-03-10 17:44:09"
+  },
+  {
+    "post_id": "1j89n99",
+    "ticker": "TSLA",
+    "sentiment_score": 0.5,
+    "upvotes": 190,
+    "created_at": "2025-03-10 17:15:09"
+  },
+  {
+    "post_id": "1j899xz",
+    "ticker": "TSLA",
+    "sentiment_score": 0.5,
+    "upvotes": 52,
+    "created_at": "2025-03-10 17:00:01"
+  },
+  {
+    "post_id": "1j88jik",
+    "ticker": "TSLA",
+    "sentiment_score": 0.7,
+    "upvotes": 222,
+    "created_at": "2025-03-10 16:29:41"
+  },
+  {
+    "post_id": "1j87rn6",
+    "ticker": "SPY",
+    "sentiment_score": -0.3,
+    "upvotes": 413,
+    "created_at": "2025-03-10 15:57:32"
+  },
+  {
+    "post_id": "1j87hgh",
+    "ticker": "MSTR",
+    "sentiment_score": 0.8,
+    "upvotes": 131,
+    "created_at": "2025-03-10 15:44:59"
+  },
+  {
+    "post_id": "1j879xb",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 317,
+    "created_at": "2025-03-10 15:35:52"
+  },
+  {
+    "post_id": "1j86l17",
+    "ticker": "TSLA",
+    "sentiment_score": -0.6,
+    "upvotes": 695,
+    "created_at": "2025-03-10 15:06:30"
+  },
+  {
+    "post_id": "1j86kjr",
+    "ticker": "SPY",
+    "sentiment_score": -0.3,
+    "upvotes": 33,
+    "created_at": "2025-03-10 15:05:57"
+  },
+  {
+    "post_id": "1j85djl",
+    "ticker": "PRAA",
+    "sentiment_score": 0.7,
+    "upvotes": 247,
+    "created_at": "2025-03-10 14:18:15"
+  },
+  {
+    "post_id": "1j84kl3",
+    "ticker": "TSLA",
+    "sentiment_score": -0.8,
+    "upvotes": 9638,
+    "created_at": "2025-03-10 13:44:57"
+  },
+  {
+    "post_id": "1j83qtb",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 363,
+    "created_at": "2025-03-10 13:11:03"
+  },
+  {
+    "post_id": "1j839uf",
+    "ticker": "TSLA",
+    "sentiment_score": 0.6,
+    "upvotes": 254,
+    "created_at": "2025-03-10 12:51:38"
+  },
+  {
+    "post_id": "1j837h1",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 192,
+    "created_at": "2025-03-10 12:48:51"
+  },
+  {
+    "post_id": "1j834xw",
+    "ticker": "TSLA",
+    "sentiment_score": -0.8,
+    "upvotes": 13476,
+    "created_at": "2025-03-10 12:45:55"
+  },
+  {
+    "post_id": "1j82ygm",
+    "ticker": "NVDA",
+    "sentiment_score": 0.7,
+    "upvotes": 64,
+    "created_at": "2025-03-10 12:38:33"
+  },
+  {
+    "post_id": "1j82s78",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 730,
+    "created_at": "2025-03-10 12:31:31"
+  },
+  {
+    "post_id": "1j81xvd",
+    "ticker": "SPY",
+    "sentiment_score": -0.3,
+    "upvotes": 2074,
+    "created_at": "2025-03-10 11:57:20"
+  },
+  {
+    "post_id": "1j81k2f",
+    "ticker": "KR",
+    "sentiment_score": 0.3,
+    "upvotes": 13,
+    "created_at": "2025-03-10 11:41:08"
+  },
+  {
+    "post_id": "1j81a8p",
+    "ticker": "SPY",
+    "sentiment_score": 0.6,
+    "upvotes": 82,
+    "created_at": "2025-03-10 11:29:42"
+  },
+  {
+    "post_id": "1j80z52",
+    "ticker": "NVDA",
+    "sentiment_score": 0.4,
+    "upvotes": 14,
+    "created_at": "2025-03-10 11:16:18"
+  },
+  {
+    "post_id": "1j803ay",
+    "ticker": "TSLA",
+    "sentiment_score": -0.9,
+    "upvotes": 1183,
+    "created_at": "2025-03-10 10:37:39"
+  },
+  {
+    "post_id": "1j80017",
+    "ticker": "QQQ",
+    "sentiment_score": 0.6,
+    "upvotes": 187,
+    "created_at": "2025-03-10 10:33:19"
+  },
+  {
+    "post_id": "1j7zkgz",
+    "ticker": "LUNR",
+    "sentiment_score": -1.0,
+    "upvotes": 182,
+    "created_at": "2025-03-10 10:13:51"
+  },
+  {
+    "post_id": "1j7zju7",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 2558,
+    "created_at": "2025-03-10 10:13:04"
+  },
+  {
+    "post_id": "1j7ze6h",
+    "ticker": "YETI",
+    "sentiment_score": 0.5,
+    "upvotes": 0,
+    "created_at": "2025-03-10 10:05:53"
+  },
+  {
+    "post_id": "1j7z4o2",
+    "ticker": "ELF",
+    "sentiment_score": 0.5,
+    "upvotes": 41,
+    "created_at": "2025-03-10 09:54:03"
+  },
+  {
+    "post_id": "1j7yzor",
+    "ticker": "KSS",
+    "sentiment_score": -0.8,
+    "upvotes": 70,
+    "created_at": "2025-03-10 09:47:29"
+  },
+  {
+    "post_id": "1j7yxm1",
+    "ticker": "SPX",
+    "sentiment_score": 0.6,
+    "upvotes": 42,
+    "created_at": "2025-03-10 09:44:38"
+  },
+  {
+    "post_id": "1j7xu8p",
+    "ticker": "MSTR",
+    "sentiment_score": -0.7,
+    "upvotes": 2040,
+    "created_at": "2025-03-10 08:49:52"
+  },
+  {
+    "post_id": "1j7xu0c",
+    "ticker": "RDFN",
+    "sentiment_score": 0.7,
+    "upvotes": 645,
+    "created_at": "2025-03-10 08:49:31"
+  },
+  {
+    "post_id": "1j7m3yn",
+    "ticker": "SOXL",
+    "sentiment_score": -0.5,
+    "upvotes": 252,
+    "created_at": "2025-03-09 20:29:34"
+  },
+  {
+    "post_id": "1j79g1e",
+    "ticker": "GRRR",
+    "sentiment_score": 0.5,
+    "upvotes": 173,
+    "created_at": "2025-03-09 11:02:29"
+  },
+  {
+    "post_id": "1j6xis4",
+    "ticker": "SPY",
+    "sentiment_score": -0.7,
+    "upvotes": 274,
+    "created_at": "2025-03-08 21:27:54"
+  },
+  {
+    "post_id": "1j6s6fu",
+    "ticker": "AAPL",
+    "sentiment_score": 0.7,
+    "upvotes": 3093,
+    "created_at": "2025-03-08 17:01:05"
+  },
+  {
+    "post_id": "1j6ep1b",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 580,
+    "created_at": "2025-03-08 05:50:19"
+  },
+  {
+    "post_id": "1j694kh",
+    "ticker": "TSLA",
+    "sentiment_score": -0.8,
+    "upvotes": 102,
+    "created_at": "2025-03-07 23:24:27"
+  },
+  {
+    "post_id": "1j68964",
+    "ticker": "TSLA",
+    "sentiment_score": 0.5,
+    "upvotes": 56,
+    "created_at": "2025-03-07 22:33:55"
+  },
+  {
+    "post_id": "1j631zs",
+    "ticker": "SPY",
+    "sentiment_score": 0.7,
+    "upvotes": 1588,
+    "created_at": "2025-03-07 18:08:17"
+  },
+  {
+    "post_id": "1j630x3",
+    "ticker": "HOOD",
+    "sentiment_score": 0.3,
+    "upvotes": 251,
+    "created_at": "2025-03-07 18:06:53"
+  },
+  {
+    "post_id": "1j62098",
+    "ticker": "QQQ",
+    "sentiment_score": 0.6,
+    "upvotes": 108,
+    "created_at": "2025-03-07 17:20:40"
+  },
+  {
+    "post_id": "1j61yn7",
+    "ticker": "SPY",
+    "sentiment_score": 0.8,
+    "upvotes": 46,
+    "created_at": "2025-03-07 17:18:40"
+  },
+  {
+    "post_id": "1j61s5v",
+    "ticker": "RDDT",
+    "sentiment_score": 0.5,
+    "upvotes": 439,
+    "created_at": "2025-03-07 17:10:38"
+  },
+  {
+    "post_id": "1j5xpox",
+    "ticker": "NVDA",
+    "sentiment_score": -0.5,
+    "upvotes": 89,
+    "created_at": "2025-03-07 14:27:27"
+  },
+  {
+    "post_id": "1j5wwgo",
+    "ticker": "APH",
+    "sentiment_score": -0.5,
+    "upvotes": 19,
+    "created_at": "2025-03-07 13:59:58"
+  },
+  {
+    "post_id": "1j5wroa",
+    "ticker": "SPY",
+    "sentiment_score": 1.0,
+    "upvotes": 25,
+    "created_at": "2025-03-07 13:55:18"
+  },
+  {
+    "post_id": "1j5wfu4",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 32,
+    "created_at": "2025-03-07 13:44:06"
+  },
+  {
+    "post_id": "1j5wclw",
+    "ticker": "GIS",
+    "sentiment_score": 1.0,
+    "upvotes": 41,
+    "created_at": "2025-03-07 13:40:38"
+  },
+  {
+    "post_id": "1j5vg5l",
+    "ticker": "LUNR",
+    "sentiment_score": -1.0,
+    "upvotes": 167,
+    "created_at": "2025-03-07 13:06:12"
+  },
+  {
+    "post_id": "1j5u5k4",
+    "ticker": "NVDA",
+    "sentiment_score": 1.0,
+    "upvotes": 1108,
+    "created_at": "2025-03-07 12:21:14"
+  },
+  {
+    "post_id": "1j5u4fq",
+    "ticker": "TSLA",
+    "sentiment_score": 0.5,
+    "upvotes": 26,
+    "created_at": "2025-03-07 12:20:13"
+  },
+  {
+    "post_id": "1j5tnun",
+    "ticker": "PARA",
+    "sentiment_score": 1.0,
+    "upvotes": 61,
+    "created_at": "2025-03-07 12:04:27"
+  },
+  {
+    "post_id": "1j5ta8j",
+    "ticker": "JPM",
+    "sentiment_score": -1.0,
+    "upvotes": 735,
+    "created_at": "2025-03-07 11:51:34"
+  },
+  {
+    "post_id": "1j5sbi1",
+    "ticker": "ORCL",
+    "sentiment_score": 0.5,
+    "upvotes": 181,
+    "created_at": "2025-03-07 11:18:03"
+  },
+  {
+    "post_id": "1j5r0wf",
+    "ticker": "LUNR",
+    "sentiment_score": -0.8,
+    "upvotes": 655,
+    "created_at": "2025-03-07 10:32:24"
+  },
+  {
+    "post_id": "1j5qk0v",
+    "ticker": "MSTR",
+    "sentiment_score": 0.6,
+    "upvotes": 36,
+    "created_at": "2025-03-07 10:15:56"
+  },
+  {
+    "post_id": "1j5q3ex",
+    "ticker": "MSTR",
+    "sentiment_score": 0.7,
+    "upvotes": 201,
+    "created_at": "2025-03-07 09:59:31"
+  },
+  {
+    "post_id": "1j5pzuu",
+    "ticker": "LUNR",
+    "sentiment_score": -0.3,
+    "upvotes": 54,
+    "created_at": "2025-03-07 09:55:53"
+  },
+  {
+    "post_id": "1j5mjny",
+    "ticker": "BABA",
+    "sentiment_score": 0.9,
+    "upvotes": 924,
+    "created_at": "2025-03-07 07:39:45"
+  },
+  {
+    "post_id": "1j5elsm",
+    "ticker": "GM",
+    "sentiment_score": -0.3,
+    "upvotes": 139,
+    "created_at": "2025-03-06 22:50:34"
+  },
+  {
+    "post_id": "1j5aw99",
+    "ticker": "MSTR",
+    "sentiment_score": -0.7,
+    "upvotes": 13949,
+    "created_at": "2025-03-06 19:39:09"
+  },
+  {
+    "post_id": "1j5amcx",
+    "ticker": "NVDA",
+    "sentiment_score": 0.4,
+    "upvotes": 205,
+    "created_at": "2025-03-06 19:25:55"
+  },
+  {
+    "post_id": "1j598y3",
+    "ticker": "LUNR",
+    "sentiment_score": -0.9,
+    "upvotes": 1099,
+    "created_at": "2025-03-06 18:21:00"
+  },
+  {
+    "post_id": "1j56p11",
+    "ticker": "SPY",
+    "sentiment_score": 0.7,
+    "upvotes": 326,
+    "created_at": "2025-03-06 16:30:31"
+  },
+  {
+    "post_id": "1j56f7u",
+    "ticker": "SPX",
+    "sentiment_score": 0.9,
+    "upvotes": 1730,
+    "created_at": "2025-03-06 16:18:56"
+  },
+  {
+    "post_id": "1j56bjy",
+    "ticker": "LUNR",
+    "sentiment_score": -0.8,
+    "upvotes": 1788,
+    "created_at": "2025-03-06 16:14:36"
+  },
+  {
+    "post_id": "1j533rx",
+    "ticker": "SPX",
+    "sentiment_score": 0.5,
+    "upvotes": 63,
+    "created_at": "2025-03-06 14:00:12"
+  },
+  {
+    "post_id": "1j51le4",
+    "ticker": "V",
+    "sentiment_score": 0.5,
+    "upvotes": 47,
+    "created_at": "2025-03-06 12:58:27"
+  },
+  {
+    "post_id": "1j51jmg",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 421,
+    "created_at": "2025-03-06 12:56:23"
+  },
+  {
+    "post_id": "1j50lnk",
+    "ticker": "FDX",
+    "sentiment_score": -0.8,
+    "upvotes": 67,
+    "created_at": "2025-03-06 12:17:35"
+  },
+  {
+    "post_id": "1j4zzwj",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 121,
+    "created_at": "2025-03-06 11:52:59"
+  },
+  {
+    "post_id": "1j4yzlr",
+    "ticker": "MSTR",
+    "sentiment_score": 0.8,
+    "upvotes": 288,
+    "created_at": "2025-03-06 11:10:40"
+  },
+  {
+    "post_id": "1j4yoca",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 69,
+    "created_at": "2025-03-06 10:57:49"
+  },
+  {
+    "post_id": "1j4y40e",
+    "ticker": "BABA",
+    "sentiment_score": -0.7,
+    "upvotes": 28,
+    "created_at": "2025-03-06 10:33:17"
+  },
+  {
+    "post_id": "1j4xaq8",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 124,
+    "created_at": "2025-03-06 09:57:33"
+  },
+  {
+    "post_id": "1j4vdnr",
+    "ticker": "MSTR",
+    "sentiment_score": -0.3,
+    "upvotes": 353,
+    "created_at": "2025-03-06 08:25:32"
+  },
+  {
+    "post_id": "1j4sy0x",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 314,
+    "created_at": "2025-03-06 05:57:32"
+  },
+  {
+    "post_id": "1j4qeb2",
+    "ticker": "TSLA",
+    "sentiment_score": -0.8,
+    "upvotes": 243,
+    "created_at": "2025-03-06 02:46:44"
+  },
+  {
+    "post_id": "1j4p3kd",
+    "ticker": "RIVN",
+    "sentiment_score": 0.6,
+    "upvotes": 1460,
+    "created_at": "2025-03-06 01:14:33"
+  },
+  {
+    "post_id": "1j4hx8n",
+    "ticker": "PFE",
+    "sentiment_score": -0.4,
+    "upvotes": 1850,
+    "created_at": "2025-03-05 18:51:07"
+  },
+  {
+    "post_id": "1j4hob3",
+    "ticker": "BABA",
+    "sentiment_score": 0.9,
+    "upvotes": 111,
+    "created_at": "2025-03-05 18:37:52"
+  },
+  {
+    "post_id": "1j4ffru",
+    "ticker": "SPY",
+    "sentiment_score": 0.7,
+    "upvotes": 813,
+    "created_at": "2025-03-05 17:05:04"
+  },
+  {
+    "post_id": "1j4f3pf",
+    "ticker": "SPX",
+    "sentiment_score": 0.3,
+    "upvotes": 75,
+    "created_at": "2025-03-05 16:51:43"
+  },
+  {
+    "post_id": "1j4ejen",
+    "ticker": "SPX",
+    "sentiment_score": 0.6,
+    "upvotes": 149,
+    "created_at": "2025-03-05 16:28:46"
+  },
+  {
+    "post_id": "1j4ejdn",
+    "ticker": "NOK",
+    "sentiment_score": 0.4,
+    "upvotes": 124,
+    "created_at": "2025-03-05 16:28:44"
+  },
+  {
+    "post_id": "1j4chts",
+    "ticker": "BABA",
+    "sentiment_score": 0.5,
+    "upvotes": 166,
+    "created_at": "2025-03-05 15:06:27"
+  },
+  {
+    "post_id": "1j4alok",
+    "ticker": "VIX",
+    "sentiment_score": 0.6,
+    "upvotes": 305,
+    "created_at": "2025-03-05 13:50:47"
+  },
+  {
+    "post_id": "1j4acdo",
+    "ticker": "CAPR",
+    "sentiment_score": 0.7,
+    "upvotes": 76,
+    "created_at": "2025-03-05 13:40:28"
+  },
+  {
+    "post_id": "1j499lh",
+    "ticker": "MSTR",
+    "sentiment_score": 0.9,
+    "upvotes": 420,
+    "created_at": "2025-03-05 12:58:04"
+  },
+  {
+    "post_id": "1j48v4o",
+    "ticker": "TSLA",
+    "sentiment_score": 0.5,
+    "upvotes": 0,
+    "created_at": "2025-03-05 12:42:07"
+  },
+  {
+    "post_id": "1j480dr",
+    "ticker": "NVDA",
+    "sentiment_score": 0.6,
+    "upvotes": 315,
+    "created_at": "2025-03-05 12:07:59"
+  },
+  {
+    "post_id": "1j46bbh",
+    "ticker": "BABA",
+    "sentiment_score": 0.8,
+    "upvotes": 6480,
+    "created_at": "2025-03-05 10:58:20"
+  },
+  {
+    "post_id": "1j4691s",
+    "ticker": "SPY",
+    "sentiment_score": -1.0,
+    "upvotes": 402,
+    "created_at": "2025-03-05 10:55:36"
+  },
+  {
+    "post_id": "1j434se",
+    "ticker": "TSLA",
+    "sentiment_score": -0.8,
+    "upvotes": 2358,
+    "created_at": "2025-03-05 08:32:08"
+  },
+  {
+    "post_id": "1j4313h",
+    "ticker": "JWN",
+    "sentiment_score": -0.7,
+    "upvotes": 17,
+    "created_at": "2025-03-05 08:27:05"
+  },
+  {
+    "post_id": "1j42h15",
+    "ticker": "MP",
+    "sentiment_score": 0.7,
+    "upvotes": 115,
+    "created_at": "2025-03-05 07:58:25"
+  },
+  {
+    "post_id": "1j40i07",
+    "ticker": "TSLA",
+    "sentiment_score": -0.9,
+    "upvotes": 221,
+    "created_at": "2025-03-05 05:57:21"
+  },
+  {
+    "post_id": "1j3y061",
+    "ticker": "LLY",
+    "sentiment_score": 0.9,
+    "upvotes": 43,
+    "created_at": "2025-03-05 02:49:00"
+  },
+  {
+    "post_id": "1j3ug8k",
+    "ticker": "BABA",
+    "sentiment_score": -0.5,
+    "upvotes": 556,
+    "created_at": "2025-03-04 23:03:00"
+  },
+  {
+    "post_id": "1j3tzsp",
+    "ticker": "CNBS",
+    "sentiment_score": 0.7,
+    "upvotes": 35,
+    "created_at": "2025-03-04 22:37:28"
+  },
+  {
+    "post_id": "1j3rzqz",
+    "ticker": "NVDA",
+    "sentiment_score": 0.8,
+    "upvotes": 181,
+    "created_at": "2025-03-04 20:55:18"
+  },
+  {
+    "post_id": "1j3rcv7",
+    "ticker": "ARM",
+    "sentiment_score": -0.3,
+    "upvotes": 126,
+    "created_at": "2025-03-04 20:23:36"
+  },
+  {
+    "post_id": "1j3rbhc",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 121,
+    "created_at": "2025-03-04 20:21:42"
+  },
+  {
+    "post_id": "1j3qp4c",
+    "ticker": "GTLB",
+    "sentiment_score": 0.6,
+    "upvotes": 43,
+    "created_at": "2025-03-04 19:52:01"
+  },
+  {
+    "post_id": "1j3pf6r",
+    "ticker": "IBIT",
+    "sentiment_score": 0.9,
+    "upvotes": 24,
+    "created_at": "2025-03-04 18:52:00"
+  },
+  {
+    "post_id": "1j3ovuk",
+    "ticker": "MSTR",
+    "sentiment_score": 0.5,
+    "upvotes": 23,
+    "created_at": "2025-03-04 18:27:30"
+  },
+  {
+    "post_id": "1j3nziz",
+    "ticker": "GOOGL",
+    "sentiment_score": 0.4,
+    "upvotes": 55,
+    "created_at": "2025-03-04 17:47:50"
+  },
+  {
+    "post_id": "1j3mzl9",
+    "ticker": "BABA",
+    "sentiment_score": 0.5,
+    "upvotes": 23,
+    "created_at": "2025-03-04 17:05:23"
+  },
+  {
+    "post_id": "1j3mnhw",
+    "ticker": "SPX",
+    "sentiment_score": 1.0,
+    "upvotes": 2302,
+    "created_at": "2025-03-04 16:51:21"
+  },
+  {
+    "post_id": "1j3lcuu",
+    "ticker": "MSTR",
+    "sentiment_score": 0.5,
+    "upvotes": 141,
+    "created_at": "2025-03-04 15:57:45"
+  },
+  {
+    "post_id": "1j3l9nv",
+    "ticker": "SPY",
+    "sentiment_score": 1.0,
+    "upvotes": 3268,
+    "created_at": "2025-03-04 15:53:53"
+  },
+  {
+    "post_id": "1j3l3eg",
+    "ticker": "SPX",
+    "sentiment_score": 1.0,
+    "upvotes": 70,
+    "created_at": "2025-03-04 15:46:24"
+  },
+  {
+    "post_id": "1j3ji6u",
+    "ticker": "MSTR",
+    "sentiment_score": 0.5,
+    "upvotes": 35,
+    "created_at": "2025-03-04 14:40:36"
+  },
+  {
+    "post_id": "1j3jf87",
+    "ticker": "FLOW",
+    "sentiment_score": 0.8,
+    "upvotes": 17,
+    "created_at": "2025-03-04 14:37:13"
+  },
+  {
+    "post_id": "1j3j9qa",
+    "ticker": "QQQ",
+    "sentiment_score": 0.5,
+    "upvotes": 165,
+    "created_at": "2025-03-04 14:31:01"
+  },
+  {
+    "post_id": "1j3isvj",
+    "ticker": "SHOP",
+    "sentiment_score": -0.5,
+    "upvotes": 0,
+    "created_at": "2025-03-04 14:12:03"
+  },
+  {
+    "post_id": "1j3ie0b",
+    "ticker": "AMD",
+    "sentiment_score": -0.8,
+    "upvotes": 14,
+    "created_at": "2025-03-04 13:55:23"
+  },
+  {
+    "post_id": "1j3hqq9",
+    "ticker": "TNK",
+    "sentiment_score": 0.8,
+    "upvotes": 18,
+    "created_at": "2025-03-04 13:29:18"
+  },
+  {
+    "post_id": "1j3hnf3",
+    "ticker": "SPY",
+    "sentiment_score": 1.0,
+    "upvotes": 148,
+    "created_at": "2025-03-04 13:25:37"
+  },
+  {
+    "post_id": "1j3hidg",
+    "ticker": "AMD",
+    "sentiment_score": -0.5,
+    "upvotes": 65,
+    "created_at": "2025-03-04 13:19:56"
+  },
+  {
+    "post_id": "1j3f02n",
+    "ticker": "EBAY",
+    "sentiment_score": 0.5,
+    "upvotes": 100,
+    "created_at": "2025-03-04 11:39:40"
+  },
+  {
+    "post_id": "1j3dqan",
+    "ticker": "TSLA",
+    "sentiment_score": -0.5,
+    "upvotes": 71,
+    "created_at": "2025-03-04 10:46:49"
+  },
+  {
+    "post_id": "1j3dmt0",
+    "ticker": "SPY",
+    "sentiment_score": 1.0,
+    "upvotes": 67,
+    "created_at": "2025-03-04 10:42:36"
+  },
+  {
+    "post_id": "1j3djya",
+    "ticker": "IWM",
+    "sentiment_score": 0.5,
+    "upvotes": 24,
+    "created_at": "2025-03-04 10:39:12"
+  },
+  {
+    "post_id": "1j3daw8",
+    "ticker": "TSLA",
+    "sentiment_score": -0.8,
+    "upvotes": 555,
+    "created_at": "2025-03-04 10:28:10"
+  },
+  {
+    "post_id": "1j3d8wh",
+    "ticker": "TSLA",
+    "sentiment_score": 0.7,
+    "upvotes": 86,
+    "created_at": "2025-03-04 10:25:45"
+  },
+  {
+    "post_id": "1j3d3od",
+    "ticker": "SPY",
+    "sentiment_score": -0.2,
+    "upvotes": 129,
+    "created_at": "2025-03-04 10:19:31"
+  },
+  {
+    "post_id": "1j3cw0g",
+    "ticker": "SPY",
+    "sentiment_score": 0.3,
+    "upvotes": 74,
+    "created_at": "2025-03-04 10:10:00"
+  },
+  {
+    "post_id": "1j3cmqd",
+    "ticker": "MSTR",
+    "sentiment_score": 0.9,
+    "upvotes": 3738,
+    "created_at": "2025-03-04 09:58:29"
+  },
+  {
+    "post_id": "1j3ckjq",
+    "ticker": "NVDA",
+    "sentiment_score": -0.7,
+    "upvotes": 2048,
+    "created_at": "2025-03-04 09:55:40"
+  },
+  {
+    "post_id": "1j3bsy2",
+    "ticker": "MP",
+    "sentiment_score": 0.8,
+    "upvotes": 13,
+    "created_at": "2025-03-04 09:19:30"
+  },
+  {
+    "post_id": "1j3awvg",
+    "ticker": "SPX",
+    "sentiment_score": -1.0,
+    "upvotes": 428,
+    "created_at": "2025-03-04 08:36:34"
+  },
+  {
+    "post_id": "1j384ol",
+    "ticker": "TSLA",
+    "sentiment_score": -0.7,
+    "upvotes": 8016,
+    "created_at": "2025-03-04 05:50:24"
+  },
+  {
+    "post_id": "1j37bkg",
+    "ticker": "NVDA",
+    "sentiment_score": -0.3,
+    "upvotes": 15,
+    "created_at": "2025-03-04 04:51:46"
+  },
+  {
+    "post_id": "1j3795s",
+    "ticker": "NVDA",
+    "sentiment_score": -0.5,
+    "upvotes": 1232,
+    "created_at": "2025-03-04 04:46:44"
+  },
+  {
+    "post_id": "1j36k5e",
+    "ticker": "RIVN",
+    "sentiment_score": -0.8,
+    "upvotes": 68,
+    "created_at": "2025-03-04 03:52:55"
+  },
+  {
+    "post_id": "1j30w9e",
+    "ticker": "SMCI",
+    "sentiment_score": 0.5,
+    "upvotes": 45,
+    "created_at": "2025-03-03 21:55:09"
+  },
+  {
+    "post_id": "1j307uz",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 239,
+    "created_at": "2025-03-03 21:19:50"
+  },
+  {
+    "post_id": "1j2yaia",
+    "ticker": "NVDA",
+    "sentiment_score": 0.5,
+    "upvotes": 13,
+    "created_at": "2025-03-03 19:41:51"
+  },
+  {
+    "post_id": "1j2xjw5",
+    "ticker": "VIX",
+    "sentiment_score": 0.5,
+    "upvotes": 384,
+    "created_at": "2025-03-03 19:06:46"
+  },
+  {
+    "post_id": "1j2xcb1",
+    "ticker": "SPX",
+    "sentiment_score": 1.0,
+    "upvotes": 135,
+    "created_at": "2025-03-03 18:57:13"
+  },
+  {
+    "post_id": "1j2x862",
+    "ticker": "QQQ",
+    "sentiment_score": 1.0,
+    "upvotes": 628,
+    "created_at": "2025-03-03 18:51:35"
+  },
+  {
+    "post_id": "1j2wg4u",
+    "ticker": "NVDA",
+    "sentiment_score": 0.8,
+    "upvotes": 550,
+    "created_at": "2025-03-03 18:15:24"
+  },
+  {
+    "post_id": "1j2w6zs",
+    "ticker": "TSLQ",
+    "sentiment_score": 0.7,
+    "upvotes": 146,
+    "created_at": "2025-03-03 18:03:54"
+  },
+  {
+    "post_id": "1j2w30s",
+    "ticker": "SPY",
+    "sentiment_score": 0.8,
+    "upvotes": 989,
+    "created_at": "2025-03-03 17:59:06"
+  },
+  {
+    "post_id": "1j2w18b",
+    "ticker": "NVDA",
+    "sentiment_score": -0.3,
+    "upvotes": 43,
+    "created_at": "2025-03-03 17:56:48"
+  },
+  {
+    "post_id": "1j2vysi",
+    "ticker": "TSLA",
+    "sentiment_score": -0.8,
+    "upvotes": 29,
+    "created_at": "2025-03-03 17:53:43"
+  },
+  {
+    "post_id": "1j2v9fp",
+    "ticker": "SPY",
+    "sentiment_score": 0.3,
+    "upvotes": 71,
+    "created_at": "2025-03-03 17:22:54"
+  },
+  {
+    "post_id": "1j2uw3o",
+    "ticker": "SPY",
+    "sentiment_score": 0.9,
+    "upvotes": 26,
+    "created_at": "2025-03-03 17:06:56"
+  },
+  {
+    "post_id": "1j2u8dl",
+    "ticker": "NVDA",
+    "sentiment_score": -0.7,
+    "upvotes": 917,
+    "created_at": "2025-03-03 16:38:54"
+  },
+  {
+    "post_id": "1j2tzpm",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 73,
+    "created_at": "2025-03-03 16:28:53"
+  },
+  {
+    "post_id": "1j2tz81",
+    "ticker": "MSTR",
+    "sentiment_score": 0.7,
+    "upvotes": 28,
+    "created_at": "2025-03-03 16:28:19"
+  },
+  {
+    "post_id": "1j2tyjn",
+    "ticker": "SPY",
+    "sentiment_score": 0.6,
+    "upvotes": 54,
+    "created_at": "2025-03-03 16:27:34"
+  },
+  {
+    "post_id": "1j2tkxq",
+    "ticker": "NVDL",
+    "sentiment_score": 0.3,
+    "upvotes": 387,
+    "created_at": "2025-03-03 16:12:06"
+  },
+  {
+    "post_id": "1j2tkc0",
+    "ticker": "NVDA",
+    "sentiment_score": 0.8,
+    "upvotes": 145,
+    "created_at": "2025-03-03 16:11:25"
+  },
+  {
+    "post_id": "1j2tek5",
+    "ticker": "MSTR",
+    "sentiment_score": 0.9,
+    "upvotes": 57,
+    "created_at": "2025-03-03 16:04:43"
+  },
+  {
+    "post_id": "1j2t6jy",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 12,
+    "created_at": "2025-03-03 15:55:30"
+  },
+  {
+    "post_id": "1j2t2wk",
+    "ticker": "AVGO",
+    "sentiment_score": 0.5,
+    "upvotes": 17,
+    "created_at": "2025-03-03 15:51:14"
+  },
+  {
+    "post_id": "1j2sr89",
+    "ticker": "NVDA",
+    "sentiment_score": -0.5,
+    "upvotes": 258,
+    "created_at": "2025-03-03 15:37:32"
+  },
+  {
+    "post_id": "1j2sinn",
+    "ticker": "NVDA",
+    "sentiment_score": 0.5,
+    "upvotes": 40,
+    "created_at": "2025-03-03 15:27:31"
+  },
+  {
+    "post_id": "1j2s2yo",
+    "ticker": "QQQ",
+    "sentiment_score": 0.8,
+    "upvotes": 212,
+    "created_at": "2025-03-03 15:09:28"
+  },
+  {
+    "post_id": "1j2ry4j",
+    "ticker": "SPY",
+    "sentiment_score": 0.8,
+    "upvotes": 15,
+    "created_at": "2025-03-03 15:03:52"
+  },
+  {
+    "post_id": "1j2qy9i",
+    "ticker": "IOS",
+    "sentiment_score": 0.5,
+    "upvotes": 36,
+    "created_at": "2025-03-03 14:23:00"
+  },
+  {
+    "post_id": "1j2qduj",
+    "ticker": "EUAD",
+    "sentiment_score": 0.7,
+    "upvotes": 467,
+    "created_at": "2025-03-03 14:00:17"
+  },
+  {
+    "post_id": "1j2piis",
+    "ticker": "TSLA",
+    "sentiment_score": -0.6,
+    "upvotes": 132,
+    "created_at": "2025-03-03 13:25:51"
+  },
+  {
+    "post_id": "1j2nge8",
+    "ticker": "SPX",
+    "sentiment_score": 0.6,
+    "upvotes": 58,
+    "created_at": "2025-03-03 12:02:44"
+  },
+  {
+    "post_id": "1j2mkvt",
+    "ticker": "SENS",
+    "sentiment_score": 0.4,
+    "upvotes": 0,
+    "created_at": "2025-03-03 11:26:34"
+  },
+  {
+    "post_id": "1j2lfos",
+    "ticker": "DNUT",
+    "sentiment_score": 0.8,
+    "upvotes": 0,
+    "created_at": "2025-03-03 10:38:21"
+  },
+  {
+    "post_id": "1j2kn8x",
+    "ticker": "SPY",
+    "sentiment_score": 1.0,
+    "upvotes": 40,
+    "created_at": "2025-03-03 10:04:36"
+  },
+  {
+    "post_id": "1j2klep",
+    "ticker": "HOOD",
+    "sentiment_score": 1.0,
+    "upvotes": 50,
+    "created_at": "2025-03-03 10:02:14"
+  },
+  {
+    "post_id": "1j2khj4",
+    "ticker": "MSTR",
+    "sentiment_score": 0.5,
+    "upvotes": 68,
+    "created_at": "2025-03-03 09:57:47"
+  },
+  {
+    "post_id": "1j2kg5b",
+    "ticker": "HOOD",
+    "sentiment_score": 0.7,
+    "upvotes": 76,
+    "created_at": "2025-03-03 09:55:57"
+  },
+  {
+    "post_id": "1j2kbtc",
+    "ticker": "MSTR",
+    "sentiment_score": -1.0,
+    "upvotes": 75,
+    "created_at": "2025-03-03 09:50:18"
+  },
+  {
+    "post_id": "1j2gkxl",
+    "ticker": "INTC",
+    "sentiment_score": 0.5,
+    "upvotes": 428,
+    "created_at": "2025-03-03 06:27:49"
+  },
+  {
+    "post_id": "1j2ftj5",
+    "ticker": "SENS",
+    "sentiment_score": 0.7,
+    "upvotes": 44,
+    "created_at": "2025-03-03 05:35:08"
+  },
+  {
+    "post_id": "1j2fnao",
+    "ticker": "IBIT",
+    "sentiment_score": 0.5,
+    "upvotes": 54,
+    "created_at": "2025-03-03 05:23:05"
+  },
+  {
+    "post_id": "1j2cd4p",
+    "ticker": "ASTS",
+    "sentiment_score": 0.6,
+    "upvotes": 443,
+    "created_at": "2025-03-03 01:22:25"
+  },
+  {
+    "post_id": "1j294j5",
+    "ticker": "MSTY",
+    "sentiment_score": 0.3,
+    "upvotes": 38,
+    "created_at": "2025-03-02 22:11:10"
+  },
+  {
+    "post_id": "1j2763h",
+    "ticker": "BTC",
+    "sentiment_score": -0.2,
+    "upvotes": 2191,
+    "created_at": "2025-03-02 20:28:35"
+  },
+  {
+    "post_id": "1j1zu7g",
+    "ticker": "FUBO",
+    "sentiment_score": 0.5,
+    "upvotes": 263,
+    "created_at": "2025-03-02 14:58:48"
+  },
+  {
+    "post_id": "1j1yclg",
+    "ticker": "AAPL",
+    "sentiment_score": 0.8,
+    "upvotes": 969,
+    "created_at": "2025-03-02 13:56:59"
+  },
+  {
+    "post_id": "1j1mpa0",
+    "ticker": "JWN",
+    "sentiment_score": 0.5,
+    "upvotes": 8,
+    "created_at": "2025-03-02 03:58:34"
+  },
+  {
+    "post_id": "1j1gag4",
+    "ticker": "AVGO",
+    "sentiment_score": -1.0,
+    "upvotes": 344,
+    "created_at": "2025-03-01 21:18:50"
+  },
+  {
+    "post_id": "1j1frns",
+    "ticker": "SPY",
+    "sentiment_score": -0.5,
+    "upvotes": 286,
+    "created_at": "2025-03-01 20:51:04"
+  },
+  {
+    "post_id": "1j1cd39",
+    "ticker": "PLTR",
+    "sentiment_score": 0.5,
+    "upvotes": 64,
+    "created_at": "2025-03-01 18:03:21"
+  },
+  {
+    "post_id": "1j19mfe",
+    "ticker": "SMCI",
+    "sentiment_score": -0.8,
+    "upvotes": 0,
+    "created_at": "2025-03-01 15:59:21"
+  },
+  {
+    "post_id": "1j13trm",
+    "ticker": "AMD",
+    "sentiment_score": -0.7,
+    "upvotes": 373,
+    "created_at": "2025-03-01 11:49:36"
+  },
+  {
+    "post_id": "1j12o25",
+    "ticker": "SPX",
+    "sentiment_score": 0.8,
+    "upvotes": 321,
+    "created_at": "2025-03-01 11:00:07"
+  },
+  {
+    "post_id": "1j0mvfy",
+    "ticker": "IBKR",
+    "sentiment_score": 0.5,
+    "upvotes": 44,
+    "created_at": "2025-02-28 19:33:51"
+  },
+  {
+    "post_id": "1j0mmz1",
+    "ticker": "IBIT",
+    "sentiment_score": -0.5,
+    "upvotes": 128,
+    "created_at": "2025-02-28 19:22:11"
+  },
+  {
+    "post_id": "1j0llgs",
+    "ticker": "NVDA",
+    "sentiment_score": 0.7,
+    "upvotes": 118,
+    "created_at": "2025-02-28 18:32:45"
+  },
+  {
+    "post_id": "1j0kwji",
+    "ticker": "ABNB",
+    "sentiment_score": -0.6,
+    "upvotes": 76,
+    "created_at": "2025-02-28 18:00:56"
+  },
+  {
+    "post_id": "1j0jph2",
+    "ticker": "NVDA",
+    "sentiment_score": 0.6,
+    "upvotes": 23,
+    "created_at": "2025-02-28 17:07:15"
+  },
+  {
+    "post_id": "1j0jmml",
+    "ticker": "SMCI",
+    "sentiment_score": 0.6,
+    "upvotes": 35,
+    "created_at": "2025-02-28 17:03:38"
+  },
+  {
+    "post_id": "1j0j539",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 32,
+    "created_at": "2025-02-28 16:42:00"
+  },
+  {
+    "post_id": "1j0iv4x",
+    "ticker": "MSTR",
+    "sentiment_score": -0.8,
+    "upvotes": 40,
+    "created_at": "2025-02-28 16:29:44"
+  },
+  {
+    "post_id": "1j0ia3w",
+    "ticker": "SPX",
+    "sentiment_score": 0.5,
+    "upvotes": 54,
+    "created_at": "2025-02-28 16:04:23"
+  },
+  {
+    "post_id": "1j0htc1",
+    "ticker": "NVDA",
+    "sentiment_score": 0.8,
+    "upvotes": 33,
+    "created_at": "2025-02-28 15:44:34"
+  },
+  {
+    "post_id": "1j0hbov",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 109,
+    "created_at": "2025-02-28 15:23:22"
+  },
+  {
+    "post_id": "1j0gl6n",
+    "ticker": "SOUN",
+    "sentiment_score": 0.7,
+    "upvotes": 59,
+    "created_at": "2025-02-28 14:52:08"
+  },
+  {
+    "post_id": "1j0fccd",
+    "ticker": "QQQ",
+    "sentiment_score": -0.7,
+    "upvotes": 21,
+    "created_at": "2025-02-28 13:58:41"
+  },
+  {
+    "post_id": "1j0f9br",
+    "ticker": "INTC",
+    "sentiment_score": -0.5,
+    "upvotes": 1287,
+    "created_at": "2025-02-28 13:55:03"
+  },
+  {
+    "post_id": "1j0f945",
+    "ticker": "NVDA",
+    "sentiment_score": 0.8,
+    "upvotes": 38,
+    "created_at": "2025-02-28 13:54:47"
+  },
+  {
+    "post_id": "1j0e8fm",
+    "ticker": "COST",
+    "sentiment_score": 0.5,
+    "upvotes": 230,
+    "created_at": "2025-02-28 13:11:39"
+  },
+  {
+    "post_id": "1j0e6su",
+    "ticker": "DNUT",
+    "sentiment_score": 0.6,
+    "upvotes": 53,
+    "created_at": "2025-02-28 13:09:45"
+  },
+  {
+    "post_id": "1j0e40w",
+    "ticker": "GOOG",
+    "sentiment_score": 0.5,
+    "upvotes": 57,
+    "created_at": "2025-02-28 13:06:32"
+  },
+  {
+    "post_id": "1j0dos7",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 1423,
+    "created_at": "2025-02-28 12:49:07"
+  },
+  {
+    "post_id": "1j0dgdl",
+    "ticker": "RKLB",
+    "sentiment_score": -0.4,
+    "upvotes": 17,
+    "created_at": "2025-02-28 12:39:15"
+  },
+  {
+    "post_id": "1j0d2k5",
+    "ticker": "HD",
+    "sentiment_score": -0.3,
+    "upvotes": 922,
+    "created_at": "2025-02-28 12:23:16"
+  },
+  {
+    "post_id": "1j0cs2n",
+    "ticker": "BBAI",
+    "sentiment_score": 0.5,
+    "upvotes": 90,
+    "created_at": "2025-02-28 12:11:14"
+  },
+  {
+    "post_id": "1j0bc36",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 76,
+    "created_at": "2025-02-28 11:12:52"
+  },
+  {
+    "post_id": "1j0al7b",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 60,
+    "created_at": "2025-02-28 10:42:16"
+  },
+  {
+    "post_id": "1j09j68",
+    "ticker": "SPY",
+    "sentiment_score": 0.5,
+    "upvotes": 107,
+    "created_at": "2025-02-28 09:56:52"
+  }
+]

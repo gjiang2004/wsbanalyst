@@ -1,0 +1,11 @@
+Also need to install npm
+npm install vite --save-dev
+npm run dev to start frontend
+python app.py to start backend
+
+if you want
+create venv
+python3 -m venv venv
+
+on mac
+source venv/bin/activate
