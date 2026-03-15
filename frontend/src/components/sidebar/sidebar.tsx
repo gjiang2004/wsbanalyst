@@ -38,12 +38,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ onToggle }) => {
         </div> </a>
         <div className="sidebar-content">
           <ul className="sidebar-menu">
-            {/*<a href="/top-posts">
+            <a href="/top-posts">
               <li className={`sidebar-item ${activeItem === 'trending' ? 'active' : ''}`} onClick={() => handleItemClick('trending')}>
                 <span className="sidebar-icon">🚀</span>
-                {isSidebarOpen && <span className="sidebar-label">Trending</span>}
+                {isSidebarOpen && <span className="sidebar-label">Trending Tickers</span>}
               </li>
-            </a>*/}
+            </a>
             <a href="/wsb-chatbot">
               <li className={`sidebar-item ${activeItem === 'chatbot' ? 'active' : ''}`} onClick={() => handleItemClick('chatbot')}>
                 <span className="sidebar-icon">🤖</span>
