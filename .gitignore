@@ -1,0 +1,25 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+venv/
+.venv/
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Local model outputs
+wsb-mistral-finetuned/
+wsb-mistral-finetuned2/
+
+# Generated short-window scrape input
+wsb_posts_24h.json

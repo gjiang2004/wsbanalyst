@@ -1,4 +1,6 @@
 import os
+import json
+import time
 import torch
 import re
 import warnings
@@ -11,8 +13,11 @@ warnings.filterwarnings("ignore")
 import logging
 logging.getLogger("yfinance").setLevel(logging.CRITICAL)
 
-BASE_MODEL    = "mistralai/Mistral-7B-Instruct-v0.3"
-FINETUNED_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wsb-mistral-finetuned")
+BASE_MODEL = os.getenv("WSB_BASE_MODEL", "mistralai/Mistral-7B-Instruct-v0.3")
+FINETUNED_DIR = os.getenv(
+    "WSB_FINETUNED_DIR",
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "wsb-mistral-finetuned2"),
+)
 
 SYSTEM_PROMPT = (
     "You are a WallStreetBets user. "
@@ -30,6 +35,9 @@ MARKET_KEYWORDS = re.compile(
 _DOLLAR_TICKER = re.compile(r"\$([A-Za-z]{1,5})\b")
 _CAPS_WORD     = re.compile(r"\b[A-Z]{2,5}\b")
 MAX_CANDIDATES = 5
+SENTIMENT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ticker_sentiment.json")
+_STOCK_CACHE_TTL_SECONDS = int(os.getenv("STOCK_CACHE_TTL_SECONDS", "300"))
+_stock_cache: dict[str, tuple[float, dict | None]] = {}
 
 
 def search_ticker(query: str) -> str | None:
@@ -63,6 +71,10 @@ _VALID_QUOTE_TYPES = {"EQUITY", "ETF", "INDEX", "FUTURE"}
 
 
 def get_stock_data(ticker: str) -> dict | None:
+    ticker = ticker.upper()
+    cached = _stock_cache.get(ticker)
+    if cached and time.time() - cached[0] < _STOCK_CACHE_TTL_SECONDS:
+        return cached[1]
     try:
         t    = yf.Ticker(ticker)
         info = t.info
@@ -76,7 +88,7 @@ def get_stock_data(ticker: str) -> dict | None:
             ((current_price - float(hist["Close"].iloc[0])) / float(hist["Close"].iloc[0])) * 100, 2
         )
         pe = info.get("trailingPE")
-        return {
+        result = {
             "ticker":      ticker.upper(),
             "price":       current_price,
             "1mo_change":  f"{change_pct:+.2f}%",
@@ -84,10 +96,45 @@ def get_stock_data(ticker: str) -> dict | None:
             "52w_high":    info.get("fiftyTwoWeekHigh", "N/A"),
             "52w_low":     info.get("fiftyTwoWeekLow", "N/A"),
             "short_ratio": info.get("shortRatio", "N/A"),
+            "market_cap":  info.get("marketCap", "N/A"),
+            "volume":      info.get("volume", "N/A"),
         }
+        _stock_cache[ticker] = (time.time(), result)
+        return result
     except Exception:
+        _stock_cache[ticker] = (time.time(), None)
         return None
 
+
+
+def get_sentiment_context(tickers: list[str]) -> list[str]:
+    if not os.path.exists(SENTIMENT_FILE):
+        return []
+    try:
+        with open(SENTIMENT_FILE, encoding="utf-8") as f:
+            rows = json.load(f).get("tickers", [])
+    except (OSError, json.JSONDecodeError):
+        return []
+
+    wanted = {t.upper() for t in tickers}
+    by_ticker = {row.get("ticker", "").upper(): row for row in rows}
+    lines = []
+    for ticker in wanted:
+        row = by_ticker.get(ticker)
+        if not row:
+            continue
+        mentions = row.get("mentions", 0)
+        sentiment = row.get("overall_sentiment", "unknown")
+        bullish = row.get("positive_count", 0)
+        bearish = row.get("negative_count", 0)
+        neutral = row.get("neutral_count", 0)
+        score = row.get("normalized_semantic_score", "N/A")
+        lines.append(
+            f"[WSB sentiment {ticker}: {sentiment}, mentions={mentions}, "
+            f"bullish={bullish}, bearish={bearish}, neutral={neutral}, "
+            f"normalized_score={score}]"
+        )
+    return lines
 
 def get_market_summary() -> dict:
     results = {}
@@ -106,21 +153,23 @@ def get_market_summary() -> dict:
 
 def fetch_context(user_message: str) -> str:
     lines = []
-    for ticker in extract_candidates(user_message):
+    candidates = extract_candidates(user_message)
+    for ticker in candidates:
         data = get_stock_data(ticker)
         if data:
             lines.append(
                 f"[{data['ticker']}: price=${data['price']}, "
                 f"1mo={data['1mo_change']}, P/E={data['pe_ratio']}, "
                 f"52w_high=${data['52w_high']}, 52w_low=${data['52w_low']}, "
-                f"short_ratio={data['short_ratio']}]"
+                f"short_ratio={data['short_ratio']}, volume={data['volume']}]"
             )
+    lines.extend(get_sentiment_context(candidates))
     if MARKET_KEYWORDS.search(user_message):
         mkt = get_market_summary()
         if mkt:
             parts = [f"{t}: ${v['price']} ({v['day_change']})" for t, v in mkt.items()]
             lines.append("[Market: " + ", ".join(parts) + "]")
-    return "\n".join(lines)
+    return "\n".join(dict.fromkeys(lines))
 
 
 print("Loading tokenizer...")

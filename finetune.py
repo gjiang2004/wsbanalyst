@@ -10,15 +10,12 @@ from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from trl import SFTTrainer, SFTConfig
 
 # ── Config ────────────────────────────────────────────────────────────────────
-MODEL_ID       = "mistralai/Mistral-7B-Instruct-v0.3"
-DATA_FILE      = "wsb_training_data.jsonl"
-OUTPUT_DIR     = "wsb-mistral-finetuned2"
-MAX_SEQ_LENGTH = 512
-EVAL_SPLIT     = 0.05
-
-# Leave one core for the main process — tune this to your machine.
-# Run `python -c "import os; print(os.cpu_count())"` to see your core count.
-DATALOADER_WORKERS = max(1, 12 - 1)
+MODEL_ID       = os.getenv("WSB_BASE_MODEL", "mistralai/Mistral-7B-Instruct-v0.3")
+DATA_FILE      = os.getenv("WSB_TRAINING_DATA", "wsb_training_data.jsonl")
+OUTPUT_DIR     = os.getenv("WSB_FINETUNED_DIR", "wsb-mistral-finetuned2")
+MAX_SEQ_LENGTH = int(os.getenv("MAX_SEQ_LENGTH", "512"))
+EVAL_SPLIT     = float(os.getenv("EVAL_SPLIT", "0.05"))
+NUM_PROC       = max(1, (os.cpu_count() or 2) - 1)
 
 # ── TF32 — free speedup on Ampere GPUs (3090, 4090, etc.) ────────────────────
 torch.backends.cuda.matmul.allow_tf32 = True
@@ -67,23 +64,41 @@ print("Loading dataset...")
 raw = load_dataset("json", data_files=DATA_FILE, split="train")
 print(f"Total examples: {len(raw)}")
 
+# pre-tokenize across all cores before training starts so the GPU is never
+# starved by single-threaded tokenization during the training loop
+print(f"Pre-tokenizing dataset across {NUM_PROC} cores...")
+def tokenize(example):
+    return tokenizer(
+        example["text"],
+        truncation=True,
+        max_length=MAX_SEQ_LENGTH,
+        padding=False,
+    )
+
+raw = raw.map(
+    tokenize,
+    batched=True,
+    num_proc=NUM_PROC,
+    remove_columns=["text"],
+    desc="Tokenizing",
+)
+
 split      = raw.train_test_split(test_size=EVAL_SPLIT, seed=42)
 train_data = split["train"]
 eval_data  = split["test"]
 print(f"Train: {len(train_data)}  |  Eval: {len(eval_data)}")
-print(f"Dataloader workers: {DATALOADER_WORKERS}")
 
 # ── Training config ───────────────────────────────────────────────────────────
 sft_config = SFTConfig(
     output_dir=OUTPUT_DIR,
 
     # epochs / batch
-    num_train_epochs=2,
-    per_device_train_batch_size=8,      # increased from 4 — lower back to 4 if OOM
-    gradient_accumulation_steps=2,
+    num_train_epochs=float(os.getenv("NUM_TRAIN_EPOCHS", "2")),
+    per_device_train_batch_size=int(os.getenv("TRAIN_BATCH_SIZE", "8")),
+    gradient_accumulation_steps=int(os.getenv("GRADIENT_ACCUMULATION_STEPS", "2")),
 
     # optimiser
-    learning_rate=2e-4,
+    learning_rate=float(os.getenv("LEARNING_RATE", "2e-4")),
     lr_scheduler_type="cosine",
     warmup_ratio=0.03,
     optim="paged_adamw_8bit",
@@ -94,14 +109,13 @@ sft_config = SFTConfig(
 
     # sequence / packing
     max_length=MAX_SEQ_LENGTH,
-    dataset_text_field="text",
-    packing=True,                       # packs short examples to fill the full
-                                        # context window — far fewer wasted GPU
-                                        # cycles padding short WSB one-liners
+    dataset_text_field=None,            # already tokenized, skip re-processing
+    packing=True,
 
-    # CPU dataloader — preprocesses batches in parallel so GPU never starves
-    dataloader_num_workers=DATALOADER_WORKERS,
-    dataloader_pin_memory=True,         # pins CPU memory for faster GPU transfers
+    # CPU dataloader
+    dataloader_num_workers=NUM_PROC,
+    dataloader_pin_memory=True,
+    dataloader_prefetch_factor=4,       # each worker pre-queues 4 batches ahead
 
     # logging / saving
     logging_steps=20,
@@ -132,4 +146,4 @@ trainer.train()
 print("Saving model...")
 trainer.save_model(OUTPUT_DIR)
 tokenizer.save_pretrained(OUTPUT_DIR)
-print(f"✅ Model saved to {OUTPUT_DIR}")
+print(f"Done -> {OUTPUT_DIR}")

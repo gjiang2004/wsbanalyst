@@ -14,6 +14,8 @@ Sentiment: FinBERT per ticker, each ticker scored on its own ±10/5 word window.
 All sentiment inference is batched globally for GPU efficiency.
 """
 
+import argparse
+import os
 import re
 import math
 import json
@@ -27,21 +29,20 @@ from typing import Iterator
 try:
     from tqdm import tqdm
 except ImportError:
-    import subprocess, sys
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "tqdm", "-q"])
-    from tqdm import tqdm
+    def tqdm(iterable, **_kwargs):
+        return iterable
 
 # =============================================================================
 # CONFIG
 # =============================================================================
 
-INPUT_FILE     = "wsb_posts.json"
-OUTPUT_FILE    = "ticker_sentiment.json"
-FINBERT_MODEL  = "ProsusAI/finbert"   # swap to "./wsb-finbert" after fine-tuning
-BATCH_SIZE     = 4
-MIN_MENTIONS   = 3
-MIN_CONFIDENCE = 0.65
-MAX_ENGAGEMENT = 1_000               # cap for log2 engagement multiplier
+INPUT_FILE     = os.getenv("WSB_POSTS_FILE", "wsb_posts.json")
+OUTPUT_FILE    = os.getenv("TICKER_SENTIMENT_FILE", "ticker_sentiment.json")
+FINBERT_MODEL  = os.getenv("FINBERT_MODEL", "ProsusAI/finbert")
+BATCH_SIZE     = int(os.getenv("FINBERT_BATCH_SIZE", "4"))
+MIN_MENTIONS   = int(os.getenv("MIN_TICKER_MENTIONS", "3"))
+MIN_CONFIDENCE = float(os.getenv("MIN_TICKER_CONFIDENCE", "0.65"))
+MAX_ENGAGEMENT = int(os.getenv("MAX_SENTIMENT_ENGAGEMENT", "1000"))               # cap for log2 engagement multiplier
 
 # Shorter ticker = more ambiguous = stricter threshold.
 # Note: CONF_DEFAULT serves as both the per-ticker fallback AND the
@@ -73,9 +74,9 @@ MAX_SAMPLES    = 50   # max raw samples stored per ticker
 #     0.70    |  0.836  |  0.700   |  0.490   |  0.100   | gentle
 #     0.82    |  0.909  |  0.820   |  0.610   |  0.100   | very gentle
 #
-DECAY_WINDOW_DAYS = 30
-DECAY_FLOOR       = 0.10   # weight at the oldest edge (day 30)
-DECAY_MIDPOINT    = 0.55   # weight at the halfway point (day 15) — raise to flatten
+DECAY_WINDOW_DAYS = float(os.getenv("SENTIMENT_DECAY_WINDOW_DAYS", "30"))
+DECAY_FLOOR       = float(os.getenv("SENTIMENT_DECAY_FLOOR", "0.10"))
+DECAY_MIDPOINT    = float(os.getenv("SENTIMENT_DECAY_MIDPOINT", "0.55"))
 
 # =============================================================================
 # BLACKLIST
@@ -769,7 +770,23 @@ def _parse_timestamp(value) -> float | None:
 # MAIN
 # =============================================================================
 
-def run(input_file: str = INPUT_FILE, output_file: str = OUTPUT_FILE) -> None:
+def run(
+    input_file: str = INPUT_FILE,
+    output_file: str = OUTPUT_FILE,
+    finbert_model: str | None = None,
+    batch_size: int | None = None,
+    min_mentions: int | None = None,
+    min_confidence: float | None = None,
+) -> None:
+    global FINBERT_MODEL, BATCH_SIZE, MIN_MENTIONS, MIN_CONFIDENCE
+    if finbert_model is not None:
+        FINBERT_MODEL = finbert_model
+    if batch_size is not None:
+        BATCH_SIZE = batch_size
+    if min_mentions is not None:
+        MIN_MENTIONS = min_mentions
+    if min_confidence is not None:
+        MIN_CONFIDENCE = min_confidence
     print("=" * 62)
     print("  WSB Ticker + Sentiment Analyzer")
     print("=" * 62)
@@ -958,5 +975,24 @@ def run(input_file: str = INPUT_FILE, output_file: str = OUTPUT_FILE) -> None:
     print(f"\n  Saved → {output_file}")
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Analyze WSB ticker sentiment with FinBERT.")
+    parser.add_argument("--input", default=INPUT_FILE)
+    parser.add_argument("--output", default=OUTPUT_FILE)
+    parser.add_argument("--finbert-model", default=FINBERT_MODEL)
+    parser.add_argument("--batch-size", type=int, default=BATCH_SIZE)
+    parser.add_argument("--min-mentions", type=int, default=MIN_MENTIONS)
+    parser.add_argument("--min-confidence", type=float, default=MIN_CONFIDENCE)
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    run()
+    args = parse_args()
+    run(
+        input_file=args.input,
+        output_file=args.output,
+        finbert_model=args.finbert_model,
+        batch_size=args.batch_size,
+        min_mentions=args.min_mentions,
+        min_confidence=args.min_confidence,
+    )

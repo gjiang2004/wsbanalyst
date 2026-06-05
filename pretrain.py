@@ -5,12 +5,21 @@ import re
 BOT_PATTERNS = re.compile(
     r"i am a bot|this action was performed automatically|"
     r"contact the moderators|remindme!|ban bet created|ban bet lost|"
-    r"bagholder spotted|our ai tracks",
+    r"bagholder spotted|our ai tracks|"
+    r"if this bot helps|find me on github|inference station|"
+    r"wink.?lab|br.?analysis|br.?fundamentals|"
+    r"give it upvotes|not optimized for reddit|"
+    r"\[i am a bot",
     re.IGNORECASE,
 )
-URL_ONLY   = re.compile(r"^https?://\S+$")
-IMAGE_LINK = re.compile(r"preview\.redd\.it|i\.redd\.it|imgur\.com")
-EMOJI_RE   = re.compile(r"[\U00010000-\U0010ffff]")
+URL_ONLY        = re.compile(r"^https?://\S+$")
+IMAGE_LINK      = re.compile(r"preview\.redd\.it|i\.redd\.it|imgur\.com")
+EMOJI_RE        = re.compile(r"[\U00010000-\U0010ffff]")
+MARKDOWN_LINK   = re.compile(r"\[.*?\]\(https?://")
+DELETED_PATTERN = re.compile(r"^\[deleted\]$|^\[removed\]$", re.IGNORECASE)
+
+MAX_SCORE = 50_000
+MAX_DEPTH = 4
 
 
 def is_good_text(text: str, min_len: int = 20, max_len: int = 1200) -> bool:
@@ -25,6 +34,10 @@ def is_good_text(text: str, min_len: int = 20, max_len: int = 1200) -> bool:
         return False
     if IMAGE_LINK.search(t):
         return False
+    if MARKDOWN_LINK.search(t):
+        return False
+    if DELETED_PATTERN.match(t):
+        return False
     if len(EMOJI_RE.findall(t)) / max(len(t), 1) > 0.20:
         return False
     return True
@@ -32,6 +45,9 @@ def is_good_text(text: str, min_len: int = 20, max_len: int = 1200) -> bool:
 
 def clean_text(text: str) -> str:
     text = re.sub(r"https?://\S+", "", text)
+    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)  # [label](url) -> keep label
+    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", "", text)      # [](url) -> remove entirely
+    text = re.sub(r"/?u/[A-Za-z0-9_-]+", "", text)         # u/username -> remove entirely, r/subreddit kept
     text = re.sub(r"\s{2,}", " ", text)
     return text.strip()
 
@@ -70,9 +86,8 @@ def build_training_examples(posts: list) -> list[dict]:
         if not comments:
             continue
 
-        instruction   = build_instruction(title, text)
-        comment_map   = {c["comment_id"]: c for c in comments}
-        children      = build_comment_tree(comments)
+        instruction = build_instruction(title, text)
+        children    = build_comment_tree(comments)
 
         if not is_good_text(instruction):
             continue
@@ -82,46 +97,40 @@ def build_training_examples(posts: list) -> list[dict]:
             c for c in comments
             if c.get("parent_id", "").startswith("t3_")
             and is_good_text(c.get("body", ""))
+            and c.get("score", 0) <= MAX_SCORE
         ]
 
         # sort by score so the best responses come first, but keep all of them
         top_level.sort(key=lambda c: c.get("score", 0), reverse=True)
 
-        # generate one training pair per top-level comment — the model sees
+        # generate one training pair per top-level comment -- the model sees
         # the full range of how WSB responds to the same post
         for comment in top_level:
             body = clean_text(comment["body"])
             if is_good_text(body):
                 examples.append(format_pair(instruction, body))
 
-        # comment → best direct reply (one pair per parent)
-        used_parents: set[str] = set()
-        for comment in sorted(comments, key=lambda c: c.get("score", 0), reverse=True):
-            parent_id = comment.get("parent_id", "")
-            if not parent_id.startswith("t1_"):
-                continue
-            parent_comment_id = parent_id[3:]
-            if parent_comment_id in used_parents:
-                continue
-
-            parent = comment_map.get(parent_comment_id)
-            if not parent:
-                continue
-
-            q = clean_text(parent.get("body", ""))
-            if not is_good_text(q):
-                used_parents.add(parent_comment_id)
-                continue
-
-            # best reply to this parent by score
-            siblings   = children.get(parent_comment_id, [])
+        # walk reply chains up to MAX_DEPTH levels deep
+        # each node becomes a (context, best_reply) training pair
+        def walk_chain(comment_id: str, context: str, depth: int) -> None:
+            if depth > MAX_DEPTH:
+                return
+            siblings = [
+                c for c in children.get(comment_id, [])
+                if c.get("score", 0) <= MAX_SCORE
+            ]
+            if not siblings:
+                return
             best_reply = max(siblings, key=lambda c: c.get("score", 0))
-            a          = clean_text(best_reply.get("body", ""))
-
+            a = clean_text(best_reply.get("body", ""))
             if is_good_text(a):
-                examples.append(format_pair(q, a))
+                examples.append(format_pair(context, a))
+                walk_chain(best_reply["comment_id"], a, depth + 1)
 
-            used_parents.add(parent_comment_id)
+        for comment in top_level:
+            body = clean_text(comment["body"])
+            if is_good_text(body):
+                walk_chain(comment["comment_id"], body, 2)
 
     examples = list(set(examples))
     random.shuffle(examples)
@@ -145,4 +154,4 @@ if __name__ == "__main__":
         for e in examples:
             f.write(json.dumps(e) + "\n")
 
-    print("✅ Done → wsb_training_data.jsonl")
+    print("Done -> wsb_training_data.jsonl")
