@@ -16,20 +16,6 @@ def parse_date(value: str) -> datetime:
     return datetime.strptime(value, DATE_FMT)
 
 
-def next_weekday(day: datetime) -> datetime:
-    current = day + timedelta(days=1)
-    while current.weekday() >= 5:
-        current += timedelta(days=1)
-    return current
-
-
-def trading_day_on_or_after(day: datetime) -> datetime:
-    current = day
-    while current.weekday() >= 5:
-        current += timedelta(days=1)
-    return current
-
-
 def load_sentiment(path: Path) -> list[dict]:
     with path.open(encoding="utf-8") as f:
         rows = json.load(f)
@@ -65,6 +51,38 @@ def select_signals(signals: dict[str, float], max_positions: int) -> dict[str, f
     return dict(ranked)
 
 
+def extract_open_series(data: pd.DataFrame, ticker: str | None = None) -> pd.Series:
+    if data.empty:
+        return pd.Series(dtype=float)
+    if isinstance(data.columns, pd.MultiIndex):
+        if ticker and (ticker, "Open") in data.columns:
+            return data[(ticker, "Open")].dropna()
+        if ticker and ("Open", ticker) in data.columns:
+            return data[("Open", ticker)].dropna()
+        for column in data.columns:
+            if isinstance(column, tuple) and "Open" in column:
+                return data[column].dropna()
+        return pd.Series(dtype=float)
+    return data.get("Open", pd.Series(dtype=float)).dropna()
+
+
+def get_market_open_days(start: datetime, end: datetime, calendar_ticker: str = "SPY") -> list[datetime]:
+    start_s = start.strftime(DATE_FMT)
+    end_s = (end + timedelta(days=1)).strftime(DATE_FMT)
+    data = yf.download(
+        calendar_ticker,
+        start=start_s,
+        end=end_s,
+        progress=False,
+        auto_adjust=False,
+        threads=False,
+    )
+    if data.empty:
+        return []
+    open_series = extract_open_series(data, calendar_ticker)
+    return [datetime.strptime(index.strftime(DATE_FMT), DATE_FMT) for index in open_series.index]
+
+
 def get_open_prices(tickers: list[str], start: datetime, end: datetime) -> dict[str, dict[str, float]]:
     if not tickers:
         return {}
@@ -85,13 +103,11 @@ def get_open_prices(tickers: list[str], start: datetime, end: datetime) -> dict[
 
     if isinstance(data.columns, pd.MultiIndex):
         for ticker in tickers:
-            if ticker not in data.columns.get_level_values(0):
-                continue
-            series = data[(ticker, "Open")].dropna()
+            series = extract_open_series(data, ticker)
             for idx, value in series.items():
                 prices[ticker][idx.strftime(DATE_FMT)] = float(value)
     else:
-        series = data.get("Open", pd.Series(dtype=float)).dropna()
+        series = extract_open_series(data, tickers[0])
         ticker = tickers[0]
         for idx, value in series.items():
             prices[ticker][idx.strftime(DATE_FMT)] = float(value)
@@ -102,9 +118,46 @@ def build_trade_days(rows: list[dict], window_days: int) -> list[datetime]:
     raw_days = sorted({row["day"] for row in rows})
     if not raw_days:
         return []
-    first_trade_day = trading_day_on_or_after(raw_days[0] + timedelta(days=window_days))
-    trade_days = sorted({trading_day_on_or_after(day) for day in raw_days})
-    return [day for day in trade_days if day >= first_trade_day and day.date() < datetime.now().date()]
+    first_candidate = raw_days[0] + timedelta(days=window_days)
+    last_candidate = min(raw_days[-1], datetime.now())
+    if first_candidate > last_candidate:
+        return []
+    return get_market_open_days(first_candidate, last_candidate)
+
+
+def build_entries(
+    signals: dict[str, float],
+    prices: dict[str, dict[str, float]],
+    day_s: str,
+    account_value: float,
+    next_day_s: str | None = None,
+) -> list[dict]:
+    usable = {
+        ticker: signal
+        for ticker, signal in signals.items()
+        if prices.get(ticker, {}).get(day_s)
+        and (next_day_s is None or prices.get(ticker, {}).get(next_day_s))
+    }
+    total_abs_signal = sum(abs(value) for value in usable.values())
+    if total_abs_signal <= 0 or account_value <= 0:
+        return []
+
+    entries = []
+    for ticker, signal in usable.items():
+        entry_price = prices[ticker][day_s]
+        allocation = account_value * (abs(signal) / total_abs_signal)
+        side = "long" if signal > 0 else "short"
+        entries.append({
+            "ticker": ticker,
+            "side": side,
+            "entry_date": day_s,
+            "entry_price": entry_price,
+            "shares": allocation / entry_price,
+            "notional": allocation,
+            "sentiment": signal,
+            "weight": allocation / account_value,
+        })
+    return entries
 
 
 def position_pnl(position: dict, exit_price: float) -> float:
@@ -126,7 +179,7 @@ def simulate(
 
     trade_days = build_trade_days(rows, window_days)
     if len(trade_days) < 2:
-        raise SystemExit("Need at least two trading days to simulate open-to-open returns")
+        raise SystemExit("Need at least two market-open days to simulate open-to-open returns")
 
     all_signals_by_day = {
         day.strftime(DATE_FMT): select_signals(rolling_signals(rows, day, window_days), max_positions)
@@ -171,33 +224,8 @@ def simulate(
         total_profit = account_value - initial_capital
 
         signals = all_signals_by_day.get(day_s, {})
-        usable = {
-            ticker: signal
-            for ticker, signal in signals.items()
-            if prices.get(ticker, {}).get(day_s) and prices.get(ticker, {}).get(next_day_s)
-        }
-        total_abs_signal = sum(abs(value) for value in usable.values())
-
-        entries = []
-        new_positions = []
-        if total_abs_signal > 0 and account_value > 0:
-            for ticker, signal in usable.items():
-                entry_price = prices[ticker][day_s]
-                allocation = account_value * (abs(signal) / total_abs_signal)
-                shares = allocation / entry_price
-                side = "long" if signal > 0 else "short"
-                position = {
-                    "ticker": ticker,
-                    "side": side,
-                    "entry_date": day_s,
-                    "entry_price": entry_price,
-                    "shares": shares,
-                    "notional": allocation,
-                    "sentiment": signal,
-                    "weight": allocation / account_value,
-                }
-                entries.append(position)
-                new_positions.append(position)
+        entries = build_entries(signals, prices, day_s, account_value, next_day_s)
+        new_positions = entries
 
         daily_record = {
             "date": day_s,
@@ -244,16 +272,21 @@ def simulate(
     account_value += final_pnl
     total_profit = account_value - initial_capital
 
+    planned_entries = build_entries(all_signals_by_day.get(final_day_s, {}), prices, final_day_s, account_value)
     final_record = {
         "date": final_day_s,
         "starting_value": account_value - final_pnl,
         "realized_pnl": final_pnl,
         "ending_value_before_rebalance": account_value,
-        "allocated_value": 0.0,
-        "cash_after_rebalance": account_value,
+        "allocated_value": sum(entry["notional"] for entry in planned_entries),
+        "cash_after_rebalance": account_value - sum(entry["notional"] for entry in planned_entries),
         "exits": final_exits,
-        "entries": [],
-        "positions": {"long": {}, "short": {}},
+        "entries": planned_entries,
+        "positions": {
+            "long": {p["ticker"]: p for p in planned_entries if p["side"] == "long"},
+            "short": {p["ticker"]: p for p in planned_entries if p["side"] == "short"},
+        },
+        "planned_only": True,
         "today_profit": final_pnl,
         "total_profit": total_profit,
         "total_investment": account_value,
@@ -278,6 +311,7 @@ def simulate(
             "max_positions": max_positions,
             "sentiment_file": str(sentiment_file),
             "warmup_days": window_days,
+            "trading_calendar": "SPY market-open dates",
         },
         "daily_data": daily_data,
         "portfolio_statistics": portfolio_statistics,

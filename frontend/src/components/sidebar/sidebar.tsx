@@ -1,71 +1,68 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { BarChart3, Bot, ChevronLeft, ChevronRight, Home, LineChart } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 import './sidebar.css';
 import wsbLogo from '../../assets/WSB.png';
+import { pageHome, pageTopPosts, pageTrading, pageWsbChatbot } from '../../router/router';
 
 interface SidebarProps {
   onToggle: (state: boolean) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ onToggle }) => {
+const navItems = [
+  { to: pageHome, label: 'Home', icon: Home, end: true },
+  { to: pageTopPosts, label: 'Top Posts', icon: BarChart3 },
+  { to: pageWsbChatbot, label: 'WSB Chatbot', icon: Bot },
+  { to: pageTrading, label: 'Simulation', icon: LineChart },
+];
+
+export const Sidebar = ({ onToggle }: SidebarProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activeItem, setActiveItem] = useState<string | null>(null);
 
-  const toggleSidebar = () => {
-    const newState = !isSidebarOpen;
-    setIsSidebarOpen(newState);
-    // Pass the new state back to parent
-    if (onToggle) {
-      onToggle(newState);
-    }
-  };
-
-  // Initialize parent with sidebar state
   useEffect(() => {
-    if (onToggle) {
-      onToggle(isSidebarOpen);
-    }
+    onToggle(isSidebarOpen);
   }, [isSidebarOpen, onToggle]);
 
-  const handleItemClick = (item: string) => {
-    setActiveItem(item);
+  const toggleSidebar = () => {
+    setIsSidebarOpen((current) => !current);
   };
 
   return (
-    <>
-      <div className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
-        <a href ="/"> <div className="sidebar-header">
-          <img src={wsbLogo} alt="wsb logo" />
-        </div> </a>
-        <div className="sidebar-content">
-          <ul className="sidebar-menu">
-            <a href="/top-posts">
-              <li className={`sidebar-item ${activeItem === 'trending' ? 'active' : ''}`} onClick={() => handleItemClick('trending')}>
-                <span className="sidebar-icon">🚀</span>
-                {isSidebarOpen && <span className="sidebar-label">Trending Tickers</span>}
-              </li>
-            </a>
-            <a href="/wsb-chatbot">
-              <li className={`sidebar-item ${activeItem === 'chatbot' ? 'active' : ''}`} onClick={() => handleItemClick('chatbot')}>
-                <span className="sidebar-icon">🤖</span>
-                {isSidebarOpen && <span className="sidebar-label">WSB Chatbot</span>}
-              </li>
-            </a>
-            <a href="/trading">
-              <li className={`sidebar-item ${activeItem === 'simulation' ? 'active' : ''}`} onClick={() => handleItemClick('simulation')}>
-                <span className="sidebar-icon">📈</span>
-                {isSidebarOpen && <span className="sidebar-label">Simulation</span>}
-              </li>
-            </a>
-          </ul>
-        </div>
+    <aside className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`} aria-label="Primary navigation">
+      <NavLink to={pageHome} className="sidebar-brand" aria-label="WSB Analyst home">
+        <img src={wsbLogo} alt="WSB logo" />
+        {isSidebarOpen && (
+          <span>
+            <strong>WSB</strong>
+            <small>Analyst</small>
+          </span>
+        )}
+      </NavLink>
 
-        <div className="sidebar-toggle-container">
-          <button className="sidebar-toggle" onClick={toggleSidebar}>
-            {isSidebarOpen ? '◀' : '▶'}
-          </button>
-        </div>
-      </div>
-    </>
+      <nav className="sidebar-content">
+        {navItems.map(({ to, label, icon: Icon, end }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
+            title={isSidebarOpen ? undefined : label}
+          >
+            <Icon className="sidebar-icon" size={20} strokeWidth={2.2} aria-hidden="true" />
+            {isSidebarOpen && <span className="sidebar-label">{label}</span>}
+          </NavLink>
+        ))}
+      </nav>
+
+      <button
+        className="sidebar-toggle"
+        type="button"
+        onClick={toggleSidebar}
+        aria-label={isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+      >
+        {isSidebarOpen ? <ChevronLeft size={19} /> : <ChevronRight size={19} />}
+      </button>
+    </aside>
   );
 };
 

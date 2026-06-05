@@ -43,6 +43,7 @@
 }
 
 .stat-card,
+.simulation-rule-card,
 .simulation-chart-card,
 .day-detail-card,
 .trade-panel {
@@ -76,10 +77,75 @@
 .positive { color: #35d98a !important; }
 .negative { color: #ff5f6d !important; }
 
+.simulation-rule-card,
 .simulation-chart-card,
 .day-detail-card {
   padding: 1rem;
   min-width: 0;
+}
+
+
+.simulation-rule-card {
+  padding: 0.95rem 1rem;
+}
+
+.simulation-rule-card strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 0.95rem;
+}
+
+.simulation-rule-card p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.62);
+  line-height: 1.5;
+  font-size: 0.93rem;
+}
+
+.closed-trades-panel {
+  align-self: start;
+}
+
+.closed-trades-toggle {
+  width: 100%;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(0, 0, 0, 0.16);
+  cursor: pointer;
+}
+
+.closed-trades-toggle:hover,
+.closed-trades-toggle:focus-visible {
+  border-color: rgba(94, 234, 212, 0.28);
+  background: rgba(94, 234, 212, 0.08);
+  outline: none;
+}
+
+.closed-trades-toggle span {
+  font-weight: 800;
+}
+
+.closed-trades-toggle strong {
+  min-width: 2rem;
+  min-height: 1.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #bffbf2;
+  background: rgba(94, 234, 212, 0.12);
+}
+
+.closed-trades-panel .trade-list,
+.closed-trades-panel .trade-empty {
+  margin-top: 0.75rem;
 }
 
 .chart-title-row,

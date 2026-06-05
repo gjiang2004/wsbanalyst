@@ -51,6 +51,7 @@ interface DailyRecord {
   exits?: Trade[];
   entries?: Trade[];
   trades?: Trade[];
+  planned_only?: boolean;
 }
 
 interface SimulationData {
@@ -113,6 +114,7 @@ const Graph = () => {
   }, []);
 
   const [selectedDate, setSelectedDate] = useState(() => chartData.length ? chartData[chartData.length - 1].date : "");
+  const [showClosedTrades, setShowClosedTrades] = useState(false);
   const selectedPoint = chartData.find((point) => point.date === selectedDate) || chartData[chartData.length - 1];
   const selectedDay = selectedPoint ? dailyByDate.get(selectedPoint.date) : undefined;
   const chartWidth = Math.max(820, chartData.length * 54);
@@ -139,52 +141,51 @@ const Graph = () => {
     if (state?.activeLabel) setSelectedDate(state.activeLabel);
   };
 
-  const renderTrades = (title: string, trades: Trade[] | undefined, fallback: "entry" | "exit") => {
+  const renderTradeRows = (title: string, trades: Trade[] | undefined, fallback: "entry" | "exit") => {
     if (!trades?.length) {
-      return (
-        <section className="trade-panel">
-          <h3>{title}</h3>
-          <p className="trade-empty">No trades recorded for this side of the rebalance.</p>
-        </section>
-      );
+      return <p className="trade-empty">No trades recorded for this side of the rebalance.</p>;
     }
 
     return (
-      <section className="trade-panel">
-        <h3>{title}</h3>
-        <div className="trade-list">
-          {trades.map((trade, index) => (
-            <article className="trade-row" key={`${title}-${trade.ticker || index}-${index}`}>
+      <div className="trade-list">
+        {trades.map((trade, index) => (
+          <article className="trade-row" key={`${title}-${trade.ticker || index}-${index}`}>
+            <div>
+              <strong>{trade.ticker || "Unknown"}</strong>
+              <span className={tradeLabel(trade, fallback).toLowerCase()}>{tradeLabel(trade, fallback)}</span>
+            </div>
+            <dl>
               <div>
-                <strong>{trade.ticker || "Unknown"}</strong>
-                <span className={tradeLabel(trade, fallback).toLowerCase()}>{tradeLabel(trade, fallback)}</span>
+                <dt>Notional</dt>
+                <dd>{currency(trade.notional ?? Math.abs(trade.cost || 0))}</dd>
               </div>
-              <dl>
-                <div>
-                  <dt>Notional</dt>
-                  <dd>{currency(trade.notional ?? Math.abs(trade.cost || 0))}</dd>
-                </div>
-                <div>
-                  <dt>Shares</dt>
-                  <dd>{number(trade.shares, 4)}</dd>
-                </div>
-                <div>
-                  <dt>{fallback === "exit" ? "Exit" : "Entry"}</dt>
-                  <dd>{currency(fallback === "exit" ? trade.exit_price : trade.entry_price ?? trade.price)}</dd>
-                </div>
-                <div>
-                  <dt>{fallback === "exit" ? "P&L" : "Signal"}</dt>
-                  <dd className={(fallback === "exit" ? trade.pnl || 0 : trade.sentiment || 0) >= 0 ? "positive" : "negative"}>
-                    {fallback === "exit" ? currency(trade.pnl) : number(trade.sentiment, 4)}
-                  </dd>
-                </div>
-              </dl>
-            </article>
-          ))}
-        </div>
-      </section>
+              <div>
+                <dt>Shares</dt>
+                <dd>{number(trade.shares, 4)}</dd>
+              </div>
+              <div>
+                <dt>{fallback === "exit" ? "Exit" : "Entry"}</dt>
+                <dd>{currency(fallback === "exit" ? trade.exit_price : trade.entry_price ?? trade.price)}</dd>
+              </div>
+              <div>
+                <dt>{fallback === "exit" ? "P&L" : "Signal"}</dt>
+                <dd className={(fallback === "exit" ? trade.pnl || 0 : trade.sentiment || 0) >= 0 ? "positive" : "negative"}>
+                  {fallback === "exit" ? currency(trade.pnl) : number(trade.sentiment, 4)}
+                </dd>
+              </div>
+            </dl>
+          </article>
+        ))}
+      </div>
     );
   };
+
+  const renderTrades = (title: string, trades: Trade[] | undefined, fallback: "entry" | "exit") => (
+    <section className="trade-panel">
+      <h3>{title}</h3>
+      {renderTradeRows(title, trades, fallback)}
+    </section>
+  );
 
   if (!chartData.length) {
     return (
@@ -201,7 +202,7 @@ const Graph = () => {
       <div className="graph-header">
         <div>
           <h1>Simulation</h1>
-          <p>Open-to-open sentiment rebalance using a rolling {simulation.meta?.rolling_sentiment_window_days || 30}-day WSB signal.</p>
+          <p>Open-to-open sentiment rebalance using a rolling {simulation.meta?.rolling_sentiment_window_days || 14}-day WSB signal on market-open days only.</p>
         </div>
       </div>
 
@@ -223,6 +224,11 @@ const Graph = () => {
           <p>{chartData.length}</p>
         </div>
       </div>
+
+      <section className="simulation-rule-card">
+        <strong>Trade selection</strong>
+        <p>Each market-open day, the simulator ranks tickers by absolute rolling sentiment strength, keeps up to {simulation.meta?.max_positions || 25} tickers with usable open prices for both entry and next-session exit, and allocates the full account value across those trades by signal weight.</p>
+      </section>
 
       <section className="simulation-chart-card">
         <div className="chart-title-row">
@@ -293,7 +299,7 @@ const Graph = () => {
         <div className="day-detail-header">
           <div>
             <h2>{selectedPoint ? dayjs(selectedPoint.date).format("MMMM D, YYYY") : "Selected Day"}</h2>
-            <p>{selectedDay?.next_trade_date ? `Positions opened for next market open: ${selectedDay.next_trade_date}` : "Final liquidation or legacy simulation record."}</p>
+            <p>{selectedDay?.next_trade_date ? `Positions opened for next market open: ${selectedDay.next_trade_date}` : selectedDay?.planned_only ? "Planned current-day entries. Results are unknown until the next market-open exit." : "Final liquidation or legacy simulation record."}</p>
           </div>
           <div className="day-value">
             <span>Account</span>
@@ -321,8 +327,19 @@ const Graph = () => {
         </div>
 
         <div className="trade-grid">
-          {renderTrades("Closed at 9:30", selectedDay?.exits, "exit")}
-          {renderTrades("Opened at 9:30", selectedDay?.entries || selectedDay?.trades, "entry")}
+          <section className="trade-panel closed-trades-panel">
+            <button
+              className="closed-trades-toggle"
+              type="button"
+              onClick={() => setShowClosedTrades((current) => !current)}
+              aria-expanded={showClosedTrades}
+            >
+              <span>Closed at 9:30</span>
+              <strong>{selectedDay?.exits?.length || 0}</strong>
+            </button>
+            {showClosedTrades && renderTradeRows("Closed Trades", selectedDay?.exits, "exit")}
+          </section>
+          {renderTrades(selectedDay?.planned_only ? "Planned for 9:30" : "Opened at 9:30", selectedDay?.entries || selectedDay?.trades, "entry")}
         </div>
       </section>
     </div>
