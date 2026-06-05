@@ -4,6 +4,25 @@ import os
 import time
 from datetime import datetime, timedelta
 
+BOT_AUTHORS = {"automoderator", "visualmod", "wsbmod", "market_sentiment"}
+BOT_TEXT_PATTERNS = (
+    "i am a bot",
+    "this action was performed automatically",
+    "contact the moderators",
+    "ban bet created",
+    "ban bet lost",
+)
+
+
+def _author_name(obj) -> str:
+    author = getattr(obj, "author", None)
+    return str(author).lower() if author else ""
+
+
+def _looks_like_bot(author: str, text: str) -> bool:
+    lowered = (text or "").lower()
+    return author.lower() in BOT_AUTHORS or any(pattern in lowered for pattern in BOT_TEXT_PATTERNS)
+
 
 
 def get_reddit_client():
@@ -39,9 +58,15 @@ def get_all_comments(submission):
 
     comments = []
     for comment in submission.comments.list():
-        if hasattr(comment, "body") and comment.body not in ("[deleted]", "[removed]"):
+        author = _author_name(comment)
+        if (
+            hasattr(comment, "body")
+            and comment.body not in ("[deleted]", "[removed]")
+            and not _looks_like_bot(author, comment.body)
+        ):
             comments.append({
                 "body": comment.body,
+                "author": author,
                 "score": comment.score,
                 "created_at": datetime.fromtimestamp(comment.created_utc).strftime("%Y-%m-%d %H:%M:%S"),
                 "comment_id": comment.id,
@@ -51,6 +76,125 @@ def get_all_comments(submission):
 
     comments.sort(key=lambda x: x["score"], reverse=True)
     return comments
+
+
+def _submission_to_post(submission, include_comments=True):
+    author = _author_name(submission)
+    post_text = f"{submission.title}\n{submission.selftext or ''}"
+    if submission.selftext in ("[deleted]", "[removed]") or _looks_like_bot(author, post_text):
+        return None
+
+    return {
+        "id": submission.id,
+        "author": author,
+        "title": submission.title,
+        "text": submission.selftext,
+        "flair": submission.link_flair_text,
+        "upvotes": submission.score,
+        "upvote_ratio": submission.upvote_ratio,
+        "num_comments": submission.num_comments,
+        "awards": submission.total_awards_received,
+        "comments": get_all_comments(submission) if include_comments else [],
+        "created_at": datetime.fromtimestamp(submission.created_utc).strftime("%Y-%m-%d %H:%M:%S"),
+        "permalink": f"https://www.reddit.com{submission.permalink}",
+    }
+
+
+def _comment_to_dict(comment):
+    author = _author_name(comment)
+    body = getattr(comment, "body", "") or ""
+    if body in ("[deleted]", "[removed]") or _looks_like_bot(author, body):
+        return None
+    return {
+        "body": body,
+        "author": author,
+        "score": comment.score,
+        "created_at": datetime.fromtimestamp(comment.created_utc).strftime("%Y-%m-%d %H:%M:%S"),
+        "comment_id": comment.id,
+        "parent_id": comment.parent_id,
+        "awards": getattr(comment, "total_awards_received", 0),
+    }
+
+
+def get_recent_wsb_posts(subreddit="wallstreetbets", since_ts=None, lookback_minutes=30, request_delay=0.0):
+    reddit = get_reddit_client()
+    cutoff = since_ts if since_ts is not None else (datetime.now() - timedelta(minutes=lookback_minutes)).timestamp()
+    posts = []
+    for submission in reddit.subreddit(subreddit).new(limit=None):
+        if submission.created_utc < cutoff:
+            break
+        post = _submission_to_post(submission, include_comments=True)
+        if post:
+            posts.append(post)
+        if request_delay > 0:
+            time.sleep(request_delay)
+    return posts
+
+
+def get_recent_wsb_comments(subreddit="wallstreetbets", since_ts=None, lookback_minutes=30, request_delay=0.0):
+    reddit = get_reddit_client()
+    cutoff = since_ts if since_ts is not None else (datetime.now() - timedelta(minutes=lookback_minutes)).timestamp()
+    comments_by_post = {}
+    parent_posts = {}
+
+    for comment in reddit.subreddit(subreddit).comments(limit=None):
+        if comment.created_utc < cutoff:
+            break
+        comment_data = _comment_to_dict(comment)
+        if not comment_data:
+            continue
+        try:
+            submission = comment.submission
+            post_id = submission.id
+            comments_by_post.setdefault(post_id, []).append(comment_data)
+            if post_id not in parent_posts:
+                parent = _submission_to_post(submission, include_comments=False)
+                if parent:
+                    parent_posts[post_id] = parent
+        except Exception:
+            continue
+        if request_delay > 0:
+            time.sleep(request_delay)
+
+    posts = []
+    for post_id, comments in comments_by_post.items():
+        post = parent_posts.get(post_id)
+        if not post:
+            continue
+        post["comments"] = comments
+        posts.append(post)
+    return posts
+
+
+def refresh_post_scores(posts, subreddit="wallstreetbets", active_days=3.0, max_posts=150, request_delay=0.0):
+    reddit = get_reddit_client()
+    cutoff = datetime.now() - timedelta(days=active_days)
+    refreshed = 0
+    candidates = []
+    for post in posts:
+        created_text = post.get("created_at") or post.get("created_utc")
+        try:
+            created = datetime.strptime(str(created_text), "%Y-%m-%d %H:%M:%S")
+        except (TypeError, ValueError):
+            continue
+        if created >= cutoff and post.get("id"):
+            candidates.append((created, post))
+    candidates.sort(key=lambda item: item[0], reverse=True)
+    refresh_candidates = candidates if max_posts <= 0 else candidates[:max_posts]
+    for _, post in refresh_candidates:
+        post_id = post.get("id")
+        try:
+            submission = reddit.submission(id=post_id)
+            post["upvotes"] = submission.score
+            post["upvote_ratio"] = submission.upvote_ratio
+            post["num_comments"] = submission.num_comments
+            post["awards"] = submission.total_awards_received
+            refreshed += 1
+        except Exception:
+            continue
+        if request_delay > 0:
+            time.sleep(request_delay)
+    return refreshed
 
 
 def get_wsb_posts(subreddit="wallstreetbets", days=30.0, request_delay=0.6):
@@ -80,24 +224,10 @@ def get_wsb_posts(subreddit="wallstreetbets", days=30.0, request_delay=0.6):
             if pbar:
                 pbar.set_postfix(day=post_date, posts=len(posts), refresh=False)
 
-        if submission.selftext in ("[deleted]", "[removed]"):
+        post = _submission_to_post(submission, include_comments=True)
+        if not post:
             continue
-
-        comments = get_all_comments(submission)
-
-        posts.append({
-            "id": submission.id,
-            "title": submission.title,
-            "text": submission.selftext,
-            "flair": submission.link_flair_text,
-            "upvotes": submission.score,
-            "upvote_ratio": submission.upvote_ratio,
-            "num_comments": submission.num_comments,
-            "awards": submission.total_awards_received,
-            "comments": comments,
-            "created_at": datetime.fromtimestamp(submission.created_utc).strftime("%Y-%m-%d %H:%M:%S"),
-            "permalink": f"https://www.reddit.com{submission.permalink}",
-        })
+        posts.append(post)
 
         if request_delay > 0:
             time.sleep(request_delay)

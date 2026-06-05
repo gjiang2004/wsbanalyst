@@ -105,12 +105,42 @@ def _bearish_score(t: dict) -> tuple[float, int]:
     return (-float(t.get("semantic_score", 0)), int(t.get("mentions", 0)))
 
 
+def _scaled_sentiment_split(t: dict) -> tuple[float, float, float]:
+    n = int(t.get("mentions", 0))
+    if n <= 0:
+        return 0.0, 0.0, 0.0
+
+    positive = int(t.get("positive_count", 0))
+    negative = int(t.get("negative_count", 0))
+    directional = positive + negative
+    if directional <= 0:
+        return 0.0, 0.0, 100.0
+
+    raw_directional_share = directional / n
+    scaled_directional_share = raw_directional_share ** 0.5
+    scaled_directional_pct = scaled_directional_share * 100
+
+    positive_share = positive / directional
+    bullish_pct = round(scaled_directional_pct * positive_share, 1)
+    bearish_pct = round(scaled_directional_pct * (1 - positive_share), 1)
+    neutral_pct = round(max(0.0, 100 - bullish_pct - bearish_pct), 1)
+    return bullish_pct, bearish_pct, neutral_pct
+
+
+def _raw_sentiment_split(t: dict) -> tuple[float, float, float]:
+    n = int(t.get("mentions", 0))
+    if n <= 0:
+        return 0.0, 0.0, 0.0
+    bullish_pct = round(int(t.get("positive_count", 0)) / n * 100, 1)
+    bearish_pct = round(int(t.get("negative_count", 0)) / n * 100, 1)
+    neutral_pct = round(max(0.0, 100 - bullish_pct - bearish_pct), 1)
+    return bullish_pct, bearish_pct, neutral_pct
+
+
 def _format_ticker(t: dict, rank: int, score: float) -> dict:
     n = t["mentions"]
-    # True three-way split — these three always sum to 100%
-    bullish_pct = round(t["positive_count"] / n * 100, 1) if n else 0
-    bearish_pct = round(t["negative_count"] / n * 100, 1) if n else 0
-    neutral_pct = round(100 - bullish_pct - bearish_pct, 1)
+    bullish_pct, bearish_pct, neutral_pct = _scaled_sentiment_split(t)
+    raw_bullish_pct, raw_bearish_pct, raw_neutral_pct = _raw_sentiment_split(t)
 
     return {
         "rank":             rank,
@@ -121,6 +151,9 @@ def _format_ticker(t: dict, rank: int, score: float) -> dict:
         "bullish_pct":      bullish_pct,
         "bearish_pct":      bearish_pct,
         "neutral_pct":      neutral_pct,
+        "raw_bullish_pct":  raw_bullish_pct,
+        "raw_bearish_pct":  raw_bearish_pct,
+        "raw_neutral_pct":  raw_neutral_pct,
         "normalized_score": round(t["normalized_semantic_score"], 4),
         "score":            round(score, 4),
     }
@@ -130,13 +163,75 @@ def _format_ticker(t: dict, rank: int, score: float) -> dict:
 async def top_posts():
     tickers = _load_tickers()
 
-    trending = sorted(tickers, key=lambda t: t["mentions"],  reverse=True)[:TOP_N]
-    bullish  = sorted(tickers, key=_bullish_score,           reverse=True)[:TOP_N]
-    bearish  = sorted(tickers, key=_bearish_score,           reverse=True)[:TOP_N]
+    trending = sorted(tickers, key=lambda t: int(t.get("mentions", 0)), reverse=True)[:TOP_N]
+    bullish = sorted(
+        (t for t in tickers if t.get("overall_sentiment") == "bullish"),
+        key=_bullish_score,
+        reverse=True,
+    )[:TOP_N]
+    bearish = sorted(
+        (t for t in tickers if t.get("overall_sentiment") == "bearish"),
+        key=_bearish_score,
+        reverse=True,
+    )[:TOP_N]
 
     return {
-        "trending": [_format_ticker(t, t["mentions"])     for t in trending],
-        "bullish":  [_format_ticker(t, _bullish_score(t)) for t in bullish],
-        "bearish":  [_format_ticker(t, _bearish_score(t)) for t in bearish],
-        "meta":     {"total_tickers": len(tickers)},
+        "trending": [
+            _format_ticker(t, i + 1, float(t.get("mentions", 0)))
+            for i, t in enumerate(trending)
+        ],
+        "bullish": [
+            _format_ticker(t, i + 1, _bullish_score(t)[0])
+            for i, t in enumerate(bullish)
+        ],
+        "bearish": [
+            _format_ticker(t, i + 1, -_bearish_score(t)[0])
+            for i, t in enumerate(bearish)
+        ],
+        "meta": {"total_tickers": len(tickers)},
+    }
+
+
+@app.get("/ticker/{ticker}")
+async def ticker_detail(ticker: str):
+    symbol = ticker.upper().strip()
+    tickers = _load_tickers()
+    row = next((item for item in tickers if str(item.get("ticker", "")).upper() == symbol), None)
+    if row is None:
+        raise HTTPException(status_code=404, detail=f"Ticker {symbol} not found")
+
+    def sample_payload(sample: dict) -> dict:
+        text = str(sample.get("text") or "")
+        return {
+            "source": sample.get("source", "unknown"),
+            "post_id": sample.get("post_id"),
+            "comment_id": sample.get("comment_id"),
+            "permalink": sample.get("permalink"),
+            "text": text,
+            "upvotes": sample.get("upvotes", 0),
+            "awards": sample.get("awards", 0),
+            "created_utc": sample.get("created_utc"),
+            "sentiment": sample.get("sentiment"),
+            "sentiment_score": sample.get("sentiment_score"),
+            "semantic_value": sample.get("semantic_value"),
+            "confidence": sample.get("confidence"),
+            "method": sample.get("method"),
+        }
+
+    bullish = [sample_payload(s) for s in row.get("top_bullish_posts", [])]
+    bearish = [sample_payload(s) for s in row.get("top_bearish_posts", [])]
+
+    return {
+        "ticker": symbol,
+        "company": _company_name(row),
+        "summary": _format_ticker(row, 1, float(row.get("semantic_score", 0))),
+        "semantic_score": row.get("semantic_score", 0),
+        "positive_score": row.get("positive_score", 0),
+        "negative_score": row.get("negative_score", 0),
+        "avg_confidence": row.get("avg_confidence", 0),
+        "detection_methods": row.get("detection_methods", {}),
+        "positive_samples": bullish,
+        "negative_samples": bearish,
+        "has_positive_sample": len(bullish) > 0,
+        "has_negative_sample": len(bearish) > 0,
     }

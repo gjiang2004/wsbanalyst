@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import './topposts.css';
 import Sidebar from '../sidebar/sidebar';
 import { TrendingUp, TrendingDown, Activity, RefreshCw, AlertCircle, ChevronsUpDown, ChevronDown, ChevronUp } from 'lucide-react';
@@ -118,7 +119,7 @@ function TickerCell({ ticker, company, sentiment }: {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <span className={`tp-ticker tp-ticker--${sentiment}`}>{ticker}</span>
+      <Link className={`tp-ticker tp-ticker--${sentiment}`} to={`/ticker/${ticker}`}>{ticker}</Link>
       {company && hovered && <div className="tp-tooltip">{company}</div>}
     </div>
   );

@@ -1,53 +1,44 @@
 .trading-container {
-    position: relative;
-    width: 100%; /* Use the full width instead of reducing by sidebar width */
-    margin-left: 150px; /* Keep the margin for the sidebar */
-    background-color: var(--bg-dark);
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow: hidden; /* Prevent scrolling */
-    transition: margin-left 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-    border-radius: 0;
-    box-shadow: none;
-    height: 100vh;
-  }
-  
+  min-height: 100vh;
+  margin-left: 250px;
+  background: #0b1020;
+  transition: margin-left 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  overflow-x: hidden;
+}
+
+.trading-container.sidebar-closed {
+  margin-left: 80px;
+}
+
+.trading-content {
+  min-height: 100vh;
+  padding: clamp(1rem, 3vw, 2rem);
+  overflow-x: auto;
+}
+
+.trading-content > * {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .trading-container,
   .trading-container.sidebar-closed {
     margin-left: 80px;
   }
-  
+
   .trading-content {
-    flex: 1;
-    display: flex; /* Changed to flex to fill space better */
-    margin-left: -20px; /* Remove the extra margin */
-    transition: margin-left 0.3s ease;
-    padding: 20px;
-    padding-left: 0px;
-    
-    overflow: hidden; /* Prevent scrolling */
-    width: calc(100% - 20px); /* Account for padding */
-    height: calc(100% - 40px); /* Account for padding */
+    padding: 1rem;
   }
-  
-  .trading-content.sidebar-closed {
-    margin-left: 0;
+}
+
+@media (max-width: 520px) {
+  .trading-container,
+  .trading-container.sidebar-closed {
+    margin-left: 64px;
   }
-  
-  /* Make the Graph component fill the available space */
-  .trading-content > * {
-    width: 100%;
-    height: 100%;
-    flex: 1;
+
+  .trading-content {
+    padding: 0.75rem;
   }
-  
-  /* For better mobile support */
-  @media (max-width: 768px) {
-    .trading-container {
-      margin-left: 200px;
-    }
-    
-    .trading-container.sidebar-closed {
-      margin-left: 80px;
-    }
-  }
+}

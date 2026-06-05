@@ -4,6 +4,7 @@ import time
 import torch
 import re
 import warnings
+from datetime import datetime, timezone
 
 import yfinance as yf
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
@@ -20,11 +21,10 @@ FINETUNED_DIR = os.getenv(
 )
 
 SYSTEM_PROMPT = (
-    "You are a WallStreetBets user. "
-    "Be direct and crude like a real WSB reply. "
-    "Match your response length to what the question needs. "
-    "When stock data is provided in the message, use those exact numbers. "
-    "Never invent prices, percentages, or statistics. "
+    "You are a WallStreetBets-style chatbot. Sound casual, blunt, skeptical, and concise. "
+    "Use only the verified stock and sentiment context provided in square brackets for prices, percentages, dates, ratios, and statistics. "
+    "If verified context is missing, say you do not have live data for that exact fact instead of inventing it. "
+    "Do not claim breaking news, exact prices, or exact returns unless they appear in the verified context. "
     "Never include URLs or links."
 )
 
@@ -38,6 +38,8 @@ MAX_CANDIDATES = 5
 SENTIMENT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ticker_sentiment.json")
 _STOCK_CACHE_TTL_SECONDS = int(os.getenv("STOCK_CACHE_TTL_SECONDS", "300"))
 _stock_cache: dict[str, tuple[float, dict | None]] = {}
+_sentiment_cache: tuple[float, list[dict]] | None = None
+_SENTIMENT_CACHE_TTL_SECONDS = int(os.getenv("SENTIMENT_CACHE_TTL_SECONDS", "120"))
 
 
 def search_ticker(query: str) -> str | None:
@@ -67,8 +69,6 @@ def extract_candidates(text: str) -> list[str]:
     return list(dict.fromkeys(found))[:MAX_CANDIDATES]
 
 
-_VALID_QUOTE_TYPES = {"EQUITY", "ETF", "INDEX", "FUTURE"}
-
 
 def get_stock_data(ticker: str) -> dict | None:
     ticker = ticker.upper()
@@ -76,28 +76,24 @@ def get_stock_data(ticker: str) -> dict | None:
     if cached and time.time() - cached[0] < _STOCK_CACHE_TTL_SECONDS:
         return cached[1]
     try:
-        t    = yf.Ticker(ticker)
-        info = t.info
-        if info.get("quoteType", "") not in _VALID_QUOTE_TYPES:
-            return None
-        hist = t.history(period="1mo")
-        if hist.empty:
+        stock = yf.Ticker(ticker)
+        hist = stock.history(period="1mo")
+        if hist.empty or "Close" not in hist:
+            _stock_cache[ticker] = (time.time(), None)
             return None
         current_price = round(float(hist["Close"].iloc[-1]), 2)
-        change_pct    = round(
-            ((current_price - float(hist["Close"].iloc[0])) / float(hist["Close"].iloc[0])) * 100, 2
-        )
-        pe = info.get("trailingPE")
+        first_price = float(hist["Close"].iloc[0])
+        change_pct = round(((current_price - first_price) / first_price) * 100, 2) if first_price else 0.0
+        fast_info = getattr(stock, "fast_info", {}) or {}
         result = {
-            "ticker":      ticker.upper(),
-            "price":       current_price,
-            "1mo_change":  f"{change_pct:+.2f}%",
-            "pe_ratio":    round(pe, 2) if pe else "N/A",
-            "52w_high":    info.get("fiftyTwoWeekHigh", "N/A"),
-            "52w_low":     info.get("fiftyTwoWeekLow", "N/A"),
-            "short_ratio": info.get("shortRatio", "N/A"),
-            "market_cap":  info.get("marketCap", "N/A"),
-            "volume":      info.get("volume", "N/A"),
+            "ticker": ticker,
+            "price": current_price,
+            "1mo_change": f"{change_pct:+.2f}%",
+            "52w_high": fast_info.get("yearHigh", "N/A"),
+            "52w_low": fast_info.get("yearLow", "N/A"),
+            "market_cap": fast_info.get("marketCap", "N/A"),
+            "volume": int(hist["Volume"].iloc[-1]) if "Volume" in hist and not hist["Volume"].empty else "N/A",
+            "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         }
         _stock_cache[ticker] = (time.time(), result)
         return result
@@ -106,14 +102,31 @@ def get_stock_data(ticker: str) -> dict | None:
         return None
 
 
-
-def get_sentiment_context(tickers: list[str]) -> list[str]:
+def _load_sentiment_rows() -> list[dict]:
+    global _sentiment_cache
+    if _sentiment_cache and time.time() - _sentiment_cache[0] < _SENTIMENT_CACHE_TTL_SECONDS:
+        return _sentiment_cache[1]
     if not os.path.exists(SENTIMENT_FILE):
         return []
     try:
         with open(SENTIMENT_FILE, encoding="utf-8") as f:
             rows = json.load(f).get("tickers", [])
     except (OSError, json.JSONDecodeError):
+        rows = []
+    _sentiment_cache = (time.time(), rows)
+    return rows
+
+
+def _sample_line(label: str, sample: dict) -> str | None:
+    text = re.sub(r"\s+", " ", str(sample.get("text") or "")).strip()
+    if not text:
+        return None
+    return f"{label}: {text[:180]}"
+
+
+def get_sentiment_context(tickers: list[str]) -> list[str]:
+    rows = _load_sentiment_rows()
+    if not rows:
         return []
 
     wanted = {t.upper() for t in tickers}
@@ -129,10 +142,22 @@ def get_sentiment_context(tickers: list[str]) -> list[str]:
         bearish = row.get("negative_count", 0)
         neutral = row.get("neutral_count", 0)
         score = row.get("normalized_semantic_score", "N/A")
+        sample_lines = []
+        for sample in row.get("top_bullish_posts", [])[:1]:
+            line = _sample_line("bullish sample", sample)
+            if line:
+                sample_lines.append(line)
+        for sample in row.get("top_bearish_posts", [])[:1]:
+            line = _sample_line("bearish sample", sample)
+            if line:
+                sample_lines.append(line)
+        sample_text = "; ".join(sample_lines)
         lines.append(
             f"[WSB sentiment {ticker}: {sentiment}, mentions={mentions}, "
             f"bullish={bullish}, bearish={bearish}, neutral={neutral}, "
-            f"normalized_score={score}]"
+            f"normalized_score={score}"
+            + (f", {sample_text}" if sample_text else "")
+            + "]"
         )
     return lines
 
@@ -159,9 +184,9 @@ def fetch_context(user_message: str) -> str:
         if data:
             lines.append(
                 f"[{data['ticker']}: price=${data['price']}, "
-                f"1mo={data['1mo_change']}, P/E={data['pe_ratio']}, "
+                f"1mo={data['1mo_change']}, "
                 f"52w_high=${data['52w_high']}, 52w_low=${data['52w_low']}, "
-                f"short_ratio={data['short_ratio']}, volume={data['volume']}]"
+                f"market_cap={data['market_cap']}, volume={data['volume']}, as_of={data['as_of']}]"
             )
     lines.extend(get_sentiment_context(candidates))
     if MARKET_KEYWORDS.search(user_message):
@@ -169,6 +194,8 @@ def fetch_context(user_message: str) -> str:
         if mkt:
             parts = [f"{t}: ${v['price']} ({v['day_change']})" for t, v in mkt.items()]
             lines.append("[Market: " + ", ".join(parts) + "]")
+    if lines:
+        lines.insert(0, f"[Verified context generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}]")
     return "\n".join(dict.fromkeys(lines))
 
 
@@ -214,8 +241,8 @@ def generate(messages: list[dict]) -> str:
     with torch.no_grad():
         outputs = model.generate(
             **inputs,
-            max_new_tokens=400,
-            temperature=0.85,
+            max_new_tokens=260,
+            temperature=0.72,
             do_sample=True,
             top_p=0.92,
             repetition_penalty=1.15,
@@ -236,7 +263,7 @@ MAX_HISTORY = 14
 def chat(user_message: str) -> str:
     global messages
     context   = fetch_context(user_message)
-    augmented = f"{context}\n{user_message}".strip() if context else user_message
+    augmented = f"Verified context:\n{context}\n\nUser message: {user_message}".strip() if context else user_message
 
     temp = messages + [{"role": "user", "content": augmented}]
     reply = generate(temp) or "lol idk"

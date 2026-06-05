@@ -1,4 +1,6 @@
+import argparse
 import json
+import os
 import random
 import re
 
@@ -20,6 +22,12 @@ DELETED_PATTERN = re.compile(r"^\[deleted\]$|^\[removed\]$", re.IGNORECASE)
 
 MAX_SCORE = 50_000
 MAX_DEPTH = 4
+DEFAULT_SEED = int(os.getenv("WSB_TRAINING_SEED", "42"))
+STYLE_PROMPT = os.getenv(
+    "WSB_STYLE_PROMPT",
+    "Reply like a normal r/wallstreetbets user: casual, blunt, skeptical, short when possible. "
+    "Do not invent prices, news, positions, or statistics. No URLs."
+)
 
 
 def is_good_text(text: str, min_len: int = 20, max_len: int = 1200) -> bool:
@@ -73,10 +81,11 @@ def build_comment_tree(comments: list[dict]) -> dict[str, list[dict]]:
 
 
 def format_pair(instruction: str, response: str) -> str:
-    return f"<s>[INST] {instruction.strip()} [/INST] {response.strip()}</s>"
+    prompt = f"{STYLE_PROMPT}\n\n{instruction.strip()}"
+    return f"<s>[INST] {prompt} [/INST] {response.strip()}</s>"
 
 
-def build_training_examples(posts: list) -> list[dict]:
+def build_training_examples(posts: list, seed: int = DEFAULT_SEED) -> list[dict]:
     examples: list[str] = []
 
     for post in posts:
@@ -132,17 +141,32 @@ def build_training_examples(posts: list) -> list[dict]:
             if is_good_text(body):
                 walk_chain(comment["comment_id"], body, 2)
 
-    examples = list(set(examples))
-    random.shuffle(examples)
-    return [{"text": e} for e in examples]
+    seen = set()
+    unique_examples = []
+    for example in examples:
+        if example in seen:
+            continue
+        seen.add(example)
+        unique_examples.append(example)
+    random.Random(seed).shuffle(unique_examples)
+    return [{"text": e} for e in unique_examples]
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Build Mistral instruction-tuning data from WSB posts/comments.")
+    parser.add_argument("--input", default=os.getenv("WSB_POSTS_FILE", "wsb_posts.json"))
+    parser.add_argument("--output", default=os.getenv("WSB_TRAINING_DATA", "wsb_training_data.jsonl"))
+    parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
-    with open("wsb_posts.json") as f:
+    args = parse_args()
+    with open(args.input, encoding="utf-8") as f:
         posts = json.load(f)
     print(f"Loaded {len(posts)} posts")
 
-    examples = build_training_examples(posts)
+    examples = build_training_examples(posts, seed=args.seed)
 
     short = sum(1 for e in examples if len(e["text"]) < 200)
     avg   = sum(len(e["text"]) for e in examples) // max(len(examples), 1)
@@ -150,8 +174,8 @@ if __name__ == "__main__":
     print(f"  short  : {short}  long: {len(examples) - short}")
     print(f"  avg    : {avg} chars")
 
-    with open("wsb_training_data.jsonl", "w") as f:
+    with open(args.output, "w", encoding="utf-8") as f:
         for e in examples:
             f.write(json.dumps(e) + "\n")
 
-    print("Done -> wsb_training_data.jsonl")
+    print(f"Done -> {args.output}")

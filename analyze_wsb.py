@@ -38,6 +38,8 @@ except ImportError:
 
 INPUT_FILE     = os.getenv("WSB_POSTS_FILE", "wsb_posts.json")
 OUTPUT_FILE    = os.getenv("TICKER_SENTIMENT_FILE", "ticker_sentiment.json")
+DAILY_SENTIMENT_FILE = os.getenv("DAILY_SENTIMENT_FILE", "backend/agg_sentiment.json")
+AGGREGATE_WINDOW_DAYS = float(os.getenv("SENTIMENT_AGGREGATE_WINDOW_DAYS", "14"))
 FINBERT_MODEL  = os.getenv("FINBERT_MODEL", "ProsusAI/finbert")
 BATCH_SIZE     = int(os.getenv("FINBERT_BATCH_SIZE", "4"))
 MIN_MENTIONS   = int(os.getenv("MIN_TICKER_MENTIONS", "3"))
@@ -74,7 +76,7 @@ MAX_SAMPLES    = 50   # max raw samples stored per ticker
 #     0.70    |  0.836  |  0.700   |  0.490   |  0.100   | gentle
 #     0.82    |  0.909  |  0.820   |  0.610   |  0.100   | very gentle
 #
-DECAY_WINDOW_DAYS = float(os.getenv("SENTIMENT_DECAY_WINDOW_DAYS", "30"))
+DECAY_WINDOW_DAYS = float(os.getenv("SENTIMENT_DECAY_WINDOW_DAYS", "14"))
 DECAY_FLOOR       = float(os.getenv("SENTIMENT_DECAY_FLOOR", "0.10"))
 DECAY_MIDPOINT    = float(os.getenv("SENTIMENT_DECAY_MIDPOINT", "0.55"))
 
@@ -655,6 +657,19 @@ def recency_weight(post_ts: float | None, now_ts: float) -> float:
 _DIRECTION: dict[str, float] = {'positive': 1.0, 'negative': -1.0, 'neutral': 0.0}
 
 
+def estimate_engagement(upvotes: int, awards: int, upvote_ratio: float | None = None) -> float:
+    """
+    Use attention, not only net score. For posts with an upvote ratio, estimate
+    total votes from net score and ratio. For comments, Reddit only exposes net
+    score, so abs(score) is the best available attention proxy.
+    """
+    net_score = abs(upvotes)
+    total_votes = net_score
+    if upvote_ratio is not None and 0 < upvote_ratio < 1 and abs(2 * upvote_ratio - 1) > 0.05:
+        total_votes = max(net_score, net_score / abs(2 * upvote_ratio - 1))
+    return min(total_votes + awards * 3 + 2, MAX_ENGAGEMENT)
+
+
 def semantic_value(
     label: str,
     score: float,
@@ -662,17 +677,16 @@ def semantic_value(
     upvotes: int,
     awards: int,
     recency: float,
+    upvote_ratio: float | None = None,
 ) -> float:
     """
     direction × sentiment_strength × detection_confidence
-              × log2(engagement_cap) × recency_weight
+              × log2(attention_cap) × recency_weight
 
-    Engagement is capped at MAX_ENGAGEMENT so a single viral post cannot
-    dominate. Recency decays exponentially from 1.0 (today) to DECAY_FLOOR
-    (DECAY_WINDOW_DAYS ago), so fresh posts drive the score.
+    Attention uses estimated total votes when possible, so controversial posts
+    can still carry weight instead of disappearing behind a low net score.
     """
-    raw_engagement = max(upvotes, 0) + awards * 3 + 2
-    engagement     = min(raw_engagement, MAX_ENGAGEMENT)
+    engagement = estimate_engagement(upvotes, awards, upvote_ratio)
     return (
         _DIRECTION.get(label, 0.0)
         * score
@@ -773,6 +787,8 @@ def _parse_timestamp(value) -> float | None:
 def run(
     input_file: str = INPUT_FILE,
     output_file: str = OUTPUT_FILE,
+    daily_sentiment_file: str | None = DAILY_SENTIMENT_FILE,
+    aggregate_window_days: float | None = AGGREGATE_WINDOW_DAYS,
     finbert_model: str | None = None,
     batch_size: int | None = None,
     min_mentions: int | None = None,
@@ -827,6 +843,7 @@ def run(
                 'post_id': post.get('id'),
                 'permalink': post.get('permalink'),
                 'upvotes': p_upvotes,
+                'upvote_ratio': post.get('upvote_ratio'),
                 'awards': p_awards,
                 'created_utc': p_ts,
             }))
@@ -874,13 +891,24 @@ def run(
 
     # ── Pass 3: accumulate results ─────────────────────────────────────────────
     data: dict[str, TickerBucket] = defaultdict(TickerBucket)
+    daily_sentiment: dict[tuple[str, str], float] = defaultdict(float)
 
     for (text, upvotes, awards, ts, mentions, meta) in all_items:
         recency = recency_weight(ts, now_ts)
+        item_day = (
+            datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%d")
+            if ts is not None else
+            datetime.fromtimestamp(now_ts, tz=timezone.utc).strftime("%Y-%m-%d")
+        )
         for m in mentions:
             label, score = next(sentiments)
-            sv = semantic_value(label, score, m.confidence, upvotes, awards, recency)
-            data[m.ticker].update(m, label, score, sv, {
+            ratio = meta.get('upvote_ratio')
+            try:
+                ratio = float(ratio) if ratio is not None else None
+            except (TypeError, ValueError):
+                ratio = None
+            sv = semantic_value(label, score, m.confidence, upvotes, awards, recency, ratio)
+            sample = {
                 **meta,
                 'text':            text[:220],
                 'ticker':          m.ticker,
@@ -890,7 +918,11 @@ def run(
                 'recency_weight':  round(recency, 4),
                 'confidence':      round(m.confidence, 3),
                 'method':          m.method,
-            })
+            }
+            daily_sentiment[(m.ticker, item_day)] += sv
+            age_days = ((now_ts - ts) / 86_400.0) if ts is not None else 0.0
+            if aggregate_window_days is None or age_days <= aggregate_window_days:
+                data[m.ticker].update(m, label, score, sv, sample)
 
     # ── Build output ───────────────────────────────────────────────────────────
     tickers_out = []
@@ -956,6 +988,24 @@ def run(
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
 
+    if daily_sentiment_file:
+        valid_output_tickers = {t['ticker'] for t in tickers_out}
+        daily_rows = [
+            {
+                'day': day,
+                'ticker': ticker,
+                'refined_sentiment': round(value, 6),
+            }
+            for (ticker, day), value in daily_sentiment.items()
+            if ticker in valid_output_tickers and value != 0
+        ]
+        daily_rows.sort(key=lambda row: (row['day'], row['ticker']))
+        daily_dir = os.path.dirname(daily_sentiment_file)
+        if daily_dir:
+            os.makedirs(daily_dir, exist_ok=True)
+        with open(daily_sentiment_file, 'w', encoding='utf-8') as f:
+            json.dump(daily_rows, f, indent=2, ensure_ascii=False)
+
     # ── Summary table ──────────────────────────────────────────────────────────
     m = output['meta']
     print(f"\n{'='*62}")
@@ -973,12 +1023,16 @@ def run(
             f"  {t['overall_sentiment']:<12} {t['avg_confidence']:>8.3f}  {methods}"
         )
     print(f"\n  Saved → {output_file}")
+    if daily_sentiment_file:
+        print(f"  Daily sentiment → {daily_sentiment_file}")
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Analyze WSB ticker sentiment with FinBERT.")
     parser.add_argument("--input", default=INPUT_FILE)
     parser.add_argument("--output", default=OUTPUT_FILE)
+    parser.add_argument("--daily-output", default=DAILY_SENTIMENT_FILE)
+    parser.add_argument("--aggregate-days", type=float, default=AGGREGATE_WINDOW_DAYS)
     parser.add_argument("--finbert-model", default=FINBERT_MODEL)
     parser.add_argument("--batch-size", type=int, default=BATCH_SIZE)
     parser.add_argument("--min-mentions", type=int, default=MIN_MENTIONS)
@@ -991,6 +1045,8 @@ if __name__ == "__main__":
     run(
         input_file=args.input,
         output_file=args.output,
+        daily_sentiment_file=args.daily_output,
+        aggregate_window_days=args.aggregate_days,
         finbert_model=args.finbert_model,
         batch_size=args.batch_size,
         min_mentions=args.min_mentions,

@@ -1,0 +1,128 @@
+
+You are analyzing Reddit posts from r/wallstreetbets. For each post, extract ONLY THE MAIN stock ticker being discussed and assign a sentiment score. 
+ONLY include real tickers, not fake ones. Also, only include REAL tickers that are actually mentioned in the post. 
+NO company names, only tickers.
+For example, if they are talking about "GDP", even if its a ticker, its not what the post is about. USE context to understand. 
+
+Score meaning (now from -1.0 to 1.0):
+-1.0: Very bearish (strongly negative)
+-0.5: Somewhat bearish (mildly negative)
+0.0: Neutral
+0.5: Somewhat bullish (mildly positive)
+1.0: Very bullish (strongly positive)
+
+Return ONLY a JSON list with this exact format:
+[
+  {"post_id": "abc123", "ticker": "AAPL", "sentiment_score": 0.8},
+  {"post_id": "def456", "ticker": "TSLA", "sentiment_score": -0.6}
+]
+
+If a post doesn't clearly mention a specific ticker, use "UNKNOWN" as the ticker value.
+Only return ONE ticker per post - the most prominently discussed one.
+Here are the posts:
+
+Post ID: 1j0bpqh
+Title: I just bought calls 32C Nordstrom. Found out their going through an acquisition at USD24 a share. Am I retarded and does Nana still love me?
+Text: 
+Top Comments: Worst case scenario: the acquisition falls through, share price tanks, and your options expire worthless
+
+Best case scenario: acquisition deal closes, shares are retired, and your options expire worthless 
+
+Good luck! ![img](emote|t5_2th52|4271)
+Zero DD before buying these? ![img](emote|t5_2th52|4640)
+You never research a stock more than in the moments after buying some contracts
+Do you suffer from mongolism?
+you know they going private right? guess not
+---
+Post ID: 1j0bc36
+Title: I SPY a double down.
+Text: Keep coming at me.
+Top Comments: I SPY a Wendy's employee of the month in March.
+You're watching SPY like it's your ex's social media. Meanwhile, did you know the VIX is spiking? Volatility is the real party.
+Bro shorted at bottom ![img](emote|t5_2th52|4271)![img](emote|t5_2th52|4267)
+I make a 15% gain on a mix of spy calls and puts around $670 profit and logged off for the day to get back to work at my day job since I was just sittin there fuckin around trading 😆 I sold way too early since I got work to do which always makes me feel bad I didn’t hold longer but one of my rules is done be greedy I usually sell it all around 20% even if it’s still ticking up pretty strong
+I hope SPY falls today too OP, good luck.
+---
+Post ID: 1j0b9xg
+Title: 99k Robinhood Calls - Added more
+Text: 
+Top Comments: I have a  several for $55 3/14. I think we are in good shape. Im Tempted to roll them to the end of the month though
+Damn...99k YOLO. Hope this works out like your MARA play a year ago you mf'er!!!
+
+https://preview.redd.it/2oa6p2pef7me1.png?width=1339&format=png&auto=webp&s=10338fa991e0fb9955ef191baf292fc3cc389278
+Remindme! - 28 days
+Remind me! -28 days
+If Monday is a confirmation of recovery, tariffs get sorted, jobs good, these will be good.
+---
+Post ID: 1j0b4l5
+Title: You guys like the GAIN PORN so i got one for you!
+Text: 
+Top Comments: Congrats and f\*ck you ![img](emote|t5_2th52|8882)
+Go buy yourself a RR
+We only post loss porn in here sir
+https://preview.redd.it/y73v0b5q0yle1.jpeg?width=1119&format=pjpg&auto=webp&s=fa63a53285649d56c592fb5c59376cf536c84b29
+Does 300% over the last four years even beat inflation?
+---
+Post ID: 1j0an68
+Title: 2025 off to a great start!
+Text: Small losses, huge gains. All 0dte spy options. Ignore the stock gains, I did not know the way of wsb.
+Top Comments: How does one just KNOW the direction spy will go. I seem to misjudge it nearly everyday
+It works until it doesn't. 
+
+See you at Wendy's next month.
+The boring answer is that OP is just riding with the waves and getting off quickly, hence only an 8% gain on his 0dte SPYs as opposed to like 200% if he was pre-reading the directions
+Gambling
+Hater
+---
+Post ID: 1j0al7b
+Title: i like sex drugs and money on
+Text: manma i doubled my margin gambling account in one day was down 9k last week chasing SMCI calls made it all back rolled into 35k worth of spy and qqq calls.
+Top Comments: Congrats, enjoy your frosties
+Any idea how I can start learning options? I’m stuck and don’t know where to start
+I think you may have a problem
+u used margin for this?
+UNLIMITED 💯
+---
+Post ID: 1j0ak50
+Title: I’m down but not out!! Bulls join me 🐂📈
+Text: I love to gamble, to bears I have a good 401k that doesn’t get touched with a 5% match and I get stocks as a bonus every year for work which is all very safe boring bets. 
+Top Comments: ![img](emote|t5_2th52|4276)![img](emote|t5_2th52|4276)![img](emote|t5_2th52|4276)
+Stop calling us gamblers, we're INVESTED INVESTORS
+Cooked
+Let hope somthing good for once happens on The week end
+Jensen used to be our friend. Nobody pumped a stock like him, but he lost his magic.
+---
+Post ID: 1j0agw9
+Title: This crap stock, almost got cut by it yesterday, bounced back Gain 8.5K
+Text: 
+Top Comments: Mara has given me both my biggest wins and biggest losses
+ah making money on $MARA volatility, takes me back to 2021.
+
+  
+didn't expect nostalgia.
+
+  
+but yes, total turd of a company, basic evidence that the market is built on lies and unsustainable hype.
+Stay away bro.  Management kills every significant upswing with a dilution announcement.  It's like a penny stock, can't trust it.
+Same unfortunately.
+I bought it after it crashed and sold it when it rallied. I won.
+---
+Post ID: 1j09j68
+Title: 87k Gain on Spy puts
+Text: 
+Top Comments: * spx and qqq puts. 
+
+Adding text here, on old reddit can't be fucked to switch to make a post. 
+
+Opened these positions early this week expecting that the market would eventually react to the threat of tariffs and uncertainty in Washington due to mass layoffs. Did I probably sell these too early? Most likely
+
+Will look to re-enter this position with a smaller size in the coming days / weeks. I think we re-test and break through new lows IF tariffs are confirmed, but then again that's a big IF. Better to take the guaranteed gain right now. 
+
+We will have much more room to go down once tariffs are enacted and I believe that the impact of them will be so monumentally bad that even waiting for their confirmation will lead to excessive profits. 
+
+My biggest regret? Not buying a seat at this administration's table. Any regard with a phone and robinhood installed with $10-100k could turn that into hundreds of millions in a few months just being near the source of potentially market rattling information.
+Everything except for SPY puts lmao but congrats anyway and fuck u
+This is the way!
+Whatcha gonna do with the money
+Amazing, do it again!
+---

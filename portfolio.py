@@ -1,343 +1,314 @@
-import yfinance as yf
-import pandas as pd
+import argparse
 import json
-import time
-import random
+import math
 import os
-from datetime import datetime, timedelta, date
 from collections import defaultdict
+from datetime import datetime, timedelta
+from pathlib import Path
 
-# Add retry function for yfinance downloads with future date check
-def download_with_retry(ticker, start_date, end_date, max_retries=5, base_delay=60):
-    """Download data with exponential backoff retry logic for rate limits."""
-    # Check if end_date is in the future
-    if isinstance(end_date, str):
-        end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
-    else:
-        end_date_obj = end_date.date()
-    today = datetime.now().date()
-    retries = 0
-    while retries < max_retries:
+import pandas as pd
+import yfinance as yf
+
+DATE_FMT = "%Y-%m-%d"
+
+
+def parse_date(value: str) -> datetime:
+    return datetime.strptime(value, DATE_FMT)
+
+
+def next_weekday(day: datetime) -> datetime:
+    current = day + timedelta(days=1)
+    while current.weekday() >= 5:
+        current += timedelta(days=1)
+    return current
+
+
+def trading_day_on_or_after(day: datetime) -> datetime:
+    current = day
+    while current.weekday() >= 5:
+        current += timedelta(days=1)
+    return current
+
+
+def load_sentiment(path: Path) -> list[dict]:
+    with path.open(encoding="utf-8") as f:
+        rows = json.load(f)
+    if not isinstance(rows, list):
+        raise SystemExit(f"Expected {path} to contain a JSON list")
+    clean = []
+    for row in rows:
         try:
-            data = yf.download(ticker, start=start_date, end=end_date, progress=False)
-            if not data.empty:
-                return data
-            else:
-                print(f"Empty data for {ticker} on {start_date}, retrying...")
-                delay = base_delay * (retries) + random.uniform(0, 1)
-                print(f"Rate limit hit for {ticker}. Retrying in {delay:.2f} seconds (attempt {retries+1}/{max_retries})")
-                time.sleep(delay)
-                retries += 1
-        except Exception as e:
-            if "Rate limit" in str(e):
-                # Calculate delay with exponential backoff and jitter
-                delay = base_delay * retries + random.uniform(0, 1)
-                print(f"Rate limit hit for {ticker}. Retrying in {delay:.2f} seconds (attempt {retries+1}/{max_retries})")
-                time.sleep(delay)
-                retries += 1
+            ticker = str(row["ticker"]).upper().strip()
+            day = parse_date(str(row["day"]))
+            sentiment = float(row["refined_sentiment"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if ticker and math.isfinite(sentiment) and sentiment != 0:
+            clean.append({"ticker": ticker, "day": day, "sentiment": sentiment})
+    return sorted(clean, key=lambda row: row["day"])
+
+
+def rolling_signals(rows: list[dict], trade_day: datetime, window_days: int) -> dict[str, float]:
+    window_end = trade_day
+    window_start = trade_day - timedelta(days=window_days)
+    signals: dict[str, float] = defaultdict(float)
+    for row in rows:
+        if window_start <= row["day"] < window_end:
+            signals[row["ticker"]] += row["sentiment"]
+    return {ticker: value for ticker, value in signals.items() if value != 0}
+
+
+def select_signals(signals: dict[str, float], max_positions: int) -> dict[str, float]:
+    ranked = sorted(signals.items(), key=lambda item: abs(item[1]), reverse=True)
+    if max_positions > 0:
+        ranked = ranked[:max_positions]
+    return dict(ranked)
+
+
+def get_open_prices(tickers: list[str], start: datetime, end: datetime) -> dict[str, dict[str, float]]:
+    if not tickers:
+        return {}
+    start_s = start.strftime(DATE_FMT)
+    end_s = (end + timedelta(days=1)).strftime(DATE_FMT)
+    data = yf.download(
+        tickers,
+        start=start_s,
+        end=end_s,
+        progress=False,
+        auto_adjust=False,
+        group_by="ticker",
+        threads=True,
+    )
+    prices: dict[str, dict[str, float]] = {ticker: {} for ticker in tickers}
+    if data.empty:
+        return prices
+
+    if isinstance(data.columns, pd.MultiIndex):
+        for ticker in tickers:
+            if ticker not in data.columns.get_level_values(0):
                 continue
-            else:
-                print(f"Error downloading {ticker}: {e}")
-                return pd.DataFrame()  # Return empty DataFrame for non-rate-limit errors
-    
-    print(f"Max retries reached for {ticker}")
-    return pd.DataFrame()
-
-# Ensure output directory exists
-output_dir = "frontend/src/portfolio_data"
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
-
-# Load sentiment data
-with open('agg_sentiment.json', 'r') as file:
-    data = json.load(file)
-
-# Sort data by date
-data = sorted(data, key=lambda x: datetime.strptime(x['day'], '%Y-%m-%d'))
-
-def adjust_weekend_to_friday(date_str):
-    """Move weekend dates to the previous Friday."""
-    date = datetime.strptime(date_str, "%Y-%m-%d")
-    weekday = date.weekday()
-    
-    if weekday == 5:  # Saturday
-        return (date - timedelta(days=1)).strftime("%Y-%m-%d")  # Friday
-    elif weekday == 6:  # Sunday
-        return (date - timedelta(days=2)).strftime("%Y-%m-%d")  # Friday
+            series = data[(ticker, "Open")].dropna()
+            for idx, value in series.items():
+                prices[ticker][idx.strftime(DATE_FMT)] = float(value)
     else:
-        return date_str  # Not a weekend, return as is
+        series = data.get("Open", pd.Series(dtype=float)).dropna()
+        ticker = tickers[0]
+        for idx, value in series.items():
+            prices[ticker][idx.strftime(DATE_FMT)] = float(value)
+    return prices
 
-def get_next_trading_day(date_str):
-    """Get the next trading day (skip weekends)."""
-    date = datetime.strptime(date_str, "%Y-%m-%d")
-    # Increment day by 1
-    next_day = date + timedelta(days=1)
-    # Check if the next day is a weekend, if so, increment until it's a weekday
-    while next_day.weekday() >= 5:  # 5=Saturday, 6=Sunday
-        next_day += timedelta(days=1)
-    return next_day.strftime("%Y-%m-%d")
 
-# Initialize portfolio and trading queue
-portfolio = {'long': {}, 'short': {}}  # Separate long and short positions
-cost_basis = {'long': {}, 'short': {}}  # Track individual position cost basis
-trading_queue = defaultdict(list)  # Dictionary with date as key and list of trades as value
+def build_trade_days(rows: list[dict], window_days: int) -> list[datetime]:
+    raw_days = sorted({row["day"] for row in rows})
+    if not raw_days:
+        return []
+    first_trade_day = trading_day_on_or_after(raw_days[0] + timedelta(days=window_days))
+    trade_days = sorted({trading_day_on_or_after(day) for day in raw_days})
+    return [day for day in trade_days if day >= first_trade_day and day.date() < datetime.now().date()]
 
-# For tracking actual cash invested
-total_investment = 0.0  # Track total money invested (positive for buys, negative for short proceeds)
-initial_investment_date = None  # Track when the first investment was made
 
-# Process sentiment data and create trading queue
-for entry in data:
-    current_day = entry['day']
-    next_trading_day = get_next_trading_day(current_day)
-    
-    # Add trade to the queue for execution on the next trading day
-    trading_queue[next_trading_day].append({
-        'ticker': entry['ticker'],
-        'sentiment': entry['refined_sentiment']
-    })
+def position_pnl(position: dict, exit_price: float) -> float:
+    if position["side"] == "long":
+        return (exit_price - position["entry_price"]) * position["shares"]
+    return (position["entry_price"] - exit_price) * position["shares"]
 
-# Adjust dates - move weekend dates to previous Friday for portfolio valuation
-all_dates = sorted(list(set([entry['day'] for entry in data]) | set(trading_queue.keys())))
-valuation_dates = [adjust_weekend_to_friday(date) for date in all_dates]
-valuation_dates = sorted(set(valuation_dates))  # Remove duplicates and re-sort
 
-# For storing detailed portfolio data
-daily_portfolio_data = []
+def simulate(
+    sentiment_file: Path,
+    output_dir: Path,
+    initial_capital: float,
+    window_days: int,
+    max_positions: int,
+) -> dict:
+    rows = load_sentiment(sentiment_file)
+    if not rows:
+        raise SystemExit(f"No usable sentiment rows in {sentiment_file}")
 
-portfolio_statistics = []
+    trade_days = build_trade_days(rows, window_days)
+    if len(trade_days) < 2:
+        raise SystemExit("Need at least two trading days to simulate open-to-open returns")
 
-# Process trading days
+    all_signals_by_day = {
+        day.strftime(DATE_FMT): select_signals(rolling_signals(rows, day, window_days), max_positions)
+        for day in trade_days
+    }
+    all_tickers = sorted({ticker for signals in all_signals_by_day.values() for ticker in signals})
+    prices = get_open_prices(all_tickers, trade_days[0], trade_days[-1])
 
-daily_data = {
-    'date': date,
-    'trades': [],
-    'positions': {'long': {}, 'short': {}},
-    'today_profit': 0.0,
-    'total_profit': 0.0,
-    'total_investment': 0.0
-}
-for date in valuation_dates:
-    if datetime.strptime(date, "%Y-%m-%d").date() >= datetime.now().date():
-        continue
-    print(f"Processing date: {date}")
-    # Initialize daily data
-    daily_data['date'] = date
-    daily_data['trades'] = []
-    daily_data['positions'] = {'long': {}, 'short': {}}
-    daily_data['today_profit'] = 0.0
-    total_investment = 0.0
-    
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for stale_file in output_dir.glob("portfolio_*.json"):
+        if stale_file.name != "portfolio_total_investment.json":
+            stale_file.unlink()
 
-    # Execute any pending trades for this date
-    if date in trading_queue:
-        for trade in trading_queue[date]:
-            ticker = trade['ticker']
-            sentiment = float(trade['sentiment'])  # Ensure sentiment is a float
-            
-            try:
-                # Get the opening price for this ticker on this date using retry function
-                end_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=1)
-                price_data = download_with_retry(ticker, date, end_date)
-                if not price_data.empty:
-                    # Make sure we get a scalar value
-                    if isinstance(price_data['Open'].iloc[0], (int, float)):
-                        open_price = price_data['Open'].iloc[0]
-                    else:
-                        open_price = price_data['Open'].iloc[0].item()
-                    
-                    open_price = float(open_price)  # Convert to float for safety
-                    
-                    # Initialize ticker in portfolio if not present
-                    if ticker not in portfolio['long']:
-                        portfolio['long'][ticker] = 0.0
-                        cost_basis['long'][ticker] = 0.0
-                    
-                    if ticker not in portfolio['short']:
-                        portfolio['short'][ticker] = 0.0
-                        cost_basis['short'][ticker] = 0.0
-                    
-                    # Track first investment date
-                    if initial_investment_date is None:
-                        initial_investment_date = date
-                    
-                    # Determine position based on sentiment
-                    if sentiment <= 0:
-                        # Short the stock for zero or negative sentiment
-                        total_investment += abs(sentiment)
-                        shares_to_add = -abs(sentiment) / open_price
-                        action = "short"
-                        portfolio_type = 'short'
-                        # For shorts, we receive cash (negative cost basis)
-                        trade_cost = shares_to_add * open_price
-                    else:
-                        # Long position for positive sentiment
-                        total_investment += sentiment
-                        shares_to_add = sentiment / open_price
-                        action = "buy"
-                        portfolio_type = 'long'
-                        # For longs, we spend cash (positive cost basis)
-                        trade_cost = shares_to_add * open_price
-                    
-                    # Update portfolio and cost basis for individual position
-                    portfolio[portfolio_type][ticker] += shares_to_add
-                    cost_basis[portfolio_type][ticker] += shares_to_add * open_price
-                    
-                    # Record the trade in daily data
-                    daily_data['trades'].append({
-                        'ticker': ticker,
-                        'action': action,
-                        'shares': abs(shares_to_add),
-                        'price': open_price,
-                        'cost': shares_to_add * open_price
-                    })
-                    
-                    #print(f"Date: {date}, {action} {abs(shares_to_add):.4f} shares of {ticker} at ${open_price:.2f}")
-                else:
-                    print(f"No price data available for {ticker} on {date}")
-            
-            except Exception as e:
-                print(f"Error processing {ticker} on {date}: {e}")
-    
-    # Calculate portfolio value at the end of this day
-    long_profit = 0.0
-    short_profit = 0.0
-    # Calculate for long positions
-    for ticker, shares in list(portfolio['long'].items()):
-        if shares == 0:
-            continue  # Skip tickers with zero shares
-            
-        try:
-            end_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=1)
-            price_data = download_with_retry(ticker, date, end_date)
-            
-            if not price_data.empty:
-                # Ensure close_price is a scalar value
-                if isinstance(price_data['Close'].iloc[0], (int, float)):
-                    close_price = price_data['Close'].iloc[0]
-                else:
-                    close_price = price_data['Close'].iloc[0].item()
-                
-                close_price = float(close_price)
-                
-                # Calculate market value of this position
-                position_value = shares * close_price # money rn
-                position_cost = cost_basis['long'][ticker] # how much it costed
-                cost_basis['long'][ticker] = position_value
+    account_value = initial_capital
+    initial_investment_date = trade_days[0].strftime(DATE_FMT)
+    portfolio_statistics = []
+    daily_data = []
+    previous_positions: list[dict] = []
+    total_profit = 0.0
 
-                # Calculate P&L - for long positions, profit is current value minus cost
-                position_pnl = position_value - position_cost
-                long_profit += position_pnl
-                
-                # Record position details in daily data
-                daily_data['positions']['long'][ticker] = {
-                    'shares': shares,
-                    'close_price': close_price,
-                    'position_cost': position_cost,
-                    'position_pnl': position_pnl
+    for index, day in enumerate(trade_days[:-1]):
+        day_s = day.strftime(DATE_FMT)
+        next_day = trade_days[index + 1]
+        next_day_s = next_day.strftime(DATE_FMT)
+
+        realized_pnl = 0.0
+        exits = []
+        for position in previous_positions:
+            exit_price = prices.get(position["ticker"], {}).get(day_s)
+            if not exit_price:
+                continue
+            pnl = position_pnl(position, exit_price)
+            realized_pnl += pnl
+            exits.append({
+                **position,
+                "exit_date": day_s,
+                "exit_price": exit_price,
+                "pnl": pnl,
+            })
+
+        account_value += realized_pnl
+        total_profit = account_value - initial_capital
+
+        signals = all_signals_by_day.get(day_s, {})
+        usable = {
+            ticker: signal
+            for ticker, signal in signals.items()
+            if prices.get(ticker, {}).get(day_s) and prices.get(ticker, {}).get(next_day_s)
+        }
+        total_abs_signal = sum(abs(value) for value in usable.values())
+
+        entries = []
+        new_positions = []
+        if total_abs_signal > 0 and account_value > 0:
+            for ticker, signal in usable.items():
+                entry_price = prices[ticker][day_s]
+                allocation = account_value * (abs(signal) / total_abs_signal)
+                shares = allocation / entry_price
+                side = "long" if signal > 0 else "short"
+                position = {
+                    "ticker": ticker,
+                    "side": side,
+                    "entry_date": day_s,
+                    "entry_price": entry_price,
+                    "shares": shares,
+                    "notional": allocation,
+                    "sentiment": signal,
+                    "weight": allocation / account_value,
                 }
-                
-                #print(f"{ticker}: {abs(shares):.4f} shares Long at ${close_price:.2f} = ${position_value:.2f}, P&L: ${position_pnl:.2f}")
-        except Exception as e:
-            print(f"Error valuing {ticker} on {date}: {e}")
-    
-    # Calculate for short positions
-    for ticker, shares in list(portfolio['short'].items()):
-        if shares == 0:
-            continue  # Skip tickers with zero shares
-        
-        try:
-            end_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=1)
-            price_data = download_with_retry(ticker, date, end_date)
-            
-            if not price_data.empty:
-                # Ensure close_price is a scalar value
-                if isinstance(price_data['Close'].iloc[0], (int, float)):
-                    close_price = price_data['Close'].iloc[0]
-                else:
-                    close_price = price_data['Close'].iloc[0].item()
-                
-                close_price = float(close_price)
-                
-                # Calculate market value of this position (negative for shorts)
-                position_value = shares * close_price  # current price
-                position_cost = cost_basis['short'][ticker]  #  price u shorted at
-                cost_basis['short'][ticker] = position_value
+                entries.append(position)
+                new_positions.append(position)
 
-                # Calculate P&L - for short positions, profit is cost minus current value
-                position_pnl = position_cost - position_value
-                short_profit += position_pnl
-                
-                # Record position details in daily data
-                daily_data['positions']['short'][ticker] = {
-                    'shares': shares,
-                    'close_price': close_price,
-                    'position_value': position_value,
-                    'position_cost': position_cost,
-                    'position_pnl': position_pnl
-                }
-                
-                #print(f"{ticker}: {abs(shares):.4f} shares Short at ${close_price:.2f} = ${position_value:.2f}, P&L: ${position_pnl:.2f}")
-        except Exception as e:
-            print(f"Error valuing {ticker} on {date}: {e}")
-    
-    
-    # Update portfolio value and total investment in daily data
-    daily_data['today_profit'] = long_profit + short_profit
-    daily_data['total_profit'] += daily_data['today_profit']
-    daily_data['total_investment'] += total_investment
-    
-    # Add to history collections
-    daily_portfolio_data.append(daily_data)
-    
+        daily_record = {
+            "date": day_s,
+            "next_trade_date": next_day_s,
+            "starting_value": account_value - realized_pnl,
+            "realized_pnl": realized_pnl,
+            "ending_value_before_rebalance": account_value,
+            "allocated_value": sum(entry["notional"] for entry in entries),
+            "cash_after_rebalance": account_value - sum(entry["notional"] for entry in entries),
+            "exits": exits,
+            "entries": entries,
+            "positions": {
+                "long": {p["ticker"]: p for p in entries if p["side"] == "long"},
+                "short": {p["ticker"]: p for p in entries if p["side"] == "short"},
+            },
+            "today_profit": realized_pnl,
+            "total_profit": total_profit,
+            "total_investment": account_value,
+        }
+        daily_data.append(daily_record)
+        portfolio_statistics.append({
+            "date": day_s,
+            "investment": account_value,
+            "today_profit": realized_pnl,
+            "total_profit": total_profit,
+        })
 
+        with (output_dir / f"portfolio_{day_s}.json").open("w", encoding="utf-8") as f:
+            json.dump(daily_record, f, indent=2)
+
+        previous_positions = new_positions
+
+    final_day = trade_days[-1]
+    final_day_s = final_day.strftime(DATE_FMT)
+    final_pnl = 0.0
+    final_exits = []
+    for position in previous_positions:
+        exit_price = prices.get(position["ticker"], {}).get(final_day_s)
+        if not exit_price:
+            continue
+        pnl = position_pnl(position, exit_price)
+        final_pnl += pnl
+        final_exits.append({**position, "exit_date": final_day_s, "exit_price": exit_price, "pnl": pnl})
+    account_value += final_pnl
+    total_profit = account_value - initial_capital
+
+    final_record = {
+        "date": final_day_s,
+        "starting_value": account_value - final_pnl,
+        "realized_pnl": final_pnl,
+        "ending_value_before_rebalance": account_value,
+        "allocated_value": 0.0,
+        "cash_after_rebalance": account_value,
+        "exits": final_exits,
+        "entries": [],
+        "positions": {"long": {}, "short": {}},
+        "today_profit": final_pnl,
+        "total_profit": total_profit,
+        "total_investment": account_value,
+    }
+    daily_data.append(final_record)
     portfolio_statistics.append({
-        'date': date,
-        'investment': daily_data['total_investment'],
-        'today_profit': daily_data['today_profit'],
-        'total_profit': daily_data['total_profit']
+        "date": final_day_s,
+        "investment": account_value,
+        "today_profit": final_pnl,
+        "total_profit": total_profit,
     })
-    
-    # Save daily data to JSON file
-    filename = os.path.join(output_dir, f"portfolio_{date}.json")
-    with open(filename, 'w') as file:
-        json.dump(daily_data, file, indent=2)
-    
-    print(f"Total investment: ${daily_data['total_investment']:.2f}")
-    print(f"Daily P&L on {date}: ${daily_data['today_profit']:.2f}")
-    print(f"Overall Profit: ${daily_data['total_profit']:.2f}")
-    print(f"Saved daily data to {filename}")
-    print("-" * 50)
+    with (output_dir / f"portfolio_{final_day_s}.json").open("w", encoding="utf-8") as f:
+        json.dump(final_record, f, indent=2)
 
-# Save the complete history to a single file
-history_filename = os.path.join(output_dir, "portfolio_total_investment.json")
-with open(history_filename, 'w') as file:
-    json.dump({
-        'daily_data': daily_portfolio_data,
-        'portfolio_statistics': portfolio_statistics,
-        'initial_investment_date': initial_investment_date,
-        'total_investment': daily_data['total_investment']
-    }, file, indent=2)
-print(f"Saved complete history to {history_filename}")
-
-# Output final results
-print("\nFinal Portfolio:")
-print("\nLong Positions:")
-for ticker, shares in portfolio['long'].items():
-    if shares != 0:  # Show all non-zero positions
-        print(f"{ticker}: {abs(shares):.4f} shares Buy, Cost Basis: ${cost_basis['long'][ticker]:.2f}")
-
-print("\nShort Positions:")
-for ticker, shares in portfolio['short'].items():
-    if shares != 0:  # Show all non-zero positions
-        print(f"{ticker}: {abs(shares):.4f} shares Short, Cost Basis: ${cost_basis['short'][ticker]:.2f}")
+    result = {
+        "meta": {
+            "strategy": "daily_open_to_open_sentiment_rebalance",
+            "initial_capital": initial_capital,
+            "final_value": account_value,
+            "total_return_pct": (account_value / initial_capital - 1) * 100,
+            "rolling_sentiment_window_days": window_days,
+            "max_positions": max_positions,
+            "sentiment_file": str(sentiment_file),
+            "warmup_days": window_days,
+        },
+        "daily_data": daily_data,
+        "portfolio_statistics": portfolio_statistics,
+        "initial_investment_date": initial_investment_date,
+        "total_investment": account_value,
+    }
+    with (output_dir / "portfolio_total_investment.json").open("w", encoding="utf-8") as f:
+        json.dump(result, f, indent=2)
+    return result
 
 
-print("\nDaily P&L History:")
-for record in portfolio_statistics:
-    print(f"{record['date']}: ${record['today_profit']:.2f}")
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Run daily WSB sentiment open-to-open rebalance simulation.")
+    parser.add_argument("--sentiment-file", default=os.getenv("SIM_SENTIMENT_FILE", "backend/agg_sentiment.json"))
+    parser.add_argument("--output-dir", default=os.getenv("SIM_OUTPUT_DIR", "frontend/src/portfolio_data"))
+    parser.add_argument("--initial-capital", type=float, default=float(os.getenv("SIM_INITIAL_CAPITAL", "1000000")))
+    parser.add_argument("--window-days", type=int, default=int(os.getenv("SIM_WINDOW_DAYS", "14")))
+    parser.add_argument("--max-positions", type=int, default=int(os.getenv("SIM_MAX_POSITIONS", "25")))
+    return parser.parse_args()
 
-# Calculate total return
-if portfolio_statistics:
-    total_return = sum(record['today_profit'] for record in portfolio_statistics)
-    print(f"\nCumulative P&L: ${total_return:.2f}")
+
+if __name__ == "__main__":
+    args = parse_args()
+    result = simulate(
+        sentiment_file=Path(args.sentiment_file),
+        output_dir=Path(args.output_dir),
+        initial_capital=args.initial_capital,
+        window_days=args.window_days,
+        max_positions=args.max_positions,
+    )
+    meta = result["meta"]
+    print(f"Final value: ${meta['final_value']:,.2f}")
+    print(f"Total return: {meta['total_return_pct']:.2f}%")
+    print(f"Saved simulation to {args.output_dir}")
