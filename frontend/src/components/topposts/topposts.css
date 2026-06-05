@@ -34,10 +34,16 @@
 }
 
 .tp-main {
-  flex:       1;
-  padding:    36px 40px;
-  overflow-x: hidden;
-  min-width:  0;
+  flex:        1;
+  min-width:   0;
+  margin-left: 250px;
+  padding:     36px 40px;
+  overflow-x:  hidden;
+  transition:  margin-left 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), padding 0.2s;
+}
+
+.sidebar.closed ~ .tp-main {
+  margin-left: 80px;
 }
 
 /* ─── Page header ─────────────────────────────────────────────────────────── */
@@ -193,10 +199,15 @@
 }
 
 /* ─── Table ───────────────────────────────────────────────────────────────── */
-.tp-table-wrap { overflow-x: auto; }
+.tp-table-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
 
 .tp-table {
   width:           100%;
+  min-width:       720px;
   border-collapse: collapse;
 }
 
@@ -221,23 +232,6 @@
   transition:  color 0.15s;
 }
 .tp-th--sortable:hover { color: var(--tp-text-1); }
-
-/* Overall column — cycles tabs, gets a subtle highlight */
-.tp-th--overall {
-  cursor:      pointer;
-  user-select: none;
-}
-.tp-th--overall:hover { color: var(--tp-gold); }
-
-.tp-th-cycle-hint {
-  display:      block;
-  font-size:    0.52rem;
-  color:        var(--tp-text-3);
-  margin-top:   2px;
-  letter-spacing: 0.06em;
-  transition:   color 0.15s;
-}
-.tp-th--overall:hover .tp-th-cycle-hint { color: var(--tp-gold); }
 
 /* ─── Sort icons ──────────────────────────────────────────────────────────── */
 .tp-sort-icon {
@@ -376,19 +370,19 @@
 
 /* ─── Three-way sentiment bar ─────────────────────────────────────────────── */
 .tp-bar-wrap {
-  display:     flex;
-  align-items: center;
-  gap:         8px;
-  min-width:   160px;
+  display:               grid;
+  grid-template-columns: minmax(130px, 1fr) 96px;
+  align-items:           center;
+  gap:                   10px;
+  min-width:             240px;
 }
 
 .tp-bar {
   display:       flex;
-  flex:          1;
+  width:         100%;
   height:        5px;
   border-radius: 3px;
   overflow:      hidden;
-  min-width:     100px;
   background:    rgba(255,255,255,0.05);
 }
 
@@ -401,13 +395,17 @@
 .tp-bar-segment--bear    { background: var(--tp-red); opacity: 0.85; }
 
 .tp-bar-labels {
-  display:     flex;
-  gap:         6px;
-  font-family: var(--tp-font-mono);
-  font-size:   0.65rem;
-  white-space: nowrap;
+  display:               grid;
+  grid-template-columns: repeat(3, 32px);
+  justify-content:       end;
+  font-family:           var(--tp-font-mono);
+  font-size:             0.65rem;
+  white-space:           nowrap;
+  text-align:            right;
 }
+.tp-bar-label { font-variant-numeric: tabular-nums; }
 .tp-bar-label--bull { color: var(--tp-green); }
+.tp-bar-label--neutral { color: var(--tp-neutral); }
 .tp-bar-label--bear { color: var(--tp-red); }
 
 /* ─── Skeleton ────────────────────────────────────────────────────────────── */
@@ -464,4 +462,95 @@
 @keyframes tp-fade-in {
   from { opacity: 0; transform: translateY(5px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .tp-main {
+    padding: 28px 24px;
+  }
+
+  .tp-header {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tp-main,
+  .sidebar.closed ~ .tp-main,
+  .sidebar.open ~ .tp-main {
+    margin-left: 80px;
+    padding: 20px 12px 20px 14px;
+  }
+
+  .tp-header {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 18px;
+  }
+
+  .tp-header-right {
+    justify-content: space-between;
+  }
+
+  .tp-title-row {
+    flex-wrap: wrap;
+  }
+
+  .tp-title {
+    font-size: 1.45rem;
+  }
+
+  .tp-tabs {
+    overflow-x: auto;
+    padding: 0 10px;
+  }
+
+  .tp-tab {
+    padding: 11px 10px;
+  }
+
+  .tp-tab-hint {
+    display: none;
+  }
+
+  .tp-legend {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 10px 12px;
+  }
+
+  .tp-legend-credit {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 520px) {
+  .tp-main,
+  .sidebar.closed ~ .tp-main,
+  .sidebar.open ~ .tp-main {
+    margin-left: 64px;
+    padding: 16px 8px 16px 10px;
+  }
+
+  .tp-card {
+    border-radius: 8px;
+  }
+
+  .tp-table {
+    min-width: 720px;
+  }
+
+  .tp-bar-wrap {
+    grid-template-columns: 130px 96px;
+    min-width: 226px;
+  }
+
+  .tp-th,
+  .tp-td {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
 }

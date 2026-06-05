@@ -7,6 +7,7 @@ import { apiUrl } from '../../lib/api';
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface TickerRow {
+  rank:             number;
   ticker:           string;
   company:          string;
   mentions:         number;
@@ -26,10 +27,9 @@ interface SentimentData {
 }
 
 type Tab        = 'trending' | 'bullish' | 'bearish';
-type SortCol    = 'rank' | 'ticker' | 'mentions' | 'bullish_pct' | 'sentiment';
+type SortCol    = 'rank' | 'ticker' | 'mentions' | 'sentiment_split' | 'sentiment' | 'normalized_score';
 type SortDir    = 'default' | 'desc' | 'asc';
 
-const TAB_ORDER: Tab[] = ['trending', 'bullish', 'bearish'];
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
@@ -56,16 +56,21 @@ function nextDir(current: SortDir): SortDir {
   return 'default';
 }
 
+function sentimentSplitValue(row: TickerRow): number {
+  return Math.max(row.bullish_pct, row.bearish_pct, row.neutral_pct);
+}
+
 function sortRows(rows: TickerRow[], col: SortCol, dir: SortDir): TickerRow[] {
   if (dir === 'default') return rows;
   const sorted = [...rows].sort((a, b) => {
     switch (col) {
-      case 'rank':       return a.mentions - b.mentions; // rank = original order proxy
-      case 'ticker':     return a.ticker.localeCompare(b.ticker);
-      case 'mentions':   return a.mentions - b.mentions;
-      case 'bullish_pct':return a.bullish_pct - b.bullish_pct;
-      case 'sentiment':  return SENTIMENT_ORDER[a.sentiment] - SENTIMENT_ORDER[b.sentiment];
-      default:           return 0;
+      case 'rank':            return a.rank - b.rank;
+      case 'ticker':          return a.ticker.localeCompare(b.ticker);
+      case 'mentions':        return a.mentions - b.mentions;
+      case 'sentiment_split': return sentimentSplitValue(a) - sentimentSplitValue(b);
+      case 'sentiment':       return SENTIMENT_ORDER[a.sentiment] - SENTIMENT_ORDER[b.sentiment];
+      case 'normalized_score':return a.normalized_score - b.normalized_score;
+      default:                return 0;
     }
   });
   return dir === 'desc' ? sorted.reverse() : sorted;
@@ -94,6 +99,7 @@ function SentimentBar({ bullishPct, bearishPct, neutralPct }: {
       </div>
       <div className="tp-bar-labels">
         <span className="tp-bar-label tp-bar-label--bull">{bullishPct.toFixed(0)}%</span>
+        <span className="tp-bar-label tp-bar-label--neutral">{neutralPct.toFixed(0)}%</span>
         <span className="tp-bar-label tp-bar-label--bear">{bearishPct.toFixed(0)}%</span>
       </div>
     </div>
@@ -132,10 +138,10 @@ function SkeletonRows() {
   );
 }
 
-function TableRow({ row, rank }: { row: TickerRow; rank: number }) {
+function TableRow({ row }: { row: TickerRow }) {
   return (
     <tr className="tp-row">
-      <td className="tp-td tp-td--rank">{rank}</td>
+      <td className="tp-td tp-td--rank">{row.rank}</td>
 
       <td className="tp-td">
         <TickerCell ticker={row.ticker} company={row.company} sentiment={row.sentiment} />
@@ -211,13 +217,6 @@ export const TopPosts = () => {
       setSortCol(col);
       setSortDir('desc');
     }
-  };
-
-  // Overall column cycles through tabs instead of sorting
-  const handleOverallClick = () => {
-    const idx  = TAB_ORDER.indexOf(tab);
-    const next = TAB_ORDER[(idx + 1) % TAB_ORDER.length];
-    setTab(next);
   };
 
   const rawRows = data?.[tab] ?? [];
@@ -331,33 +330,33 @@ export const TopPosts = () => {
                     <th
                       className="tp-th tp-th--left tp-th--sortable"
                       style={{ width: 200 }}
-                      onClick={() => handleColSort('bullish_pct')}
+                      onClick={() => handleColSort('sentiment_split')}
                     >
-                      Sentiment Split <SortIcon col="bullish_pct" activeCol={sortCol} dir={sortDir} />
+                      Sentiment Split <SortIcon col="sentiment_split" activeCol={sortCol} dir={sortDir} />
                     </th>
 
                     <th
                       className="tp-th tp-th--center tp-th--sortable tp-th--overall"
                       style={{ width: 88 }}
-                      onClick={handleOverallClick}
-                      title="Click to cycle: Trending → Bullish → Bearish"
+                      onClick={() => handleColSort('sentiment')}
                     >
-                      Overall
-                      <span className="tp-th-cycle-hint">
-                        {tab === 'trending' ? '→ bullish' : tab === 'bullish' ? '→ bearish' : '→ trending'}
-                      </span>
+                      Overall <SortIcon col="sentiment" activeCol={sortCol} dir={sortDir} />
                     </th>
 
-                    <th className="tp-th tp-th--right" style={{ width: 96 }}>
-                      Avg Score
+                    <th
+                      className="tp-th tp-th--right tp-th--sortable"
+                      style={{ width: 96 }}
+                      onClick={() => handleColSort('normalized_score')}
+                    >
+                      Avg Score <SortIcon col="normalized_score" activeCol={sortCol} dir={sortDir} />
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {loading && !data
                     ? <SkeletonRows />
-                    : rows.map((row, i) => (
-                        <TableRow key={row.ticker} row={row} rank={i + 1} />
+                    : rows.map((row) => (
+                        <TableRow key={row.ticker} row={row} />
                       ))}
                 </tbody>
               </table>

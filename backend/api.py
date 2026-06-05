@@ -97,29 +97,15 @@ def _load_tickers() -> list[dict]:
         raise HTTPException(status_code=500, detail=f"Malformed sentiment file: {e}")
 
 
-def _bullish_score(t: dict) -> float:
-    """
-    Continuous ranking — no hard filter by overall_sentiment.
-    Primary signal: sentiment_ratio (% bullish mentions).
-    This naturally puts confirmed bullish tickers first, then neutral,
-    then bearish at the bottom — ordered by least bearish among those.
-    Multiplied by normalized_semantic_score magnitude to separate tickers
-    with identical ratios by conviction strength.
-    """
-    return t["sentiment_ratio"] * (1 + abs(t["normalized_semantic_score"]))
+def _bullish_score(t: dict) -> tuple[float, int]:
+    return (float(t.get("semantic_score", 0)), int(t.get("mentions", 0)))
 
 
-def _bearish_score(t: dict) -> float:
-    """
-    Mirror of bullish — ranks by highest bearish % first (1 - sentiment_ratio),
-    then least bullish as the fallback. Tickers with identical bearish ratios
-    are separated by conviction strength.
-    """
-    bearish_ratio = 1.0 - t["sentiment_ratio"]
-    return bearish_ratio * (1 + abs(t["normalized_semantic_score"]))
+def _bearish_score(t: dict) -> tuple[float, int]:
+    return (-float(t.get("semantic_score", 0)), int(t.get("mentions", 0)))
 
 
-def _format_ticker(t: dict, score: float) -> dict:
+def _format_ticker(t: dict, rank: int, score: float) -> dict:
     n = t["mentions"]
     # True three-way split — these three always sum to 100%
     bullish_pct = round(t["positive_count"] / n * 100, 1) if n else 0
@@ -127,6 +113,7 @@ def _format_ticker(t: dict, score: float) -> dict:
     neutral_pct = round(100 - bullish_pct - bearish_pct, 1)
 
     return {
+        "rank":             rank,
         "ticker":           t["ticker"],
         "company":          _company_name(t),
         "mentions":         n,
