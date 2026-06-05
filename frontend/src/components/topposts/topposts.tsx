@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import './topposts.css';
 import Sidebar from '../sidebar/sidebar';
 import { TrendingUp, TrendingDown, Activity, RefreshCw, AlertCircle, ChevronsUpDown, ChevronDown, ChevronUp } from 'lucide-react';
+import { apiUrl } from '../../lib/api';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -46,7 +47,6 @@ const TAB_ACTIVE_CLASS: Record<Tab, string> = {
 
 const SENTIMENT_ORDER = { bullish: 0, neutral: 1, bearish: 2 };
 
-const API_URL = 'http://localhost:8000/top-posts';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -183,7 +183,7 @@ export const TopPosts = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(API_URL);
+      const res = await fetch(apiUrl('/top-posts'));
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const json: SentimentData & { error?: string } = await res.json();
       if (json.error) throw new Error(json.error);

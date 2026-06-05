@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import MyChart from "./MyChart";
 import sampleData from "../../portfolio_data/portfolio_total_investment.json";
 import spxData from "../../portfolio_data/spx_data.json";

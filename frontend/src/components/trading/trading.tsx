@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './trading.css';
 import Sidebar from '../sidebar/sidebar';
 import Graph from '../graphs/Graph';

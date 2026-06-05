@@ -3,6 +3,7 @@ import './wsbchatbot.css';
 import char from '../../assets/aigirl.jpg';
 import char2 from '../../assets/wojak.jpg';
 import Sidebar from '../sidebar/sidebar';
+import { apiUrl } from '../../lib/api';
 
 type Sender = 'user' | 'bot';
 
@@ -26,7 +27,7 @@ export const WsbChatbot: React.FC = () => {
 
   // Load conversation history once on mount
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/history')
+    fetch(apiUrl('/history'))
       .then(r => r.json())
       .then(data => {
         setMessages(
@@ -58,7 +59,7 @@ export const WsbChatbot: React.FC = () => {
     ]);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/chat', {
+      const res = await fetch(apiUrl('/chat'), {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ message: userText }),
