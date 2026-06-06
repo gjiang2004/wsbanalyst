@@ -23,3 +23,10 @@ wsb-mistral-finetuned2/
 
 # Generated short-window scrape input
 wsb_posts_24h.json
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+
+# Generated per-day simulation snapshots; frontend uses portfolio_total_investment.json
+frontend/src/portfolio_data/portfolio_*.json
+!frontend/src/portfolio_data/portfolio_total_investment.json

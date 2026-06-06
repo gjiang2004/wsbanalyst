@@ -11,7 +11,7 @@
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  align-items: flex-end;
+  align-items: flex-start;
 }
 
 .graph-header h1,
@@ -23,8 +23,9 @@
 }
 
 .graph-header h1 {
-  font-size: clamp(1.6rem, 4vw, 2.35rem);
-  line-height: 1.1;
+  font-size: clamp(1.65rem, 4vw, 2.4rem);
+  line-height: 1.05;
+  font-weight: 800;
 }
 
 .graph-header p,
@@ -103,11 +104,11 @@
   font-size: 0.93rem;
 }
 
-.closed-trades-panel {
+.collapsible-trades-panel {
   align-self: start;
 }
 
-.closed-trades-toggle {
+.trade-panel-toggle {
   width: 100%;
   min-height: 42px;
   display: flex;
@@ -122,18 +123,18 @@
   cursor: pointer;
 }
 
-.closed-trades-toggle:hover,
-.closed-trades-toggle:focus-visible {
+.trade-panel-toggle:hover,
+.trade-panel-toggle:focus-visible {
   border-color: rgba(94, 234, 212, 0.28);
   background: rgba(94, 234, 212, 0.08);
   outline: none;
 }
 
-.closed-trades-toggle span {
+.trade-panel-toggle span {
   font-weight: 800;
 }
 
-.closed-trades-toggle strong {
+.trade-panel-toggle strong {
   min-width: 2rem;
   min-height: 1.6rem;
   display: grid;
@@ -143,8 +144,25 @@
   background: rgba(94, 234, 212, 0.12);
 }
 
-.closed-trades-panel .trade-list,
-.closed-trades-panel .trade-empty {
+.trade-panel-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
+}
+
+.trade-panel-body.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.trade-panel-body-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.collapsible-trades-panel .trade-list,
+.collapsible-trades-panel .trade-empty {
   margin-top: 0.75rem;
 }
 

@@ -174,6 +174,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-confidence", type=float, default=float(os.getenv("MIN_TICKER_CONFIDENCE", "0.65")))
     parser.add_argument("--request-delay", type=float, default=float(os.getenv("REDDIT_REQUEST_DELAY", "0.6")))
     parser.add_argument("--state-file", default=os.getenv("WSB_SCRAPE_STATE_FILE", "wsb_scrape_state.json"))
+    parser.add_argument("--storage", choices=("db", "json"), default=os.getenv("WSB_STORAGE", "db"))
     parser.add_argument("--overlap-minutes", type=float, default=float(os.getenv("WSB_SCRAPE_OVERLAP_MINUTES", "30")))
     parser.add_argument("--score-refresh-days", type=float, default=float(os.getenv("WSB_SCORE_REFRESH_DAYS", "3")))
     parser.add_argument("--max-score-refresh", type=int, default=int(os.getenv("WSB_MAX_SCORE_REFRESH", "150")))
@@ -193,7 +194,21 @@ def main() -> None:
     store_path = Path(args.store_file)
     output_path = Path(args.output)
     state_path = Path(args.state_file)
-    existing_posts = [] if args.rebuild else _load_posts(store_path)
+    use_database = args.storage == "db"
+    db_store = None
+
+    if use_database:
+        import db_store as db_module
+        db_store = db_module
+        db_store.init_db()
+        if not args.rebuild and db_store.count_posts() == 0 and store_path.exists():
+            seed_posts = _load_posts(store_path)
+            if seed_posts:
+                print(f"Seeding database from {store_path} ({len(seed_posts)} posts)...")
+                db_store.save_posts(seed_posts, subreddit=args.subreddit)
+        existing_posts = [] if args.rebuild else db_store.load_posts(window_days=args.window_days)
+    else:
+        existing_posts = [] if args.rebuild else _load_posts(store_path)
 
     if args.rebuild:
         scrape_days = args.window_days
@@ -205,7 +220,7 @@ def main() -> None:
         )
         incoming_posts = scraped_posts
     else:
-        state = _load_state(state_path)
+        state = db_store.load_state() if use_database and db_store else _load_state(state_path)
         fallback_since = (datetime.now() - timedelta(days=args.scrape_days)).timestamp()
         overlap_seconds = max(args.overlap_minutes, 0) * 60
         post_since = float(state.get("last_post_seen_at", fallback_since)) - overlap_seconds
@@ -242,20 +257,30 @@ def main() -> None:
 
     merged_posts = _merge_posts(existing_posts, incoming_posts)
     rolling_posts = _prune_posts(merged_posts, args.window_days)
+
+    if use_database and db_store:
+        db_store.save_posts(rolling_posts, subreddit=args.subreddit)
+        db_store.prune_old(args.window_days)
+        rolling_posts = db_store.load_posts(window_days=args.window_days)
+
     _write_posts(store_path, rolling_posts)
 
     latest_post = _latest_post_ts(rolling_posts)
     latest_comment = _latest_comment_ts(rolling_posts)
     if latest_post or latest_comment:
-        _write_state(state_path, {
+        next_state = {
             "last_successful_run_at": datetime.now().timestamp(),
             "last_post_seen_at": latest_post or datetime.now().timestamp(),
             "last_comment_seen_at": latest_comment or latest_post or datetime.now().timestamp(),
             "window_days": args.window_days,
-        })
+        }
+        if use_database and db_store:
+            db_store.write_state(next_state)
+        else:
+            _write_state(state_path, next_state)
 
     print(
-        f"Post store: {len(existing_posts)} existing + {len(incoming_posts)} incoming "
+        f"Post store ({'database' if use_database else 'json'}): {len(existing_posts)} existing + {len(incoming_posts)} incoming "
         f"-> {len(rolling_posts)} kept over {args.window_days:g} day(s)."
     )
 

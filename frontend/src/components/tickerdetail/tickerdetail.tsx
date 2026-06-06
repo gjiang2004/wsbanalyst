@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
-import Sidebar from '../sidebar/sidebar';
 import { apiUrl } from '../../lib/api';
+import Sidebar from '../sidebar/sidebar';
 import './tickerdetail.css';
 
 type Sentiment = 'bullish' | 'bearish' | 'neutral';
@@ -16,6 +16,7 @@ interface TickerSummary {
   bearish_pct: number;
   neutral_pct: number;
   normalized_score: number;
+  asset_type: string;
 }
 
 interface SentimentSample {
@@ -36,6 +37,7 @@ interface SentimentSample {
 interface TickerDetailData {
   ticker: string;
   company: string;
+  asset_type: string;
   summary: TickerSummary;
   semantic_score: number;
   positive_score: number;
@@ -99,6 +101,8 @@ export const TickerDetail = () => {
     return Object.entries(data.detection_methods).sort((a, b) => b[1] - a[1]);
   }, [data]);
 
+  const companyName = data?.company || data?.summary?.company || '';
+
   return (
     <div className="td-layout">
       <Sidebar onToggle={setIsSidebarOpen} />
@@ -111,9 +115,11 @@ export const TickerDetail = () => {
         {data && (
           <>
             <section className="td-hero">
-              <div>
-                <h1>{data.ticker}</h1>
-                {data.company && <p>{data.company}</p>}
+              <div className="td-hero-title">
+                <h1>
+                  {data.ticker}{companyName && <span className="td-company-name"> - {companyName}</span>}
+                  <span className="td-asset-tag">{data.asset_type || data.summary.asset_type || 'Unknown'}</span>
+                </h1>
               </div>
               <span className={`td-sentiment td-sentiment--${data.summary.sentiment}`}>{data.summary.sentiment}</span>
             </section>

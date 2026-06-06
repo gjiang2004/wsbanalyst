@@ -15,7 +15,7 @@
     #10121a;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 12px 0 32px rgba(0, 0, 0, 0.28);
-  transition: width 180ms ease;
+  transition: width 260ms cubic-bezier(0.22, 1, 0.36, 1), padding 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sidebar.open {
@@ -51,6 +51,11 @@
   display: grid;
   gap: 0.05rem;
   min-width: 0;
+  overflow: hidden;
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1), max-width 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  max-width: 140px;
 }
 
 .sidebar-brand strong {
@@ -67,8 +72,21 @@
 }
 
 .sidebar.closed .sidebar-brand {
+  background: transparent;
+  border-color: transparent;
+  width: 46px;
   justify-content: center;
-  padding-inline: 0.35rem;
+  align-self: center;
+  padding-inline: 0;
+  gap: 0;
+}
+
+.sidebar.closed .sidebar-brand span,
+.sidebar.closed .sidebar-label {
+  opacity: 0;
+  max-width: 0;
+  transform: translateX(-6px);
+  pointer-events: none;
 }
 
 .sidebar-content {
@@ -88,8 +106,10 @@
   border-radius: 8px;
   color: rgba(255, 255, 255, 0.68);
   text-decoration: none;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border: 1px solid transparent;
-  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease, width 260ms cubic-bezier(0.22, 1, 0.36, 1), padding 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sidebar-item:hover {
@@ -105,8 +125,12 @@
 }
 
 .sidebar.closed .sidebar-item {
+  width: 46px;
+  min-height: 46px;
   justify-content: center;
+  align-self: center;
   padding-inline: 0;
+  gap: 0;
 }
 
 .sidebar-icon {
@@ -120,6 +144,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   letter-spacing: 0;
+  max-width: 150px;
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1), max-width 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sidebar-toggle {
@@ -151,8 +179,13 @@
   }
 
   .sidebar-brand {
+    background: transparent;
+    border-color: transparent;
+    width: 46px;
     justify-content: center;
-    padding-inline: 0.35rem;
+    align-self: center;
+    padding-inline: 0;
+    gap: 0;
   }
 
   .sidebar-brand span,
@@ -161,7 +194,11 @@
   }
 
   .sidebar-item {
+    width: 46px;
+    min-height: 46px;
     justify-content: center;
+    align-self: center;
     padding-inline: 0;
+    gap: 0;
   }
 }

@@ -5,16 +5,12 @@ import Graph from '../graphs/Graph';
 
 export const Trading = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  
-  const handleSidebarToggle = (isOpen: boolean | ((prevState: boolean) => boolean)) => {
-    setIsSidebarOpen(isOpen);
-  };
-  
+
   return (
     <>
-      <Sidebar onToggle={handleSidebarToggle} />
+      <Sidebar onToggle={setIsSidebarOpen} />
       <div className={`trading-container ${isSidebarOpen ? '' : 'sidebar-closed'}`}>
-        <div className={`trading-content ${isSidebarOpen ? '' : 'sidebar-closed'}`}>
+        <div className="trading-content">
           <Graph />
         </div>
       </div>

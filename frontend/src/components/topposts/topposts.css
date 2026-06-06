@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap');
-
 .tp-layout {
   --tp-bg: #0b1020;
   --tp-panel: #11182a;
@@ -13,21 +11,26 @@
   --tp-red: #ff5252;
   --tp-blue: #5aa8ff;
   --tp-gold: #f0c060;
-  --tp-font: 'Barlow', sans-serif;
-  --tp-mono: 'DM Mono', monospace;
-  display: flex;
+  --tp-font: inherit;
+  --tp-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  height: 100vh;
   min-height: 100vh;
+  display: flex;
+  overflow: hidden;
   background: var(--tp-bg);
   color: var(--tp-text);
-  font-family: var(--tp-font);
 }
 
 .tp-main {
   flex: 1;
   min-width: 0;
+  height: 100vh;
   margin-left: 250px;
   padding: clamp(1.25rem, 3vw, 2.5rem);
-  transition: margin-left 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), padding 0.2s;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: margin-left 0.25s ease, padding 0.2s;
 }
 
 .sidebar.closed ~ .tp-main {
@@ -40,6 +43,7 @@
   align-items: flex-start;
   gap: 1rem;
   margin-bottom: 1rem;
+  flex: 0 0 auto;
 }
 
 .tp-title-row {
@@ -59,7 +63,7 @@
 
 .tp-badge {
   font-family: var(--tp-mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   padding: 0.28rem 0.5rem;
   border-radius: 5px;
   color: var(--tp-gold);
@@ -78,6 +82,48 @@
   align-items: center;
   gap: 0.7rem;
   flex-shrink: 0;
+}
+
+
+.tp-search {
+  width: min(280px, 34vw);
+  min-width: 210px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.75rem;
+  color: var(--tp-muted);
+  background: var(--tp-panel-2);
+  border: 1px solid var(--tp-border);
+  border-radius: 8px;
+}
+
+.tp-search:focus-within {
+  color: var(--tp-text);
+  border-color: rgba(94, 234, 212, 0.32);
+  box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.08);
+}
+
+.tp-search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  color: var(--tp-text);
+  background: transparent;
+  font-size: 0.92rem;
+}
+
+.tp-search input::placeholder {
+  color: var(--tp-faint);
+}
+
+.tp-empty-row {
+  padding: 2rem 1rem;
+  color: var(--tp-muted);
+  text-align: center;
+  font-size: 1rem;
 }
 
 .tp-timestamp {
@@ -111,6 +157,10 @@
 .tp-refresh--spinning svg { animation: tp-spin 0.8s linear infinite; }
 
 .tp-card {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   background: var(--tp-panel);
   border: 1px solid var(--tp-border);
@@ -119,6 +169,7 @@
 }
 
 .tp-tabs {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   gap: 0.35rem;
@@ -138,7 +189,7 @@
   background: transparent;
   color: var(--tp-muted);
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   white-space: nowrap;
 }
 
@@ -189,27 +240,33 @@
 }
 
 .tp-table-wrap {
-  overflow-x: auto;
+  flex: 1 1 auto;
+  min-height: 0;
   max-width: 100%;
+  overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 .tp-table {
   width: 100%;
-  min-width: 760px;
+  min-width: 940px;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .tp-th {
-  padding: 0.75rem 0.85rem;
+  padding: 0.86rem 1rem;
   color: var(--tp-faint);
   font-family: var(--tp-mono);
-  font-size: 0.68rem;
-  font-weight: 500;
+  font-size: 0.78rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border-bottom: 1px solid var(--tp-border-soft);
-  background: rgba(255, 255, 255, 0.018);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #121a2d;
   white-space: nowrap;
 }
 
@@ -218,6 +275,16 @@
 .tp-th--center { text-align: center; }
 .tp-th--sortable { cursor: pointer; user-select: none; }
 .tp-th--sortable:hover { color: var(--tp-text); }
+
+.tp-th--filter {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tp-th--type-filter {
+  max-width: 150px;
+}
+
 
 .tp-sort-icon {
   display: inline-block;
@@ -239,19 +306,42 @@
 .tp-row:last-child { border-bottom: none; }
 
 .tp-td {
-  padding: 0.85rem;
+  padding: 1rem;
   vertical-align: middle;
+  font-size: 0.98rem;
   white-space: nowrap;
 }
 
 .tp-td--right { text-align: right; }
 .tp-td--center { text-align: center; }
+.tp-td--number {
+  text-align: left;
+  padding-left: 0.85rem;
+}
+
+.tp-th--left.tp-th--sortable {
+  padding-left: 0.85rem;
+}
+
+.tp-td--asset {
+  padding-left: 0.85rem;
+}
+
+.tp-td--ticker {
+  height: 100%;
+}
+
+.tp-td--ticker .tp-ticker-wrap {
+  min-height: 1.35rem;
+}
+
 .tp-td--rank {
   width: 46px;
   color: var(--tp-faint);
   font-family: var(--tp-mono);
-  font-size: 0.78rem;
-  text-align: right;
+  font-size: 0.9rem;
+  text-align: left;
+  padding-left: 0.85rem;
 }
 
 .tp-ticker-wrap {
@@ -260,36 +350,51 @@
   align-items: center;
 }
 
+
 .tp-ticker {
+  display: inline-flex;
+  align-items: center;
   font-family: var(--tp-mono);
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1;
 }
 
 .tp-ticker--bullish { color: var(--tp-green); }
 .tp-ticker--bearish { color: var(--tp-red); }
 .tp-ticker--neutral { color: var(--tp-blue); }
 
-.tp-tooltip {
-  position: absolute;
-  bottom: calc(100% + 7px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  max-width: 240px;
-  padding: 0.45rem 0.6rem;
-  background: #10192a;
-  border: 1px solid var(--tp-border);
-  border-radius: 6px;
-  color: var(--tp-text);
-  font-size: 0.75rem;
-  white-space: normal;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+.tp-asset-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 0.48rem;
+  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.065);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
 }
+
+.tp-asset-tag--etf {
+  color: #bffbf2;
+  background: rgba(94, 234, 212, 0.1);
+  border-color: rgba(94, 234, 212, 0.22);
+}
+
+.tp-asset-tag--fund,
+.tp-asset-tag--fund-other {
+  color: #f0c060;
+  background: rgba(240, 192, 96, 0.1);
+  border-color: rgba(240, 192, 96, 0.2);
+}
+
 
 .tp-mono {
   font-family: var(--tp-mono);
-  font-size: 0.82rem;
+  font-size: 0.96rem;
 }
 
 .tp-norm-score--pos { color: var(--tp-green); }
@@ -298,11 +403,11 @@
 .tp-sentiment-badge {
   display: inline-flex;
   justify-content: center;
-  min-width: 74px;
-  padding: 0.25rem 0.5rem;
+  min-width: 84px;
+  padding: 0.32rem 0.58rem;
   border-radius: 5px;
   font-family: var(--tp-mono);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
 }
 
@@ -326,15 +431,15 @@
 
 .tp-bar-wrap {
   display: grid;
-  grid-template-columns: 150px 102px;
+  grid-template-columns: 180px 123px;
   align-items: center;
   gap: 0.75rem;
-  min-width: 264px;
+  min-width: 326px;
 }
 
 .tp-bar {
-  width: 150px;
-  height: 7px;
+  width: 180px;
+  height: 9px;
   display: flex;
   overflow: hidden;
   border-radius: 999px;
@@ -348,10 +453,10 @@
 
 .tp-bar-labels {
   display: grid;
-  grid-template-columns: repeat(3, 34px);
+  grid-template-columns: repeat(3, 41px);
   color: var(--tp-faint);
   font-family: var(--tp-mono);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   text-align: right;
 }
 
@@ -369,6 +474,7 @@
 }
 
 .tp-legend {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -398,7 +504,8 @@
 @media (max-width: 900px) {
   .tp-main { padding: 1rem; }
   .tp-header { flex-direction: column; }
-  .tp-header-right { width: 100%; justify-content: space-between; }
+  .tp-header-right { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+  .tp-search { width: min(100%, 360px); }
 }
 
 @media (max-width: 768px) {
@@ -408,8 +515,9 @@
     margin-left: 80px;
   }
 
+  .tp-search { min-width: 100%; }
   .tp-tab-hint { display: none; }
-  .tp-table { min-width: 740px; }
+  .tp-table { min-width: 920px; }
 }
 
 @media (max-width: 520px) {
@@ -417,11 +525,11 @@
   .sidebar.closed ~ .tp-main,
   .sidebar.open ~ .tp-main {
     margin-left: 64px;
-    padding: 0.75rem;
+    padding: 1rem;
   }
 
   .tp-card { border-radius: 8px; }
-  .tp-table { min-width: 720px; }
-  .tp-th, .tp-td { padding-left: 0.65rem; padding-right: 0.65rem; }
+  .tp-table { min-width: 900px; }
+  .tp-th, .tp-td { padding-left: 0.85rem; padding-right: 0.65rem; }
   .tp-legend-credit { width: 100%; margin-left: 0; }
 }

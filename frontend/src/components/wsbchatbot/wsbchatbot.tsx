@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import './wsbchatbot.css';
 import char from '../../assets/aigirl.jpg';
 import char2 from '../../assets/wojak.jpg';
-import Sidebar from '../sidebar/sidebar';
 import { apiUrl } from '../../lib/api';
+import Sidebar from '../sidebar/sidebar';
 
 type Sender = 'user' | 'bot';
 
@@ -13,17 +13,13 @@ interface Message {
 }
 
 export const WsbChatbot: React.FC = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [message, setMessage]             = useState<string>('');
   const [messages, setMessages]           = useState<Message[]>([]);
   const [isStreaming, setIsStreaming]      = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen]  = useState(true);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const chatWindowRef  = useRef<HTMLDivElement | null>(null);
-
-  const handleSidebarToggle = (isOpen: boolean | ((prevState: boolean) => boolean)) => {
-    setIsSidebarOpen(isOpen);
-  };
 
   // Load conversation history once on mount
   useEffect(() => {
@@ -101,7 +97,7 @@ export const WsbChatbot: React.FC = () => {
 
   return (
     <div className="page-container">
-      <Sidebar onToggle={handleSidebarToggle} />
+      <Sidebar onToggle={setIsSidebarOpen} />
       <div className={`chat-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
         <div className="chat-box">
           <div className="chat-window" ref={chatWindowRef}>

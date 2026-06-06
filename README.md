@@ -6,7 +6,8 @@ This is research software, not financial advice.
 
 ## Current Data Model
 
-- `wsb_posts.json` is the rolling raw Reddit bank. It is configured for 28 days.
+- Raw Reddit posts/comments are stored in a database by default. Local development uses SQLite at `wsb_data.sqlite3`; production can use Postgres via `DATABASE_URL`.
+- `wsb_posts.json` is still exported as a compatibility snapshot for analysis/training scripts. It is configured for 28 days.
 - `ticker_sentiment.json` is the active Top Posts sentiment output. It is calculated from the latest 14 days only.
 - `backend/agg_sentiment.json` stores daily ticker sentiment rows used by the simulator.
 - The simulator uses a rolling 14-day sentiment lookback. With a 28-day bank, the first 14 days warm up the signal and the next ~14 days can be simulated.
@@ -60,12 +61,29 @@ cd frontend
 npm run build
 ```
 
+
+## Database
+
+The sentiment updater uses DB storage by default (`WSB_STORAGE=db`). If `DATABASE_URL` is omitted, it writes to local SQLite:
+
+```bash
+DATABASE_URL=sqlite:///wsb_data.sqlite3
+```
+
+For production, point `DATABASE_URL` at Postgres:
+
+```bash
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DBNAME
+```
+
+The pipeline still exports `wsb_posts.json`, `ticker_sentiment.json`, and `backend/agg_sentiment.json` so the existing analyzer, frontend, simulation, and chatbot flows continue to work. On the first DB run, `update_sentiment.py` seeds the database from `wsb_posts.json` if the database is empty.
+
 ## Refresh Sentiment
 
 Incremental refresh for normal use:
 
 ```bash
-venv/bin/python update_sentiment.py   --scrape-days 1   --window-days 28   --aggregate-days 14   --store-file wsb_posts.json   --output ticker_sentiment.json   --daily-output backend/agg_sentiment.json
+venv/bin/python update_sentiment.py   --storage db   --scrape-days 1   --window-days 28   --aggregate-days 14   --store-file wsb_posts.json   --output ticker_sentiment.json   --daily-output backend/agg_sentiment.json
 ```
 
 GitHub Actions runs this every 15 minutes with overlap so boundary posts/comments are merged by ID instead of missed. A separate nightly workflow refreshes scores for the active 14-day sentiment window.

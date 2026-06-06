@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import './topposts.css';
-import Sidebar from '../sidebar/sidebar';
-import { TrendingUp, TrendingDown, Activity, RefreshCw, AlertCircle, ChevronsUpDown, ChevronDown, ChevronUp } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, RefreshCw, AlertCircle, ChevronsUpDown, ChevronDown, ChevronUp, Search, Filter } from 'lucide-react';
 import { apiUrl } from '../../lib/api';
+import Sidebar from '../sidebar/sidebar';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -11,26 +11,29 @@ interface TickerRow {
   rank:             number;
   ticker:           string;
   company:          string;
+  asset_type:       string;
   mentions:         number;
   sentiment:        'bullish' | 'bearish' | 'neutral';
   bullish_pct:      number;
   bearish_pct:      number;
   neutral_pct:      number;
   normalized_score: number;
-  score:            number;
 }
 
 interface SentimentData {
   trending: TickerRow[];
   bullish:  TickerRow[];
   bearish:  TickerRow[];
-  meta:     { total_tickers: number };
+  meta:     { total_tickers: number; limit?: number; sentiment_window_days?: number; source_total_posts?: number };
 }
 
 type Tab        = 'trending' | 'bullish' | 'bearish';
-type SortCol    = 'rank' | 'ticker' | 'mentions' | 'sentiment_split' | 'sentiment' | 'normalized_score';
+type SortCol    = 'rank' | 'ticker' | 'mentions' | 'sentiment_split' | 'normalized_score';
 type SortDir    = 'default' | 'desc' | 'asc';
 
+
+const DEFAULT_VISIBLE_ROWS = 100;
+const FULL_SENTIMENT_LIMIT = 5000;
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
@@ -46,7 +49,6 @@ const TAB_ACTIVE_CLASS: Record<Tab, string> = {
   bearish:  'tp-tab--bearish',
 };
 
-const SENTIMENT_ORDER = { bullish: 0, neutral: 1, bearish: 2 };
 
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -69,7 +71,6 @@ function sortRows(rows: TickerRow[], col: SortCol, dir: SortDir): TickerRow[] {
       case 'ticker':          return a.ticker.localeCompare(b.ticker);
       case 'mentions':        return a.mentions - b.mentions;
       case 'sentiment_split': return sentimentSplitValue(a) - sentimentSplitValue(b);
-      case 'sentiment':       return SENTIMENT_ORDER[a.sentiment] - SENTIMENT_ORDER[b.sentiment];
       case 'normalized_score':return a.normalized_score - b.normalized_score;
       default:                return 0;
     }
@@ -107,22 +108,19 @@ function SentimentBar({ bullishPct, bearishPct, neutralPct }: {
   );
 }
 
-function TickerCell({ ticker, company, sentiment }: {
+function TickerCell({ ticker, sentiment }: {
   ticker:    string;
-  company:   string;
   sentiment: string;
 }) {
-  const [hovered, setHovered] = useState(false);
   return (
-    <div
-      className="tp-ticker-wrap"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+    <div className="tp-ticker-wrap">
       <Link className={`tp-ticker tp-ticker--${sentiment}`} to={`/ticker/${ticker}`}>{ticker}</Link>
-      {company && hovered && <div className="tp-tooltip">{company}</div>}
     </div>
   );
+}
+
+function assetTagClass(assetType: string): string {
+  return assetType.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 }
 
 function SkeletonRows() {
@@ -130,7 +128,7 @@ function SkeletonRows() {
     <>
       {Array.from({ length: 10 }).map((_, i) => (
         <tr key={i} className="tp-skeleton-row">
-          {[24, 64, 48, 160, 72, 80].map((w, j) => (
+          {[24, 64, 72, 48, 160, 72, 80].map((w, j) => (
             <td key={j}><div className="tp-skeleton" style={{ width: w }} /></td>
           ))}
         </tr>
@@ -144,12 +142,16 @@ function TableRow({ row }: { row: TickerRow }) {
     <tr className="tp-row">
       <td className="tp-td tp-td--rank">{row.rank}</td>
 
-      <td className="tp-td">
-        <TickerCell ticker={row.ticker} company={row.company} sentiment={row.sentiment} />
+      <td className="tp-td tp-td--ticker">
+        <TickerCell ticker={row.ticker} sentiment={row.sentiment} />
       </td>
 
-      <td className="tp-td tp-td--right">
+      <td className="tp-td tp-td--number">
         <span className="tp-mono">{row.mentions.toLocaleString()}</span>
+      </td>
+
+      <td className="tp-td tp-td--asset">
+        <span className={`tp-asset-tag tp-asset-tag--${assetTagClass(row.asset_type)}`}>{row.asset_type || 'Unknown'}</span>
       </td>
 
       <td className="tp-td">
@@ -166,7 +168,7 @@ function TableRow({ row }: { row: TickerRow }) {
         </span>
       </td>
 
-      <td className="tp-td tp-td--right">
+      <td className="tp-td tp-td--number">
         <span className={`tp-mono tp-norm-score tp-norm-score--${row.normalized_score >= 0 ? 'pos' : 'neg'}`}>
           {row.normalized_score >= 0 ? '+' : ''}{row.normalized_score.toFixed(4)}
         </span>
@@ -185,12 +187,15 @@ export const TopPosts = () => {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [sortCol,     setSortCol]     = useState<SortCol>('rank');
   const [sortDir,     setSortDir]     = useState<SortDir>('default');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [typeFilter, setTypeFilter] = useState('All');
+  const [sentimentFilter, setSentimentFilter] = useState<'All' | 'bullish' | 'bearish' | 'neutral'>('All');
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(apiUrl('/top-posts'));
+      const res = await fetch(apiUrl(`/top-posts?limit=${FULL_SENTIMENT_LIMIT}`));
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const json: SentimentData & { error?: string } = await res.json();
       if (json.error) throw new Error(json.error);
@@ -209,9 +214,17 @@ export const TopPosts = () => {
   useEffect(() => {
     setSortCol('rank');
     setSortDir('default');
+    setTypeFilter('All');
+    setSentimentFilter('All');
   }, [tab]);
 
   const handleColSort = (col: SortCol) => {
+    if (col === 'mentions') {
+      setSortCol('mentions');
+      setSortDir(prev => (sortCol === 'mentions' && prev === 'desc' ? 'asc' : 'desc'));
+      return;
+    }
+
     if (col === sortCol) {
       setSortDir(prev => nextDir(prev));
     } else {
@@ -220,19 +233,51 @@ export const TopPosts = () => {
     }
   };
 
-  const rawRows = data?.[tab] ?? [];
+  const normalizedSearch = searchQuery.trim().toLowerCase();
 
-  const rows = useMemo(
-    () => sortRows(rawRows, sortCol, sortDir),
-    [rawRows, sortCol, sortDir]
-  );
+  const availableTypes = useMemo(() => {
+    const rawRows = data?.[tab] ?? [];
+    return ['All', ...Array.from(new Set(rawRows.map((row) => row.asset_type || 'Unknown'))).sort()];
+  }, [data, tab]);
+
+  const handleTypeFilter = () => {
+    setTypeFilter((current) => {
+      const currentIndex = availableTypes.indexOf(current);
+      return availableTypes[(currentIndex + 1) % availableTypes.length] || 'All';
+    });
+  };
+
+  const handleSentimentFilter = () => {
+    const order: Array<'All' | 'bullish' | 'bearish' | 'neutral'> = ['All', 'bullish', 'bearish', 'neutral'];
+    setSentimentFilter((current) => order[(order.indexOf(current) + 1) % order.length]);
+  };
+
+  const rows = useMemo(() => {
+    const rawRows = data?.[tab] ?? [];
+    const searchedRows = normalizedSearch
+      ? rawRows.filter((row) =>
+          row.ticker.toLowerCase().includes(normalizedSearch) ||
+          row.company.toLowerCase().includes(normalizedSearch) ||
+          row.asset_type.toLowerCase().includes(normalizedSearch)
+        )
+      : rawRows;
+    const typeFilteredRows = typeFilter === 'All'
+      ? searchedRows
+      : searchedRows.filter((row) => (row.asset_type || 'Unknown') === typeFilter);
+    const sentimentFilteredRows = sentimentFilter === 'All'
+      ? typeFilteredRows
+      : typeFilteredRows.filter((row) => row.sentiment === sentimentFilter);
+    return sortRows(sentimentFilteredRows, sortCol, sortDir);
+  }, [data, tab, normalizedSearch, typeFilter, sentimentFilter, sortCol, sortDir]);
+
+  const visibleRows = normalizedSearch ? rows : rows.slice(0, DEFAULT_VISIBLE_ROWS);
 
   const { icon: TabIcon, hint } = TAB_CONFIG[tab];
+  const sentimentWindowDays = data?.meta.sentiment_window_days ?? 14;
 
   return (
     <div className="tp-layout">
       <Sidebar onToggle={() => {}} />
-
       <main className="tp-main">
 
         {/* Header */}
@@ -244,12 +289,21 @@ export const TopPosts = () => {
             </div>
             <p className="tp-subtitle">
               {data
-                ? `${data.meta.total_tickers} tickers tracked · last 30 days`
+                ? `${data.meta.total_tickers} tickers searchable · showing ${normalizedSearch ? rows.length : Math.min(DEFAULT_VISIBLE_ROWS, rows.length)} · last ${Number(sentimentWindowDays).toLocaleString(undefined, { maximumFractionDigits: 1 })} days`
                 : 'loading market sentiment...'}
             </p>
           </div>
 
           <div className="tp-header-right">
+            <label className="tp-search" aria-label="Search tickers">
+              <Search size={15} />
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search ticker or company"
+              />
+            </label>
             {lastUpdated && (
               <span className="tp-timestamp">
                 {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -305,7 +359,7 @@ export const TopPosts = () => {
                 <thead>
                   <tr>
                     <th
-                      className="tp-th tp-th--right tp-th--sortable"
+                      className="tp-th tp-th--left tp-th--sortable"
                       style={{ width: 28 }}
                       onClick={() => handleColSort('rank')}
                     >
@@ -321,11 +375,20 @@ export const TopPosts = () => {
                     </th>
 
                     <th
-                      className="tp-th tp-th--right tp-th--sortable"
+                      className="tp-th tp-th--left tp-th--sortable"
                       style={{ width: 80 }}
                       onClick={() => handleColSort('mentions')}
                     >
                       Mentions <SortIcon col="mentions" activeCol={sortCol} dir={sortDir} />
+                    </th>
+
+                    <th
+                      className="tp-th tp-th--left tp-th--sortable tp-th--filter tp-th--type-filter"
+                      style={{ width: 150 }}
+                      onClick={handleTypeFilter}
+                      title="Cycle type filter"
+                    >
+                      Type: {typeFilter} <Filter size={10} className="tp-sort-icon tp-sort-icon--active" />
                     </th>
 
                     <th
@@ -337,15 +400,16 @@ export const TopPosts = () => {
                     </th>
 
                     <th
-                      className="tp-th tp-th--center tp-th--sortable tp-th--overall"
-                      style={{ width: 88 }}
-                      onClick={() => handleColSort('sentiment')}
+                      className="tp-th tp-th--center tp-th--sortable tp-th--overall tp-th--filter"
+                      style={{ width: 150 }}
+                      onClick={handleSentimentFilter}
+                      title="Cycle sentiment filter"
                     >
-                      Overall <SortIcon col="sentiment" activeCol={sortCol} dir={sortDir} />
+                      Overall: {sentimentFilter} <Filter size={10} className="tp-sort-icon tp-sort-icon--active" />
                     </th>
 
                     <th
-                      className="tp-th tp-th--right tp-th--sortable"
+                      className="tp-th tp-th--left tp-th--sortable"
                       style={{ width: 96 }}
                       onClick={() => handleColSort('normalized_score')}
                     >
@@ -356,9 +420,15 @@ export const TopPosts = () => {
                 <tbody>
                   {loading && !data
                     ? <SkeletonRows />
-                    : rows.map((row) => (
-                        <TableRow key={row.ticker} row={row} />
-                      ))}
+                    : visibleRows.length
+                      ? visibleRows.map((row) => (
+                          <TableRow key={row.ticker} row={row} />
+                        ))
+                      : (
+                        <tr>
+                          <td className="tp-empty-row" colSpan={7}>No tickers match your search.</td>
+                        </tr>
+                      )}
                 </tbody>
               </table>
             </div>

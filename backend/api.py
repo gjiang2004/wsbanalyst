@@ -2,11 +2,12 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import json
+from functools import lru_cache
 
 app = FastAPI()
 
@@ -37,7 +38,80 @@ app.add_middleware(
 
 # Path to ticker_sentiment.json — lives in wsb/, one level up from backend/
 SENTIMENT_FILE = os.path.join(os.path.dirname(__file__), "..", "ticker_sentiment.json")
-TOP_N = 20
+COMPANY_CACHE_FILE = os.path.join(os.path.dirname(__file__), "..", "ticker_company_names.json")
+TOP_N = int(os.getenv("TOP_POSTS_LIMIT", "100"))
+
+
+def _alias_company_names() -> dict[str, str]:
+    try:
+        import analyze_wsb
+    except Exception:
+        return {}
+
+    names: dict[str, str] = {}
+    for alias, ticker in getattr(analyze_wsb, "MANUAL_ALIASES", {}).items():
+        symbol = str(ticker).upper().strip()
+        if not symbol:
+            continue
+        candidate = str(alias).replace("  ", " ").strip().title()
+        current = names.get(symbol)
+        if current is None or len(candidate) > len(current):
+            names[symbol] = candidate
+    return names
+
+
+COMPANY_NAME_FALLBACKS = _alias_company_names()
+
+
+def _load_company_cache() -> dict[str, str]:
+    try:
+        with open(COMPANY_CACHE_FILE, encoding="utf-8") as f:
+            raw = json.load(f)
+        return {str(k).upper(): str(v) for k, v in raw.items() if v}
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def _save_company_cache(cache: dict[str, str]) -> None:
+    try:
+        with open(COMPANY_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(dict(sorted(cache.items())), f, indent=2)
+    except OSError:
+        pass
+
+
+COMPANY_NAME_CACHE = _load_company_cache()
+MAJOR_ETF_TICKERS = {
+    "SPY", "QQQ", "IWM", "DIA", "VOO", "VTI", "ARKK", "SQQQ", "TQQQ",
+    "SOXL", "SOXS", "XLF", "XLE", "XLK", "XBI", "SMH", "TLT", "HYG",
+}
+
+
+@lru_cache(maxsize=1024)
+def _lookup_company_name(symbol: str) -> str:
+    ticker = symbol.upper().strip()
+    if not ticker:
+        return ""
+
+    cached = COMPANY_NAME_CACHE.get(ticker)
+    if cached:
+        return cached
+
+    fallback = COMPANY_NAME_FALLBACKS.get(ticker, "")
+
+    try:
+        import yfinance as yf
+        info = yf.Ticker(ticker).get_info()
+        value = info.get("longName") or info.get("shortName") or info.get("displayName") or fallback
+    except Exception:
+        value = fallback
+
+    if value:
+        cleaned = _clean_company_name(str(value))
+        COMPANY_NAME_CACHE[ticker] = cleaned
+        _save_company_cache(COMPANY_NAME_CACHE)
+        return cleaned
+    return ""
 
 
 # ─── Existing chat endpoints ──────────────────────────────────────────────────
@@ -81,20 +155,70 @@ async def reset():
 
 # ─── Sentiment endpoints ──────────────────────────────────────────────────────
 
-def _company_name(ticker_row: dict) -> str:
-    value = ticker_row.get("company") or ticker_row.get("company_name") or ""
-    return str(value)
+def _clean_company_name(value: str) -> str:
+    text = str(value or "").strip()
+    if " - " in text:
+        text = text.split(" - ", 1)[0].strip()
+    for suffix in (
+        " Common Stock",
+        " Ordinary Shares",
+        " American Depositary Shares",
+        " American Depositary Receipt",
+    ):
+        if text.endswith(suffix):
+            text = text[: -len(suffix)].strip()
+    return text
 
 
-def _load_tickers() -> list[dict]:
+def _asset_type(ticker_row: dict) -> str:
+    value = ticker_row.get("asset_type") or ticker_row.get("type") or ticker_row.get("quote_type")
+    if value:
+        text = str(value).strip().upper()
+        if text in {"ETF", "FUND"}:
+            return "ETF" if text == "ETF" else "Fund"
+        if text in {"EQUITY", "COMMON STOCK", "STOCK"}:
+            return "Company"
+        return str(value).strip()
+    symbol = str(ticker_row.get("ticker", "")).upper().strip()
+    if symbol in MAJOR_ETF_TICKERS:
+        return "ETF"
+    return "Company"
+
+
+def _company_name(ticker_row: dict, allow_lookup: bool = False) -> str:
+    value = ticker_row.get("company") or ticker_row.get("company_name") or ticker_row.get("name")
+    if value:
+        return _clean_company_name(str(value))
+    symbol = str(ticker_row.get("ticker", "")).upper().strip()
+    if allow_lookup:
+        return _lookup_company_name(symbol)
+    return COMPANY_NAME_CACHE.get(symbol) or COMPANY_NAME_FALLBACKS.get(symbol, "")
+
+
+def _load_sentiment_payload() -> dict:
     path = os.path.abspath(SENTIMENT_FILE)
     if not os.path.exists(path):
         raise HTTPException(status_code=404, detail=f"ticker_sentiment.json not found at {path}")
     try:
         with open(path, encoding="utf-8") as f:
-            return json.load(f)["tickers"]
+            payload = json.load(f)
+        if "tickers" not in payload:
+            raise KeyError("tickers")
+        return payload
     except (KeyError, json.JSONDecodeError) as e:
         raise HTTPException(status_code=500, detail=f"Malformed sentiment file: {e}")
+
+
+def _load_tickers() -> list[dict]:
+    return _load_sentiment_payload()["tickers"]
+
+
+def _sentiment_window_days(meta: dict) -> float:
+    value = meta.get("aggregate_window_days") or (meta.get("recency_decay") or {}).get("window_days")
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return float(os.getenv("SENTIMENT_AGGREGATE_WINDOW_DAYS", "14"))
 
 
 def _bullish_score(t: dict) -> tuple[float, int]:
@@ -146,6 +270,7 @@ def _format_ticker(t: dict, rank: int, score: float) -> dict:
         "rank":             rank,
         "ticker":           t["ticker"],
         "company":          _company_name(t),
+        "asset_type":       _asset_type(t),
         "mentions":         n,
         "sentiment":        t["overall_sentiment"],
         "bullish_pct":      bullish_pct,
@@ -160,20 +285,22 @@ def _format_ticker(t: dict, rank: int, score: float) -> dict:
 
 
 @app.get("/top-posts")
-async def top_posts():
-    tickers = _load_tickers()
+async def top_posts(limit: int = Query(TOP_N, ge=1, le=5000)):
+    payload = _load_sentiment_payload()
+    tickers = payload["tickers"]
+    source_meta = payload.get("meta") or {}
 
-    trending = sorted(tickers, key=lambda t: int(t.get("mentions", 0)), reverse=True)[:TOP_N]
+    trending = sorted(tickers, key=lambda t: int(t.get("mentions", 0)), reverse=True)[:limit]
     bullish = sorted(
         (t for t in tickers if t.get("overall_sentiment") == "bullish"),
         key=_bullish_score,
         reverse=True,
-    )[:TOP_N]
+    )[:limit]
     bearish = sorted(
         (t for t in tickers if t.get("overall_sentiment") == "bearish"),
         key=_bearish_score,
         reverse=True,
-    )[:TOP_N]
+    )[:limit]
 
     return {
         "trending": [
@@ -188,7 +315,15 @@ async def top_posts():
             _format_ticker(t, i + 1, -_bearish_score(t)[0])
             for i, t in enumerate(bearish)
         ],
-        "meta": {"total_tickers": len(tickers)},
+        "meta": {
+            "total_tickers": len(tickers),
+            "limit": limit,
+            "sentiment_window_days": _sentiment_window_days(source_meta),
+            "source_total_posts": source_meta.get("total_posts"),
+            "aggregate_posts": source_meta.get("aggregate_posts"),
+            "aggregate_comments": source_meta.get("aggregate_comments"),
+            "aggregate_items_with_mentions": source_meta.get("aggregate_items_with_mentions"),
+        },
     }
 
 
@@ -223,7 +358,8 @@ async def ticker_detail(ticker: str):
 
     return {
         "ticker": symbol,
-        "company": _company_name(row),
+        "company": _company_name(row, allow_lookup=True),
+        "asset_type": _asset_type(row),
         "summary": _format_ticker(row, 1, float(row.get("semantic_score", 0))),
         "semantic_score": row.get("semantic_score", 0),
         "positive_score": row.get("positive_score", 0),

@@ -2,8 +2,8 @@
   min-height: 100vh;
   margin-left: 250px;
   background: #0b1020;
-  transition: margin-left 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   overflow-x: hidden;
+  transition: margin-left 0.25s ease;
 }
 
 .trading-container.sidebar-closed {
@@ -12,8 +12,8 @@
 
 .trading-content {
   min-height: 100vh;
-  padding: clamp(1rem, 3vw, 2rem);
-  overflow-x: auto;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  overflow-x: hidden;
 }
 
 .trading-content > * {
@@ -39,6 +39,6 @@
   }
 
   .trading-content {
-    padding: 0.75rem;
+    padding: 1rem;
   }
 }

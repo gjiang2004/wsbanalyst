@@ -114,7 +114,8 @@ const Graph = () => {
   }, []);
 
   const [selectedDate, setSelectedDate] = useState(() => chartData.length ? chartData[chartData.length - 1].date : "");
-  const [showClosedTrades, setShowClosedTrades] = useState(false);
+  const [showClosedTrades, setShowClosedTrades] = useState(true);
+  const [showOpenTrades, setShowOpenTrades] = useState(true);
   const selectedPoint = chartData.find((point) => point.date === selectedDate) || chartData[chartData.length - 1];
   const selectedDay = selectedPoint ? dailyByDate.get(selectedPoint.date) : undefined;
   const chartWidth = Math.max(820, chartData.length * 54);
@@ -180,10 +181,28 @@ const Graph = () => {
     );
   };
 
-  const renderTrades = (title: string, trades: Trade[] | undefined, fallback: "entry" | "exit") => (
-    <section className="trade-panel">
-      <h3>{title}</h3>
-      {renderTradeRows(title, trades, fallback)}
+  const renderCollapsibleTrades = (
+    title: string,
+    trades: Trade[] | undefined,
+    fallback: "entry" | "exit",
+    isOpen: boolean,
+    onToggle: () => void,
+  ) => (
+    <section className="trade-panel collapsible-trades-panel">
+      <button
+        className="trade-panel-toggle"
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+      >
+        <span>{title}</span>
+        <strong>{trades?.length || 0}</strong>
+      </button>
+      <div className={`trade-panel-body ${isOpen ? 'open' : 'closed'}`}>
+        <div className="trade-panel-body-inner">
+          {renderTradeRows(title, trades, fallback)}
+        </div>
+      </div>
     </section>
   );
 
@@ -327,19 +346,20 @@ const Graph = () => {
         </div>
 
         <div className="trade-grid">
-          <section className="trade-panel closed-trades-panel">
-            <button
-              className="closed-trades-toggle"
-              type="button"
-              onClick={() => setShowClosedTrades((current) => !current)}
-              aria-expanded={showClosedTrades}
-            >
-              <span>Closed at 9:30</span>
-              <strong>{selectedDay?.exits?.length || 0}</strong>
-            </button>
-            {showClosedTrades && renderTradeRows("Closed Trades", selectedDay?.exits, "exit")}
-          </section>
-          {renderTrades(selectedDay?.planned_only ? "Planned for 9:30" : "Opened at 9:30", selectedDay?.entries || selectedDay?.trades, "entry")}
+          {renderCollapsibleTrades(
+            "Closed at 9:30",
+            selectedDay?.exits,
+            "exit",
+            showClosedTrades,
+            () => setShowClosedTrades((current) => !current),
+          )}
+          {renderCollapsibleTrades(
+            selectedDay?.planned_only ? "Planned for 9:30" : "Opened at 9:30",
+            selectedDay?.entries || selectedDay?.trades,
+            "entry",
+            showOpenTrades,
+            () => setShowOpenTrades((current) => !current),
+          )}
         </div>
       </section>
     </div>

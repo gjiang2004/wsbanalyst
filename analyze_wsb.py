@@ -231,6 +231,7 @@ REQUIRE_PREFIX: frozenset[str] = frozenset({
     'FACT',  # Factset (FACT etf) — noun
     'HOUR',  # Hour Holdings      — noun
     'LINE',  # LINE Corp          — noun
+    'ONTO',  # Onto Innovation    — also a common preposition
     'FAST',  # Fastenal           — adjective (alias "fastenal" handles it)
     'EDIT',  # Editas Medicine    — verb
     'WOOD',  # iShares Clean ETF  — noun
@@ -291,39 +292,78 @@ FINANCIAL_CONTEXT: frozenset[str] = frozenset({
 # TICKER UNIVERSE
 # =============================================================================
 
-def fetch_ticker_list() -> set[str]:
-    """
-    Fetch valid ticker symbols from NASDAQ.
-    Raises RuntimeError if both sources fail, so callers get an obvious error
-    instead of silently processing everything as ticker-free.
-    """
-    tickers: set[str] = set()
+def _clean_security_name(name: str) -> str:
+    value = (name or "").strip()
+    if " - " in value:
+        value = value.split(" - ", 1)[0].strip()
+    suffixes = (
+        " Common Stock",
+        " Ordinary Shares",
+        " American Depositary Shares",
+        " American Depositary Receipt",
+    )
+    for suffix in suffixes:
+        if value.endswith(suffix):
+            value = value[: -len(suffix)].strip()
+    return value
+
+
+def _asset_type_from_security_name(name: str, etf_flag: str = "") -> str:
+    lowered = (name or "").lower()
+    if etf_flag.upper() == "Y":
+        return "ETF"
+    if any(term in lowered for term in ("etf", "etn", "exchange traded", "index fund")):
+        return "ETF"
+    if any(term in lowered for term in ("fund", "trust", "notes due", "preferred", "warrant", "unit")):
+        return "Fund/Other"
+    return "Company"
+
+
+def fetch_ticker_metadata() -> dict[str, dict[str, str]]:
+    """Fetch valid ticker symbols plus display metadata from NASDAQ trader files."""
+    metadata: dict[str, dict[str, str]] = {}
     errors: list[str] = []
 
-    for url in [
+    sources = [
         "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
         "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-    ]:
+    ]
+    for url in sources:
         try:
             with urllib.request.urlopen(url, timeout=10) as r:
-                for line in r.read().decode('utf-8').splitlines()[1:]:
-                    parts = line.split('|')
-                    if parts and parts[0] and parts[0] != 'File Creation Time':
-                        sym = parts[0].strip().upper()
-                        if re.match(r'^[A-Z]{1,5}$', sym):
-                            tickers.add(sym)
+                lines = r.read().decode('utf-8').splitlines()
         except Exception as e:
             errors.append(f"{url}: {e}")
+            continue
+        if not lines:
+            continue
+        headers = [h.strip() for h in lines[0].split('|')]
+        for line in lines[1:]:
+            if line.startswith('File Creation Time'):
+                continue
+            parts = line.split('|')
+            row = dict(zip(headers, parts))
+            sym = (row.get('Symbol') or row.get('ACT Symbol') or row.get('NASDAQ Symbol') or '').strip().upper()
+            if not re.match(r'^[A-Z]{1,5}$', sym):
+                continue
+            name = (row.get('Security Name') or '').strip()
+            etf_flag = (row.get('ETF') or '').strip()
+            metadata[sym] = {
+                'company': _clean_security_name(name),
+                'asset_type': _asset_type_from_security_name(name, etf_flag),
+            }
 
-    if not tickers:
+    if not metadata:
         raise RuntimeError(
             "Could not fetch any tickers from NASDAQ.\n" + "\n".join(errors)
         )
-
     if errors:
         print(f"  Warning: some ticker sources failed:\n" + "\n".join(f"    {e}" for e in errors))
+    return metadata
 
-    return tickers
+
+def fetch_ticker_list() -> set[str]:
+    return set(fetch_ticker_metadata())
 
 
 def build_alias_map(valid_tickers: set[str]) -> dict[str, str]:
@@ -812,7 +852,8 @@ def run(
     print(f"\n  {len(posts):,} posts loaded")
 
     print("\n  Fetching NASDAQ ticker list...")
-    valid_tickers = fetch_ticker_list()   # raises on total failure
+    ticker_metadata = fetch_ticker_metadata()
+    valid_tickers = set(ticker_metadata)
     print(f"  {len(valid_tickers):,} tickers")
 
     alias_map = build_alias_map(valid_tickers)
@@ -827,6 +868,10 @@ def run(
     stats: dict[str, int] = defaultdict(int)
 
     now_ts = time.time()
+    aggregate_cutoff_ts = (
+        now_ts - aggregate_window_days * 86_400
+        if aggregate_window_days is not None else None
+    )
 
     for post in tqdm(posts, desc="Extracting tickers", unit="post"):
         post_text = f"{post.get('title') or ''} {post.get('text') or ''}".strip()
@@ -900,6 +945,15 @@ def run(
             if ts is not None else
             datetime.fromtimestamp(now_ts, tz=timezone.utc).strftime("%Y-%m-%d")
         )
+        age_days = ((now_ts - ts) / 86_400.0) if ts is not None else 0.0
+        in_aggregate_window = aggregate_window_days is None or age_days <= aggregate_window_days
+        if in_aggregate_window:
+            stats['aggregate_items_with_mentions'] += 1
+            if meta.get('source') == 'post':
+                stats['aggregate_posts'] += 1
+            elif meta.get('source') == 'comment':
+                stats['aggregate_comments'] += 1
+
         for m in mentions:
             label, score = next(sentiments)
             ratio = meta.get('upvote_ratio')
@@ -920,8 +974,7 @@ def run(
                 'method':          m.method,
             }
             daily_sentiment[(m.ticker, item_day)] += sv
-            age_days = ((now_ts - ts) / 86_400.0) if ts is not None else 0.0
-            if aggregate_window_days is None or age_days <= aggregate_window_days:
+            if in_aggregate_window:
                 data[m.ticker].update(m, label, score, sv, sample)
 
     # ── Build output ───────────────────────────────────────────────────────────
@@ -942,8 +995,11 @@ def run(
         top_bullish = [s for s in sorted_samples if s['sentiment'] == 'positive'][:5]
         top_bearish = [s for s in sorted_samples if s['sentiment'] == 'negative'][:5]
 
+        meta_row = ticker_metadata.get(ticker, {})
         tickers_out.append({
             'ticker':                   ticker,
+            'company':                  meta_row.get('company', ''),
+            'asset_type':               meta_row.get('asset_type', 'Unknown'),
             'mentions':                 n,
             'semantic_score':           round(d.semantic_sum,              4),
             'normalized_semantic_score':round(d.semantic_sum / n,          4),
@@ -975,6 +1031,15 @@ def run(
             'processed_comments': stats['proc_comments'],
             'discarded_comments': stats['disc_comments'],
             'unique_tickers':     len(tickers_out),
+            'generated_at':       datetime.fromtimestamp(now_ts, tz=timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'aggregate_window_days': aggregate_window_days,
+            'aggregate_cutoff': (
+                datetime.fromtimestamp(aggregate_cutoff_ts, tz=timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+                if aggregate_cutoff_ts is not None else None
+            ),
+            'aggregate_posts':    stats['aggregate_posts'],
+            'aggregate_comments': stats['aggregate_comments'],
+            'aggregate_items_with_mentions': stats['aggregate_items_with_mentions'],
             'noise_removed':      before - len(tickers_out),
             'sentiment_model':    FINBERT_MODEL,
             'recency_decay': {
