@@ -197,6 +197,41 @@ def refresh_post_scores(posts, subreddit="wallstreetbets", active_days=3.0, max_
     return refreshed
 
 
+def refresh_active_post_comments(posts, subreddit="wallstreetbets", active_days=3.0, max_posts=75, request_delay=0.0):
+    reddit = get_reddit_client()
+    cutoff = datetime.now() - timedelta(days=active_days)
+    candidates = []
+    seen = set()
+    for post in posts:
+        post_id = str(post.get("id") or "").strip()
+        if not post_id or post_id in seen:
+            continue
+        created_text = post.get("created_at") or post.get("created_utc")
+        try:
+            created = datetime.strptime(str(created_text), "%Y-%m-%d %H:%M:%S")
+        except (TypeError, ValueError):
+            continue
+        if created >= cutoff:
+            seen.add(post_id)
+            activity = int(post.get("num_comments") or 0) + abs(int(post.get("upvotes") or 0))
+            candidates.append((created, activity, post_id))
+
+    candidates.sort(key=lambda item: (item[0], item[1]), reverse=True)
+    refresh_candidates = candidates if max_posts <= 0 else candidates[:max_posts]
+    refreshed_posts = []
+    for _, _, post_id in refresh_candidates:
+        try:
+            submission = reddit.submission(id=post_id)
+            post = _submission_to_post(submission, include_comments=True)
+            if post:
+                refreshed_posts.append(post)
+        except Exception:
+            continue
+        if request_delay > 0:
+            time.sleep(request_delay)
+    return refreshed_posts
+
+
 def get_wsb_posts(subreddit="wallstreetbets", days=30.0, request_delay=0.6):
     reddit = get_reddit_client()
     posts = []

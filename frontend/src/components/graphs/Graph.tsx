@@ -33,6 +33,9 @@ interface Trade {
   weight?: number;
   sentiment?: number;
   pnl?: number;
+  current_price?: number;
+  current_unrealized_pnl?: number;
+  current_value?: number;
   price?: number;
   cost?: number;
 }
@@ -189,9 +192,9 @@ const Graph = () => {
                 <dd>{currency(fallback === "exit" ? trade.exit_price : trade.entry_price ?? trade.price)}</dd>
               </div>
               <div>
-                <dt>{fallback === "exit" ? "P&L" : "Signal"}</dt>
-                <dd className={(fallback === "exit" ? trade.pnl || 0 : trade.sentiment || 0) >= 0 ? "positive" : "negative"}>
-                  {fallback === "exit" ? currency(trade.pnl) : number(trade.sentiment, 4)}
+                <dt>{fallback === "exit" ? "P&L" : typeof trade.current_unrealized_pnl === "number" ? "Current P&L" : "Signal"}</dt>
+                <dd className={(fallback === "exit" ? trade.pnl || 0 : trade.current_unrealized_pnl ?? trade.sentiment ?? 0) >= 0 ? "positive" : "negative"}>
+                  {fallback === "exit" ? currency(trade.pnl) : typeof trade.current_unrealized_pnl === "number" ? currency(trade.current_unrealized_pnl) : number(trade.sentiment, 4)}
                 </dd>
               </div>
             </dl>

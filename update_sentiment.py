@@ -178,7 +178,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--overlap-minutes", type=float, default=float(os.getenv("WSB_SCRAPE_OVERLAP_MINUTES", "30")))
     parser.add_argument("--score-refresh-days", type=float, default=float(os.getenv("WSB_SCORE_REFRESH_DAYS", "3")))
     parser.add_argument("--max-score-refresh", type=int, default=int(os.getenv("WSB_MAX_SCORE_REFRESH", "150")))
+    parser.add_argument("--comment-refresh-days", type=float, default=float(os.getenv("WSB_COMMENT_REFRESH_DAYS", "3")))
+    parser.add_argument("--max-comment-refresh-posts", type=int, default=int(os.getenv("WSB_MAX_COMMENT_REFRESH_POSTS", "75")))
+    parser.add_argument("--sentiment-cache", default=os.getenv("FINBERT_SENTIMENT_CACHE", "finbert_sentiment_cache.json"))
     parser.add_argument("--rebuild", action="store_true", help="Ignore existing store and scrape the full window.")
+    parser.add_argument("--skip-analysis", action="store_true", help="Only update the rolling Reddit post store/state; skip FinBERT sentiment output.")
     return parser.parse_args()
 
 
@@ -188,7 +192,13 @@ def main() -> None:
 
     args = parse_args()
 
-    from getdata import get_recent_wsb_comments, get_recent_wsb_posts, get_wsb_posts, refresh_post_scores
+    from getdata import (
+        get_recent_wsb_comments,
+        get_recent_wsb_posts,
+        get_wsb_posts,
+        refresh_active_post_comments,
+        refresh_post_scores,
+    )
     import analyze_wsb
 
     store_path = Path(args.store_file)
@@ -241,6 +251,13 @@ def main() -> None:
             since_ts=comment_since,
             request_delay=args.request_delay,
         )
+        active_comment_posts = refresh_active_post_comments(
+            existing_posts,
+            subreddit=args.subreddit,
+            active_days=args.comment_refresh_days,
+            max_posts=args.max_comment_refresh_posts,
+            request_delay=args.request_delay,
+        )
         refreshed_scores = refresh_post_scores(
             existing_posts,
             subreddit=args.subreddit,
@@ -248,11 +265,12 @@ def main() -> None:
             max_posts=args.max_score_refresh,
             request_delay=args.request_delay,
         )
-        incoming_posts = _merge_posts(new_posts, comment_posts)
+        incoming_posts = _merge_posts(_merge_posts(new_posts, comment_posts), active_comment_posts)
         print(
             f"Incremental scrape found {len(new_posts)} new/recent posts, "
             f"{sum(len(p.get('comments') or []) for p in comment_posts)} new/recent comments, "
-            f"refreshed scores for {refreshed_scores} active posts."
+            f"refreshed comment trees for {len(active_comment_posts)} active posts, "
+            f"and refreshed scores for {refreshed_scores} active posts."
         )
 
     merged_posts = _merge_posts(existing_posts, incoming_posts)
@@ -284,6 +302,10 @@ def main() -> None:
         f"-> {len(rolling_posts)} kept over {args.window_days:g} day(s)."
     )
 
+    if args.skip_analysis:
+        print("Skipping FinBERT sentiment analysis; rolling Reddit store/state updated only.")
+        return
+
     print(f"Analyzing sentiment into {output_path}...")
     analyze_wsb.DECAY_WINDOW_DAYS = args.aggregate_days
     analyze_wsb.run(
@@ -295,6 +317,7 @@ def main() -> None:
         batch_size=args.batch_size,
         min_mentions=args.min_mentions,
         min_confidence=args.min_confidence,
+        sentiment_cache_file=args.sentiment_cache,
     )
 
     print(f"Done. Updated {output_path} and {args.daily_output} from rolling store {store_path}.")

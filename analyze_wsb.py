@@ -20,6 +20,7 @@ import re
 import math
 import json
 import time
+import hashlib
 import urllib.request
 from datetime import datetime, timezone
 from dataclasses import dataclass, field
@@ -610,7 +611,43 @@ def _ticker_context(ticker: str, text: str) -> str:
     return ' '.join(weighted)[:512]
 
 
-def run_sentiment_batch(ticker_text_pairs: list[tuple[str, str]]) -> list[tuple[str, float]]:
+def _load_sentiment_cache(cache_file: str | None) -> dict[str, tuple[str, float]]:
+    if not cache_file or not os.path.exists(cache_file):
+        return {}
+    try:
+        with open(cache_file, encoding="utf-8") as f:
+            raw = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return {}
+    if not isinstance(raw, dict):
+        return {}
+    cache: dict[str, tuple[str, float]] = {}
+    for key, value in raw.items():
+        if isinstance(value, dict) and value.get("label") and value.get("score") is not None:
+            cache[str(key)] = (str(value["label"]), float(value["score"]))
+    return cache
+
+
+def _write_sentiment_cache(cache_file: str | None, cache: dict[str, tuple[str, float]]) -> None:
+    if not cache_file:
+        return
+    cache_dir = os.path.dirname(cache_file)
+    if cache_dir:
+        os.makedirs(cache_dir, exist_ok=True)
+    payload = {key: {"label": label, "score": score} for key, (label, score) in sorted(cache.items())}
+    with open(cache_file, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False)
+
+
+def _sentiment_cache_key(context: str) -> str:
+    payload = f"{FINBERT_MODEL}\0{context}".encode("utf-8", errors="ignore")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def run_sentiment_batch(
+    ticker_text_pairs: list[tuple[str, str]],
+    cache_file: str | None = None,
+) -> list[tuple[str, float]]:
     """
     Score every (ticker, text) pair in one global GPU pass.
 
@@ -632,20 +669,32 @@ def run_sentiment_batch(ticker_text_pairs: list[tuple[str, str]]) -> list[tuple[
 
     # Deduplicate while preserving insertion order
     unique_contexts: list[str] = list(dict.fromkeys(contexts))
-    ctx_to_result:   dict[str, tuple[str, float]] = {}
+    cache = _load_sentiment_cache(cache_file)
+    ctx_to_result: dict[str, tuple[str, float]] = {}
+    missing_contexts: list[str] = []
+    for ctx in unique_contexts:
+        cached = cache.get(_sentiment_cache_key(ctx))
+        if cached:
+            ctx_to_result[ctx] = cached
+        else:
+            missing_contexts.append(ctx)
+
+    print(f"  Sentiment cache: {len(unique_contexts) - len(missing_contexts):,} hit(s), {len(missing_contexts):,} new context(s)")
 
     def _run_chunk(pipe, chunk: list[str], keys: list[str]) -> None:
         out = pipe(chunk)
         for ctx, r in zip(keys, out):
-            ctx_to_result[ctx] = (r['label'].lower(), round(r['score'], 3))
+            result = (r['label'].lower(), round(r['score'], 3))
+            ctx_to_result[ctx] = result
+            cache[_sentiment_cache_key(ctx)] = result
 
     chunk_size   = BATCH_SIZE * 2
     force_cpu    = False
     i            = 0
 
-    while i < len(unique_contexts):
-        chunk      = unique_contexts[i : i + chunk_size]
-        chunk_keys = unique_contexts[i : i + chunk_size]   # same slice, clarity
+    while i < len(missing_contexts):
+        chunk      = missing_contexts[i : i + chunk_size]
+        chunk_keys = missing_contexts[i : i + chunk_size]   # same slice, clarity
         try:
             pipe = _load_finbert(force_cpu=force_cpu)
             _run_chunk(pipe, chunk, chunk_keys)
@@ -662,6 +711,9 @@ def run_sentiment_batch(ticker_text_pairs: list[tuple[str, str]]) -> list[tuple[
         finally:
             if torch.cuda.is_available() and not force_cpu:
                 torch.cuda.empty_cache()
+
+    if missing_contexts:
+        _write_sentiment_cache(cache_file, cache)
 
     return [ctx_to_result[c] for c in contexts]
 
@@ -833,6 +885,7 @@ def run(
     batch_size: int | None = None,
     min_mentions: int | None = None,
     min_confidence: float | None = None,
+    sentiment_cache_file: str | None = None,
 ) -> None:
     global FINBERT_MODEL, BATCH_SIZE, MIN_MENTIONS, MIN_CONFIDENCE
     if finbert_model is not None:
@@ -859,8 +912,6 @@ def run(
     alias_map = build_alias_map(valid_tickers)
     print(f"  {len(alias_map):,} aliases\n")
 
-    _load_finbert()
-    print()
 
     # ── Pass 1: extract all ticker mentions across posts + comments ────────────
     # Each item: (text, upvotes, awards, timestamp_or_None, [TickerMention, ...], meta_dict)
@@ -931,7 +982,7 @@ def run(
         for m in mentions
     ]
     sentiments: Iterator[tuple[str, float]] = iter(
-        run_sentiment_batch(ticker_text_pairs)
+        run_sentiment_batch(ticker_text_pairs, cache_file=sentiment_cache_file)
     )
 
     # ── Pass 3: accumulate results ─────────────────────────────────────────────
@@ -1102,6 +1153,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--batch-size", type=int, default=BATCH_SIZE)
     parser.add_argument("--min-mentions", type=int, default=MIN_MENTIONS)
     parser.add_argument("--min-confidence", type=float, default=MIN_CONFIDENCE)
+    parser.add_argument("--sentiment-cache", default=os.getenv("FINBERT_SENTIMENT_CACHE", "finbert_sentiment_cache.json"))
     return parser.parse_args()
 
 

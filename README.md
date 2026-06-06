@@ -131,4 +131,3 @@ venv/bin/python inference.py
 - `analyze_wsb.py` - ticker extraction and sentiment aggregation
 - `portfolio.py` - open-to-open trading simulation
 - `pretrain.py`, `finetune.py`, `inference.py` - Mistral style training and grounded chatbot inference
-- `old/` - legacy experiments and removed generated artifacts kept for reference
