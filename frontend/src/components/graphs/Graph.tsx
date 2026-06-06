@@ -81,7 +81,7 @@ const number = (value?: number, digits = 2) =>
   typeof value === "number" && Number.isFinite(value) ? value.toFixed(digits) : "--";
 
 const compactCurrency = (value: number) =>
-  value.toLocaleString("en-US", { style: "currency", currency: "USD", notation: "compact", maximumFractionDigits: 1 });
+  value.toLocaleString("en-US", { style: "currency", currency: "USD", notation: "compact", maximumFractionDigits: 2 });
 
 const tradeLabel = (trade: Trade, fallback: "entry" | "exit") => {
   if (trade.side) return trade.side === "short" ? "Short" : "Long";
@@ -119,6 +119,26 @@ const Graph = () => {
   const selectedPoint = chartData.find((point) => point.date === selectedDate) || chartData[chartData.length - 1];
   const selectedDay = selectedPoint ? dailyByDate.get(selectedPoint.date) : undefined;
   const chartWidth = Math.max(820, chartData.length * 54);
+  const yAxisTicks = useMemo<number[]>(() => {
+    const values = chartData.map((point) => point.investment).filter(Number.isFinite);
+    if (!values.length) return [0, 1];
+
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const range = Math.max(max - min, Math.abs(max) * 0.01, 1);
+    const roughStep = range / 5;
+    const magnitude = 10 ** Math.floor(Math.log10(roughStep));
+    const normalized = roughStep / magnitude;
+    const stepMultiplier = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
+    const step = stepMultiplier * magnitude;
+    const lower = Math.max(0, Math.floor((min - step) / step) * step);
+    const upper = Math.ceil((max + step) / step) * step;
+    const tickCount = Math.max(2, Math.round((upper - lower) / step) + 1);
+
+    return Array.from({ length: tickCount }, (_, index) => lower + index * step);
+  }, [chartData]);
+  const yAxisDomain: [number, number] = [yAxisTicks[0], yAxisTicks[yAxisTicks.length - 1]];
+
 
   const stats = useMemo(() => {
     const first = chartData[0];
@@ -273,6 +293,8 @@ const Graph = () => {
                 />
                 <YAxis
                   dataKey="investment"
+                  domain={yAxisDomain}
+                  ticks={yAxisTicks}
                   tickFormatter={compactCurrency}
                   tick={{ fill: "rgba(255,255,255,0.62)", fontSize: 12 }}
                   axisLine={false}

@@ -5,6 +5,10 @@ on:
     - cron: "*/15 * * * *"
   workflow_dispatch:
 
+concurrency:
+  group: update-wsb-sentiment
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -45,15 +49,26 @@ jobs:
           --overlap-minutes 30
           --score-refresh-days 3
           --max-score-refresh 150
+          --storage json
+
+      - name: Regenerate simulation
+        run: >
+          python portfolio.py
+          --sentiment-file backend/agg_sentiment.json
+          --output-dir frontend/src/portfolio_data
+          --initial-capital 1000000
+          --window-days 14
+          --max-positions 25
 
       - name: Commit updated sentiment
         run: |
-          if git diff --quiet -- ticker_sentiment.json wsb_posts.json wsb_scrape_state.json backend/agg_sentiment.json; then
+          if git diff --quiet -- ticker_sentiment.json wsb_posts.json wsb_scrape_state.json backend/agg_sentiment.json frontend/src/portfolio_data/portfolio_total_investment.json; then
             echo "No sentiment changes to commit."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ticker_sentiment.json wsb_posts.json wsb_scrape_state.json backend/agg_sentiment.json
+          git add ticker_sentiment.json wsb_posts.json backend/agg_sentiment.json frontend/src/portfolio_data/portfolio_total_investment.json
+          if [ -f wsb_scrape_state.json ]; then git add wsb_scrape_state.json; fi
           git commit -m "Update WSB sentiment data"
           git push origin main
