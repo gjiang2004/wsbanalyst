@@ -58,9 +58,9 @@ jobs:
           --request-delay 0.05
           --overlap-minutes 30
           --score-refresh-days 3
-          --max-score-refresh 150
+          --max-score-refresh 100
           --comment-refresh-days 3
-          --max-comment-refresh-posts 75
+          --max-comment-refresh-posts 40
           --sentiment-cache finbert_sentiment_cache.json
           --storage json
 
