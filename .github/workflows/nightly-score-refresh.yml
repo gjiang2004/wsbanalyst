@@ -2,7 +2,8 @@ name: Nightly WSB Score Refresh
 
 on:
   schedule:
-    - cron: "23 7 * * *"
+    - cron: "0 0 * * *"
+      timezone: "America/New_York"
   workflow_dispatch:
 
 concurrency:
