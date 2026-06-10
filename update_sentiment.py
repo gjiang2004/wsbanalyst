@@ -168,17 +168,14 @@ def _load_daily_rows(path: Path) -> list[dict]:
     return rows if isinstance(rows, list) else []
 
 
-def _merge_daily_history(current_path: Path, history_path: Path) -> int:
-    current_rows = _load_daily_rows(current_path)
-    history_rows = _load_daily_rows(history_path)
+def _clean_daily_rows(rows: list[dict], min_day: str | None = None) -> list[dict]:
     merged: dict[tuple[str, str], dict] = {}
-
-    for row in history_rows + current_rows:
+    for row in rows:
         if not isinstance(row, dict):
             continue
         day = str(row.get("day") or "").strip()
         ticker = str(row.get("ticker") or "").upper().strip()
-        if not day or not ticker:
+        if not day or not ticker or (min_day and day < min_day):
             continue
         try:
             value = float(row.get("refined_sentiment"))
@@ -191,11 +188,26 @@ def _merge_daily_history(current_path: Path, history_path: Path) -> int:
             "ticker": ticker,
             "refined_sentiment": round(value, 6),
         }
+    return [merged[key] for key in sorted(merged)]
 
-    rows = [merged[key] for key in sorted(merged)]
-    history_path.parent.mkdir(parents=True, exist_ok=True) if history_path.parent != Path(".") else None
-    with history_path.open("w", encoding="utf-8") as f:
+
+def _write_daily_rows(path: Path, rows: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True) if path.parent != Path(".") else None
+    with path.open("w", encoding="utf-8") as f:
         json.dump(rows, f, indent=2, ensure_ascii=False)
+
+
+def _filter_daily_output(path: Path, min_day: str | None = None) -> int:
+    rows = _clean_daily_rows(_load_daily_rows(path), min_day=min_day)
+    _write_daily_rows(path, rows)
+    return len(rows)
+
+
+def _merge_daily_history(current_path: Path, history_path: Path, min_day: str | None = None) -> int:
+    current_rows = _load_daily_rows(current_path)
+    history_rows = _load_daily_rows(history_path)
+    rows = _clean_daily_rows(history_rows + current_rows, min_day=min_day)
+    _write_daily_rows(history_path, rows)
     return len(rows)
 
 
@@ -210,6 +222,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", default=os.getenv("TICKER_SENTIMENT_FILE", "ticker_sentiment.json"))
     parser.add_argument("--daily-output", default=os.getenv("DAILY_SENTIMENT_FILE", "backend/agg_sentiment.json"))
     parser.add_argument("--daily-history-output", default=os.getenv("DAILY_SENTIMENT_HISTORY_FILE", "backend/agg_sentiment_history.json"))
+    parser.add_argument("--min-daily-output-day", default=os.getenv("SENTIMENT_DAILY_MIN_DAY", ""))
     parser.add_argument("--aggregate-days", type=float, default=float(os.getenv("SENTIMENT_AGGREGATE_WINDOW_DAYS", "14")))
     parser.add_argument("--finbert-model", default=os.getenv("FINBERT_MODEL", "ProsusAI/finbert"))
     parser.add_argument("--batch-size", type=int, default=int(os.getenv("FINBERT_BATCH_SIZE", "4")))
@@ -362,10 +375,16 @@ def main() -> None:
         min_confidence=args.min_confidence,
         sentiment_cache_file=args.sentiment_cache,
     )
-    history_rows = _merge_daily_history(Path(args.daily_output), Path(args.daily_history_output))
+    min_daily_day = str(args.min_daily_output_day or "").strip() or None
+    daily_rows = _filter_daily_output(Path(args.daily_output), min_day=min_daily_day)
+    history_rows = _merge_daily_history(
+        Path(args.daily_output),
+        Path(args.daily_history_output),
+        min_day=min_daily_day,
+    )
 
     print(
-        f"Done. Updated {output_path}, {args.daily_output}, and "
+        f"Done. Updated {output_path}, {args.daily_output} ({daily_rows} daily rows), and "
         f"{args.daily_history_output} ({history_rows} historical daily rows) from rolling store {store_path}."
     )
 

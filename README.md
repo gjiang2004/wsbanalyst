@@ -10,8 +10,8 @@ This is research software, not financial advice.
 - `wsb_posts.json` is still exported as a compatibility snapshot for analysis/training scripts. It is configured for 28 days.
 - `ticker_sentiment.json` is the active Top Posts sentiment output. It is calculated from the latest 14 days only.
 - `backend/agg_sentiment.json` stores the latest rolling daily ticker sentiment rows from the current 28-day bank.
-- `backend/agg_sentiment_history.json` accumulates daily ticker sentiment rows over time and is used by the simulator.
-- The simulator uses a rolling 14-day sentiment lookback over the cumulative daily history, so the backtest grows as scheduled refreshes collect more days.
+- `backend/agg_sentiment_history.json` accumulates daily ticker sentiment rows from May 23, 2026 onward and is used by the simulator.
+- The simulator uses a rolling 14-day sentiment lookback over that cumulative daily history, so the backtest grows as scheduled refreshes collect more days.
 
 The regular Reddit API does not page indefinitely into older subreddit history, so the app collects forward from scheduled runs instead of relying on archive backfills.
 
@@ -84,7 +84,7 @@ The pipeline still exports `wsb_posts.json`, `ticker_sentiment.json`, `backend/a
 Incremental refresh for normal use:
 
 ```bash
-venv/bin/python update_sentiment.py   --storage db   --scrape-days 1   --window-days 28   --aggregate-days 14   --store-file wsb_posts.json   --output ticker_sentiment.json   --daily-output backend/agg_sentiment.json   --daily-history-output backend/agg_sentiment_history.json
+venv/bin/python update_sentiment.py   --storage db   --scrape-days 1   --window-days 28   --aggregate-days 14   --store-file wsb_posts.json   --output ticker_sentiment.json   --daily-output backend/agg_sentiment.json   --daily-history-output backend/agg_sentiment_history.json   --min-daily-output-day 2026-05-23
 ```
 
 GitHub Actions runs this every 15 minutes with overlap so boundary posts/comments are merged by ID instead of missed. A separate nightly workflow refreshes scores for the active 14-day sentiment window.
