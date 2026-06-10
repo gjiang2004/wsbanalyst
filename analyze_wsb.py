@@ -1015,7 +1015,7 @@ def run(
             sv = semantic_value(label, score, m.confidence, upvotes, awards, recency, ratio)
             sample = {
                 **meta,
-                'text':            text[:220],
+                'text':            text[:1200],
                 'ticker':          m.ticker,
                 'sentiment':       label,
                 'sentiment_score': round(score, 3),

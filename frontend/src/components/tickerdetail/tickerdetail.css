@@ -193,33 +193,8 @@
   margin: 0.7rem 0;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.86);
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.td-sample-text--expanded {
-  display: block;
-  overflow: visible;
-  text-overflow: clip;
-}
-
-.td-sample-toggle {
-  margin: -0.2rem 0 0.65rem;
-  padding: 0;
-  border: 0;
-  color: #5aa8ff;
-  background: transparent;
-  font-size: 0.86rem;
-  font-weight: 700;
-}
-
-.td-sample-toggle:hover,
-.td-sample-toggle:focus-visible {
-  color: #8fc4ff;
-  outline: none;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .td-sample-meta,

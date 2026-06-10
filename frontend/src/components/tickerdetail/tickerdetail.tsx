@@ -55,9 +55,7 @@ function formatNumber(value: number | undefined, digits = 2) {
 
 function SampleCard({ sample, tone }: { sample: SentimentSample; tone: 'positive' | 'negative' }) {
   const sourceLabel = sample.source === 'comment' ? 'Comment' : 'Post';
-  const [expanded, setExpanded] = useState(false);
   const text = sample.text || 'No text available.';
-  const canExpand = text.length > 260;
 
   return (
     <article className={`td-sample td-sample--${tone}`}>
@@ -66,17 +64,7 @@ function SampleCard({ sample, tone }: { sample: SentimentSample; tone: 'positive
         <span>{sample.upvotes?.toLocaleString?.() ?? 0} votes</span>
         <span>score {formatNumber(sample.semantic_value, 3)}</span>
       </div>
-      <p className={`td-sample-text ${expanded ? 'td-sample-text--expanded' : ''}`}>{text}</p>
-      {canExpand && (
-        <button
-          className="td-sample-toggle"
-          type="button"
-          onClick={() => setExpanded((current) => !current)}
-          aria-expanded={expanded}
-        >
-          {expanded ? 'Show less' : 'Show full'}
-        </button>
-      )}
+      <p className="td-sample-text">{text}</p>
       <div className="td-sample-footer">
         <span>FinBERT {formatNumber(sample.sentiment_score, 3)}</span>
         <span>confidence {formatNumber(sample.confidence, 3)}</span>
