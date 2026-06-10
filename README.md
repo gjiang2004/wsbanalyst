@@ -84,7 +84,7 @@ The pipeline still exports `wsb_posts.json`, `ticker_sentiment.json`, `backend/a
 Incremental refresh for normal use:
 
 ```bash
-venv/bin/python update_sentiment.py   --storage db   --scrape-days 1   --window-days 28   --aggregate-days 14   --store-file wsb_posts.json   --output ticker_sentiment.json   --daily-output backend/agg_sentiment.json   --daily-history-output backend/agg_sentiment_history.json   --min-daily-output-day 2026-05-23
+venv/bin/python update_sentiment.py   --storage db   --scrape-days 1   --window-days 28   --aggregate-days 14   --store-file wsb_posts.json   --output ticker_sentiment.json   --daily-output backend/agg_sentiment.json   --daily-history-output backend/agg_sentiment_history.json   --min-daily-output-day 2026-05-14
 ```
 
 GitHub Actions runs this every 15 minutes with overlap so boundary posts/comments are merged by ID instead of missed. A separate nightly workflow refreshes scores for the active 14-day sentiment window.

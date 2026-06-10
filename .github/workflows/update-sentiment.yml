@@ -54,7 +54,7 @@ jobs:
           --output ticker_sentiment.json
           --daily-output backend/agg_sentiment.json
           --daily-history-output backend/agg_sentiment_history.json
-          --min-daily-output-day 2026-05-23
+          --min-daily-output-day 2026-05-14
           --aggregate-days 14
           --finbert-model "${FINBERT_MODEL:-ProsusAI/finbert}"
           --request-delay 0.05
