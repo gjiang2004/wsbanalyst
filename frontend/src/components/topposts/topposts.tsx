@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import './topposts.css';
-import { TrendingUp, TrendingDown, Activity, RefreshCw, AlertCircle, ChevronsUpDown, ChevronDown, ChevronUp, Search, Filter } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, RefreshCw, AlertCircle, ChevronsUpDown, ChevronDown, ChevronUp, Search, Filter, CalendarDays } from 'lucide-react';
 import { apiUrl } from '../../lib/api';
 import Sidebar from '../sidebar/sidebar';
 
@@ -24,16 +24,18 @@ interface SentimentData {
   trending: TickerRow[];
   bullish:  TickerRow[];
   bearish:  TickerRow[];
-  meta:     { total_tickers: number; limit?: number; sentiment_window_days?: number; source_total_posts?: number };
+  meta:     { total_tickers: number; limit?: number; sentiment_window_days?: number; selected_window_days?: number; available_window_days?: number[]; source_total_posts?: number };
 }
 
 type Tab        = 'trending' | 'bullish' | 'bearish';
 type SortCol    = 'rank' | 'ticker' | 'mentions' | 'sentiment_split' | 'normalized_score';
 type SortDir    = 'default' | 'desc' | 'asc';
+type WindowDays = 1 | 3 | 7 | 14;
 
 
 const DEFAULT_VISIBLE_ROWS = 100;
 const FULL_SENTIMENT_LIMIT = 5000;
+const WINDOW_OPTIONS: WindowDays[] = [1, 3, 7, 14];
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
@@ -190,12 +192,13 @@ export const TopPosts = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('All');
   const [sentimentFilter, setSentimentFilter] = useState<'All' | 'bullish' | 'bearish' | 'neutral'>('All');
+  const [windowDays, setWindowDays] = useState<WindowDays>(14);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(apiUrl(`/top-posts?limit=${FULL_SENTIMENT_LIMIT}`));
+      const res = await fetch(apiUrl(`/top-posts?limit=${FULL_SENTIMENT_LIMIT}&window_days=${windowDays}`));
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const json: SentimentData & { error?: string } = await res.json();
       if (json.error) throw new Error(json.error);
@@ -206,7 +209,7 @@ export const TopPosts = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [windowDays]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
@@ -216,7 +219,7 @@ export const TopPosts = () => {
     setSortDir('default');
     setTypeFilter('All');
     setSentimentFilter('All');
-  }, [tab]);
+  }, [tab, windowDays]);
 
   const handleColSort = (col: SortCol) => {
     if (col === 'mentions') {
@@ -273,7 +276,7 @@ export const TopPosts = () => {
   const visibleRows = normalizedSearch ? rows : rows.slice(0, DEFAULT_VISIBLE_ROWS);
 
   const { icon: TabIcon, hint } = TAB_CONFIG[tab];
-  const sentimentWindowDays = data?.meta.sentiment_window_days ?? 14;
+  const sentimentWindowDays = data?.meta.selected_window_days ?? data?.meta.sentiment_window_days ?? windowDays;
 
   return (
     <div className="tp-layout">
@@ -338,6 +341,23 @@ export const TopPosts = () => {
                 </button>
               );
             })}
+            <div className="tp-window-control" aria-label="Sentiment window">
+              <span className="tp-window-label"><CalendarDays size={11} /> Window</span>
+              <div className="tp-window-buttons">
+                {WINDOW_OPTIONS.map((days) => (
+                  <button
+                    key={days}
+                    type="button"
+                    className={`tp-window-button ${windowDays === days ? 'tp-window-button--active' : ''}`}
+                    onClick={() => setWindowDays(days)}
+                    aria-pressed={windowDays === days}
+                    title={`Use last ${days} day${days === 1 ? '' : 's'} of sentiment`}
+                  >
+                    {days}D
+                  </button>
+                ))}
+              </div>
+            </div>
             <span className="tp-tab-hint">
               <TabIcon size={11} />
               {hint}

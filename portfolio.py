@@ -556,7 +556,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--sentiment-file", default=os.getenv("SIM_SENTIMENT_FILE", "backend/agg_sentiment.json"))
     parser.add_argument("--output-dir", default=os.getenv("SIM_OUTPUT_DIR", "frontend/src/portfolio_data"))
     parser.add_argument("--initial-capital", type=float, default=float(os.getenv("SIM_INITIAL_CAPITAL", "1000000")))
-    parser.add_argument("--window-days", type=int, default=int(os.getenv("SIM_WINDOW_DAYS", "14")))
+    parser.add_argument("--window-days", type=int, default=int(os.getenv("SIM_WINDOW_DAYS", "7")))
     parser.add_argument("--max-positions", type=int, default=int(os.getenv("SIM_MAX_POSITIONS", "25")))
     parser.add_argument("--continue-existing", action="store_true", help="Skip regeneration when the saved simulation is already current.")
     return parser.parse_args()

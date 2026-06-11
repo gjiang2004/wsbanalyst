@@ -60,8 +60,8 @@ CONTEXT_AFTER  = 5
 
 MAX_SAMPLES    = 50   # max raw samples stored per ticker
 
-# Recency decay — power curve over the collection window.
-# Posts from today → weight 1.0. Posts from DECAY_WINDOW_DAYS ago → DECAY_FLOOR.
+# Recency decay over the active signal window.
+# Posts at the generation cutoff -> weight 1.0. Posts DECAY_WINDOW_DAYS old -> DECAY_FLOOR.
 #
 # Shape is controlled by DECAY_MIDPOINT: the weight at the halfway mark (day 15).
 # This lets you keep the same floor while flattening or steepening the curve.
@@ -80,6 +80,7 @@ MAX_SAMPLES    = 50   # max raw samples stored per ticker
 #
 DECAY_WINDOW_DAYS = float(os.getenv("SENTIMENT_DECAY_WINDOW_DAYS", "14"))
 DECAY_FLOOR       = float(os.getenv("SENTIMENT_DECAY_FLOOR", "0.10"))
+DAILY_DECAY_WINDOW_DAYS = float(os.getenv("SIM_DAILY_DECAY_WINDOW_DAYS", "7"))
 DECAY_MIDPOINT    = float(os.getenv("SENTIMENT_DECAY_MIDPOINT", "0.55"))
 TRADING_TIMEZONE   = ZoneInfo(os.getenv("SIM_TRADING_TIMEZONE", "America/New_York"))
 MARKET_OPEN_TIME   = dt_time(
@@ -727,25 +728,21 @@ def run_sentiment_batch(
 # RECENCY WEIGHTING
 # =============================================================================
 
-def recency_weight(post_ts: float | None, now_ts: float) -> float:
-    """
-    Power-curve decay anchored at both ends and shaped by a midpoint weight.
-
-        weight = 1 - (1 - DECAY_FLOOR) * t^p
-
-    where t = age / window  (0 → today, 1 → oldest edge)
-    and   p is solved so the curve hits DECAY_MIDPOINT at t=0.5 (day 15).
-
-    Posts with no timestamp fall back to mid-window weight.
-    """
+def recency_weight_for_window(post_ts: float | None, now_ts: float, window_days: float) -> float:
+    """Exponential recency decay from 100% now to DECAY_FLOOR at window_days."""
+    safe_window = max(float(window_days), 0.001)
     if post_ts is None:
-        age_days = DECAY_WINDOW_DAYS / 2.0
+        age_days = safe_window / 2.0
     else:
         age_days = max(now_ts - post_ts, 0.0) / 86_400.0
 
-    age_days = min(age_days, DECAY_WINDOW_DAYS)
-    k        = math.log(DECAY_FLOOR) / DECAY_WINDOW_DAYS
+    age_days = min(age_days, safe_window)
+    k = math.log(DECAY_FLOOR) / safe_window
     return math.exp(k * age_days)
+
+
+def recency_weight(post_ts: float | None, now_ts: float) -> float:
+    return recency_weight_for_window(post_ts, now_ts, DECAY_WINDOW_DAYS)
 
 
 # =============================================================================
@@ -1028,7 +1025,7 @@ def run(
         # current workflow run time, so old signal rows do not drift later.
         item_day = _signal_day_from_timestamp(ts, now_ts)
         daily_anchor_ts = _signal_anchor_timestamp(item_day)
-        daily_recency = recency_weight(ts, daily_anchor_ts)
+        daily_recency = recency_weight_for_window(ts, daily_anchor_ts, DAILY_DECAY_WINDOW_DAYS)
         age_days = ((now_ts - ts) / 86_400.0) if ts is not None else 0.0
         in_aggregate_window = aggregate_window_days is None or age_days <= aggregate_window_days
         if in_aggregate_window:
@@ -1131,6 +1128,7 @@ def run(
                 'window_days': DECAY_WINDOW_DAYS,
                 'floor':       DECAY_FLOOR,
                 'daily_anchor': 'historical 9:30am America/New_York generation cutoff',
+                'daily_window_days': DAILY_DECAY_WINDOW_DAYS,
             },
         },
         'tickers': tickers_out,

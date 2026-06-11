@@ -36,9 +36,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Path to ticker_sentiment.json — lives in wsb/, one level up from backend/
-SENTIMENT_FILE = os.path.join(os.path.dirname(__file__), "..", "ticker_sentiment.json")
-COMPANY_CACHE_FILE = os.path.join(os.path.dirname(__file__), "..", "ticker_company_names.json")
+# Sentiment JSON files live in wsb/, one level up from backend/.
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+SENTIMENT_FILE = os.path.join(ROOT_DIR, "ticker_sentiment.json")
+SENTIMENT_WINDOW_FILES = {
+    1: os.path.join(ROOT_DIR, "ticker_sentiment_1d.json"),
+    3: os.path.join(ROOT_DIR, "ticker_sentiment_3d.json"),
+    7: os.path.join(ROOT_DIR, "ticker_sentiment_7d.json"),
+    14: SENTIMENT_FILE,
+}
+AVAILABLE_SENTIMENT_WINDOWS = tuple(sorted(SENTIMENT_WINDOW_FILES))
+COMPANY_CACHE_FILE = os.path.join(ROOT_DIR, "ticker_company_names.json")
 TOP_N = int(os.getenv("TOP_POSTS_LIMIT", "100"))
 
 
@@ -200,10 +208,21 @@ def _company_name(ticker_row: dict, allow_lookup: bool = False) -> str:
     return COMPANY_NAME_CACHE.get(symbol) or COMPANY_NAME_FALLBACKS.get(symbol, "")
 
 
-def _load_sentiment_payload() -> dict:
-    path = os.path.abspath(SENTIMENT_FILE)
+def _sentiment_file_for_window(window_days: int) -> str:
+    try:
+        normalized = int(window_days)
+    except (TypeError, ValueError):
+        normalized = 14
+    if normalized not in SENTIMENT_WINDOW_FILES:
+        allowed = ", ".join(str(day) for day in AVAILABLE_SENTIMENT_WINDOWS)
+        raise HTTPException(status_code=400, detail=f"window_days must be one of: {allowed}")
+    return SENTIMENT_WINDOW_FILES[normalized]
+
+
+def _load_sentiment_payload(window_days: int = 14) -> dict:
+    path = os.path.abspath(_sentiment_file_for_window(window_days))
     if not os.path.exists(path):
-        raise HTTPException(status_code=404, detail=f"ticker_sentiment.json not found at {path}")
+        raise HTTPException(status_code=404, detail=f"sentiment file not found at {path}")
     try:
         with open(path, encoding="utf-8") as f:
             payload = json.load(f)
@@ -214,8 +233,8 @@ def _load_sentiment_payload() -> dict:
         raise HTTPException(status_code=500, detail=f"Malformed sentiment file: {e}")
 
 
-def _load_tickers() -> list[dict]:
-    return _load_sentiment_payload()["tickers"]
+def _load_tickers(window_days: int = 14) -> list[dict]:
+    return _load_sentiment_payload(window_days)["tickers"]
 
 
 def _sentiment_window_days(meta: dict) -> float:
@@ -290,8 +309,11 @@ def _format_ticker(t: dict, rank: int, score: float) -> dict:
 
 
 @app.get("/top-posts")
-async def top_posts(limit: int = Query(TOP_N, ge=1, le=5000)):
-    payload = _load_sentiment_payload()
+async def top_posts(
+    limit: int = Query(TOP_N, ge=1, le=5000),
+    window_days: int = Query(14, ge=1, le=14),
+):
+    payload = _load_sentiment_payload(window_days)
     tickers = payload["tickers"]
     source_meta = payload.get("meta") or {}
 
@@ -324,6 +346,8 @@ async def top_posts(limit: int = Query(TOP_N, ge=1, le=5000)):
             "total_tickers": len(tickers),
             "limit": limit,
             "sentiment_window_days": _sentiment_window_days(source_meta),
+            "selected_window_days": window_days,
+            "available_window_days": list(AVAILABLE_SENTIMENT_WINDOWS),
             "source_total_posts": source_meta.get("total_posts"),
             "aggregate_posts": source_meta.get("aggregate_posts"),
             "aggregate_comments": source_meta.get("aggregate_comments"),

@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HF_HOME: .cache/huggingface
+      SIM_DAILY_DECAY_WINDOW_DAYS: "7"
 
     steps:
       - name: Checkout
@@ -66,20 +67,26 @@ jobs:
           --sentiment-cache finbert_sentiment_cache.json
           --storage json
 
+      - name: Generate Top Posts aggregate windows
+        run: |
+          python analyze_wsb.py --input wsb_posts.json --output ticker_sentiment_1d.json --daily-output "" --aggregate-days 1 --sentiment-cache finbert_sentiment_cache.json
+          python analyze_wsb.py --input wsb_posts.json --output ticker_sentiment_3d.json --daily-output "" --aggregate-days 3 --sentiment-cache finbert_sentiment_cache.json
+          python analyze_wsb.py --input wsb_posts.json --output ticker_sentiment_7d.json --daily-output "" --aggregate-days 7 --sentiment-cache finbert_sentiment_cache.json
+
       - name: Update simulation if needed
         run: >
           python portfolio.py
           --sentiment-file backend/agg_sentiment_history.json
           --output-dir frontend/src/portfolio_data
           --initial-capital 1000000
-          --window-days 14
+          --window-days 7
           --max-positions 25
 
       - name: Commit updated sentiment
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ticker_sentiment.json wsb_posts.json wsb_scrape_state.json backend/agg_sentiment.json backend/agg_sentiment_history.json finbert_sentiment_cache.json frontend/src/portfolio_data
+          git add ticker_sentiment.json ticker_sentiment_1d.json ticker_sentiment_3d.json ticker_sentiment_7d.json wsb_posts.json wsb_scrape_state.json backend/agg_sentiment.json backend/agg_sentiment_history.json finbert_sentiment_cache.json frontend/src/portfolio_data
           if git diff --cached --quiet; then
             echo "No sentiment changes to commit."
             exit 0

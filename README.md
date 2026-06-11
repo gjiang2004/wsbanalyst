@@ -8,10 +8,10 @@ This is research software, not financial advice.
 
 - Raw Reddit posts/comments are stored in a database by default. Local development uses SQLite at `wsb_data.sqlite3`; production can use Postgres via `DATABASE_URL`.
 - `wsb_posts.json` is still exported as a compatibility snapshot for analysis/training scripts. It is configured for 28 days.
-- `ticker_sentiment.json` is the active Top Posts sentiment output. It is calculated from the latest 14 days only.
+- `ticker_sentiment.json` is the default 14-day Top Posts sentiment output. Additional `ticker_sentiment_1d.json`, `ticker_sentiment_3d.json`, and `ticker_sentiment_7d.json` files power the Top Posts window filter.
 - `backend/agg_sentiment.json` stores the latest rolling daily ticker sentiment rows from the current 28-day bank.
-- `backend/agg_sentiment_history.json` accumulates daily ticker sentiment rows from May 23, 2026 onward and is used by the simulator.
-- The simulator uses a rolling 14-day sentiment lookback over that cumulative daily history, so the backtest grows as scheduled refreshes collect more days.
+- `backend/agg_sentiment_history.json` accumulates daily ticker sentiment rows from May 14, 2026 onward and is used by the simulator.
+- The simulator uses a rolling 7-day sentiment lookback over that cumulative daily history, so the backtest grows as scheduled refreshes collect more days.
 
 The regular Reddit API does not page indefinitely into older subreddit history, so the app collects forward from scheduled runs instead of relying on archive backfills.
 
@@ -87,12 +87,12 @@ Incremental refresh for normal use:
 venv/bin/python update_sentiment.py   --storage db   --scrape-days 1   --window-days 28   --aggregate-days 14   --store-file wsb_posts.json   --output ticker_sentiment.json   --daily-output backend/agg_sentiment.json   --daily-history-output backend/agg_sentiment_history.json   --min-daily-output-day 2026-05-14
 ```
 
-GitHub Actions runs this every 15 minutes with overlap so boundary posts/comments are merged by ID instead of missed. A separate nightly workflow refreshes scores for the active 14-day sentiment window.
+GitHub Actions runs this every 15 minutes with overlap so boundary posts/comments are merged by ID instead of missed. A separate nightly workflow refreshes scores for the active 14-day sentiment window and regenerates the selectable Top Posts windows.
 
 ## Run Simulation
 
 ```bash
-venv/bin/python portfolio.py   --sentiment-file backend/agg_sentiment_history.json   --output-dir frontend/src/portfolio_data   --initial-capital 1000000   --window-days 14   --max-positions 25
+venv/bin/python portfolio.py   --sentiment-file backend/agg_sentiment_history.json   --output-dir frontend/src/portfolio_data   --initial-capital 1000000   --window-days 7   --max-positions 25
 ```
 
 The simulation buys or shorts at the market open, closes at the next market open, then rebalances using the latest rolling sentiment signal.
