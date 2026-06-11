@@ -3,13 +3,19 @@ import json
 import math
 import os
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, time as dt_time, timedelta, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 import pandas as pd
 import yfinance as yf
 
 DATE_FMT = "%Y-%m-%d"
+TRADING_TIMEZONE = ZoneInfo(os.getenv("SIM_TRADING_TIMEZONE", "America/New_York"))
+MARKET_OPEN_TIME = dt_time(
+    int(os.getenv("SIM_MARKET_OPEN_HOUR", "9")),
+    int(os.getenv("SIM_MARKET_OPEN_MINUTE", "30")),
+)
 
 
 def parse_date(value: str) -> datetime:
@@ -160,20 +166,41 @@ def get_latest_prices(tickers: list[str]) -> dict[str, float]:
     return prices
 
 
-def mark_to_market(entries: list[dict]) -> float:
+def current_market_time() -> datetime:
+    return datetime.now(timezone.utc).astimezone(TRADING_TIMEZONE)
+
+
+def trade_close_time(entry_day: datetime) -> datetime:
+    candidate = entry_day.date() + timedelta(days=1)
+    while candidate.weekday() >= 5:
+        candidate += timedelta(days=1)
+    return datetime.combine(candidate, MARKET_OPEN_TIME, tzinfo=TRADING_TIMEZONE)
+
+
+def is_trade_still_open(entry_day: datetime, now: datetime | None = None) -> bool:
+    local_now = now or current_market_time()
+    return local_now < trade_close_time(entry_day)
+
+
+def mark_to_market(entries: list[dict]) -> tuple[float, str | None]:
     tickers = [entry["ticker"] for entry in entries if entry.get("entry_price") and entry.get("shares")]
     latest_prices = get_latest_prices(tickers)
     total_unrealized = 0.0
+    marked_at = current_market_time().strftime("%Y-%m-%d %H:%M:%S %Z")
     for entry in entries:
         current_price = latest_prices.get(entry.get("ticker"))
         if not current_price or not entry.get("entry_price") or not entry.get("shares"):
             continue
         pnl = position_pnl(entry, current_price)
+        current_value = entry.get("notional", 0) + pnl
         entry["current_price"] = current_price
+        entry["current_mark_price"] = current_price
+        entry["current_marked_at"] = marked_at
         entry["current_unrealized_pnl"] = pnl
-        entry["current_value"] = entry.get("notional", 0) + pnl
+        entry["current_trade_result"] = pnl
+        entry["current_value"] = current_value
         total_unrealized += pnl
-    return total_unrealized
+    return total_unrealized, marked_at if latest_prices else None
 
 
 def build_trade_days(rows: list[dict], window_days: int) -> list[datetime]:
@@ -426,7 +453,12 @@ def simulate(
     total_profit = account_value - initial_capital
 
     planned_entries = build_entries(all_signals_by_day.get(final_day_s, {}), prices, final_day_s, account_value)
-    current_unrealized_pnl = mark_to_market(planned_entries) if final_day.date() == datetime.now().date() else 0.0
+    trade_is_open = is_trade_still_open(final_day)
+    current_marked_at = None
+    if trade_is_open:
+        current_unrealized_pnl, current_marked_at = mark_to_market(planned_entries)
+    else:
+        current_unrealized_pnl = 0.0
     marked_account_value = account_value + current_unrealized_pnl
     final_record = {
         "date": final_day_s,
@@ -442,7 +474,11 @@ def simulate(
             "short": {p["ticker"]: p for p in planned_entries if p["side"] == "short"},
         },
         "planned_only": True,
+        "trade_status": "open_mark_to_market" if trade_is_open else "closed",
+        "trade_close_time": trade_close_time(final_day).strftime("%Y-%m-%d %H:%M:%S %Z"),
+        "current_marked_at": current_marked_at,
         "current_unrealized_pnl": current_unrealized_pnl,
+        "current_trade_result": current_unrealized_pnl,
         "marked_account_value": marked_account_value,
         "today_profit": final_pnl + current_unrealized_pnl,
         "total_profit": total_profit + current_unrealized_pnl,
@@ -503,6 +539,7 @@ def simulate(
             "warmup_days": window_days,
             "trading_calendar": "SPY market-open dates",
             "signal_timing": "daily rows use America/New_York 9:30am ET cutoff buckets; trade day excludes same-day rows so post-open data is next-generation only",
+            "mark_to_market": "latest open trade is refreshed with current/latest prices until the next 9:30am ET open",
         },
         "daily_data": daily_data,
         "portfolio_statistics": portfolio_statistics,
