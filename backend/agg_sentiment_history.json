@@ -8101,8 +8101,13 @@
   },
   {
     "day": "2026-06-10",
+    "ticker": "AVAV",
+    "refined_sentiment": -1.007869
+  },
+  {
+    "day": "2026-06-10",
     "ticker": "AVGO",
-    "refined_sentiment": -4.133305
+    "refined_sentiment": -4.20057
   },
   {
     "day": "2026-06-10",
@@ -8112,7 +8117,12 @@
   {
     "day": "2026-06-10",
     "ticker": "BMNR",
-    "refined_sentiment": -4.278507
+    "refined_sentiment": -4.851539
+  },
+  {
+    "day": "2026-06-10",
+    "ticker": "BNO",
+    "refined_sentiment": -1.444741
   },
   {
     "day": "2026-06-10",
@@ -8127,7 +8137,7 @@
   {
     "day": "2026-06-10",
     "ticker": "COIN",
-    "refined_sentiment": -3.229283
+    "refined_sentiment": -2.878689
   },
   {
     "day": "2026-06-10",
@@ -8138,6 +8148,11 @@
     "day": "2026-06-10",
     "ticker": "CRWD",
     "refined_sentiment": -1.306391
+  },
+  {
+    "day": "2026-06-10",
+    "ticker": "DOW",
+    "refined_sentiment": -1.37193
   },
   {
     "day": "2026-06-10",
@@ -8152,12 +8167,12 @@
   {
     "day": "2026-06-10",
     "ticker": "GOOGL",
-    "refined_sentiment": -5.63452
+    "refined_sentiment": -6.11161
   },
   {
     "day": "2026-06-10",
     "ticker": "HOOD",
-    "refined_sentiment": -3.229738
+    "refined_sentiment": -3.404461
   },
   {
     "day": "2026-06-10",
@@ -8167,7 +8182,7 @@
   {
     "day": "2026-06-10",
     "ticker": "IPOS",
-    "refined_sentiment": -0.79614
+    "refined_sentiment": -1.166324
   },
   {
     "day": "2026-06-10",
@@ -8192,7 +8207,7 @@
   {
     "day": "2026-06-10",
     "ticker": "META",
-    "refined_sentiment": -6.609575
+    "refined_sentiment": -8.398509
   },
   {
     "day": "2026-06-10",
@@ -8202,7 +8217,7 @@
   {
     "day": "2026-06-10",
     "ticker": "MSFT",
-    "refined_sentiment": -0.27763
+    "refined_sentiment": -2.881994
   },
   {
     "day": "2026-06-10",
@@ -8237,22 +8252,22 @@
   {
     "day": "2026-06-10",
     "ticker": "NVDA",
-    "refined_sentiment": -11.745755
+    "refined_sentiment": -12.137395
   },
   {
     "day": "2026-06-10",
     "ticker": "ODTE",
-    "refined_sentiment": -1.217474
+    "refined_sentiment": -2.65733
   },
   {
     "day": "2026-06-10",
     "ticker": "ORCL",
-    "refined_sentiment": -12.069836
+    "refined_sentiment": -12.239819
   },
   {
     "day": "2026-06-10",
     "ticker": "PDT",
-    "refined_sentiment": -0.885173
+    "refined_sentiment": -2.404831
   },
   {
     "day": "2026-06-10",
@@ -8266,8 +8281,13 @@
   },
   {
     "day": "2026-06-10",
+    "ticker": "POET",
+    "refined_sentiment": -2.085996
+  },
+  {
+    "day": "2026-06-10",
     "ticker": "PSN",
-    "refined_sentiment": 2.035082
+    "refined_sentiment": 2.346742
   },
   {
     "day": "2026-06-10",
@@ -8277,12 +8297,12 @@
   {
     "day": "2026-06-10",
     "ticker": "QQQ",
-    "refined_sentiment": -9.610198
+    "refined_sentiment": -9.815402
   },
   {
     "day": "2026-06-10",
     "ticker": "RDDT",
-    "refined_sentiment": -0.779863
+    "refined_sentiment": -2.195932
   },
   {
     "day": "2026-06-10",
@@ -8292,12 +8312,12 @@
   {
     "day": "2026-06-10",
     "ticker": "RSI",
-    "refined_sentiment": 1.44244
+    "refined_sentiment": 1.328173
   },
   {
     "day": "2026-06-10",
     "ticker": "SEEM",
-    "refined_sentiment": -0.988812
+    "refined_sentiment": -0.815461
   },
   {
     "day": "2026-06-10",
@@ -8312,17 +8332,22 @@
   {
     "day": "2026-06-10",
     "ticker": "SIZE",
-    "refined_sentiment": -0.821273
+    "refined_sentiment": -1.061481
+  },
+  {
+    "day": "2026-06-10",
+    "ticker": "SMA",
+    "refined_sentiment": 0.881199
   },
   {
     "day": "2026-06-10",
     "ticker": "SMCI",
-    "refined_sentiment": -11.390019
+    "refined_sentiment": -11.437605
   },
   {
     "day": "2026-06-10",
     "ticker": "SNDK",
-    "refined_sentiment": 3.679661
+    "refined_sentiment": 3.584352
   },
   {
     "day": "2026-06-10",
@@ -8358,5 +8383,10 @@
     "day": "2026-06-10",
     "ticker": "VOO",
     "refined_sentiment": 0.110912
+  },
+  {
+    "day": "2026-06-10",
+    "ticker": "WBD",
+    "refined_sentiment": -1.153142
   }
 ]
