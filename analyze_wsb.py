@@ -1203,4 +1203,5 @@ if __name__ == "__main__":
         batch_size=args.batch_size,
         min_mentions=args.min_mentions,
         min_confidence=args.min_confidence,
+        sentiment_cache_file=args.sentiment_cache,
     )
