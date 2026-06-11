@@ -1,0 +1,521 @@
+{
+  "date": "2026-05-28",
+  "next_trade_date": "2026-05-29",
+  "starting_value": 1000000.0,
+  "realized_pnl": 0.0,
+  "ending_value_before_rebalance": 1000000.0,
+  "allocated_value": 1000000.0000000001,
+  "cash_after_rebalance": -1.1641532182693481e-10,
+  "exits": [],
+  "entries": [
+    {
+      "ticker": "NVDA",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 211.27999877929688,
+      "shares": 1137.1789091655805,
+      "notional": 240263.158540346,
+      "sentiment": -17.432267999999997,
+      "weight": 0.240263158540346
+    },
+    {
+      "ticker": "MSFT",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 412.9800109863281,
+      "shares": 288.0111926915253,
+      "notional": 118942.86552193158,
+      "sentiment": -8.629887,
+      "weight": 0.11894286552193159
+    },
+    {
+      "ticker": "META",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 639.5,
+      "shares": 177.51970497867148,
+      "notional": 113523.85133386041,
+      "sentiment": -8.236711,
+      "weight": 0.1135238513338604
+    },
+    {
+      "ticker": "SNDK",
+      "side": "long",
+      "entry_date": "2026-05-28",
+      "entry_price": 1596.31005859375,
+      "shares": 30.323258095401613,
+      "notional": 48405.32190702395,
+      "sentiment": 3.5120430000000002,
+      "weight": 0.04840532190702395
+    },
+    {
+      "ticker": "TGT",
+      "side": "long",
+      "entry_date": "2026-05-28",
+      "entry_price": 129.75999450683594,
+      "shares": 356.48230180320576,
+      "notional": 46257.14152376821,
+      "sentiment": 3.3561820000000004,
+      "weight": 0.04625714152376821
+    },
+    {
+      "ticker": "GOOGL",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 388.0,
+      "shares": 89.03663775503539,
+      "notional": 34546.21544895373,
+      "sentiment": -2.5064969999999995,
+      "weight": 0.03454621544895373
+    },
+    {
+      "ticker": "DRAM",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 61.029998779296875,
+      "shares": 533.9915539632691,
+      "notional": 32589.50388653315,
+      "sentiment": -2.3645280000000004,
+      "weight": 0.03258950388653315
+    },
+    {
+      "ticker": "HOOD",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 74.84500122070312,
+      "shares": 401.0663263821543,
+      "notional": 30017.809687655255,
+      "sentiment": -2.177939,
+      "weight": 0.030017809687655255
+    },
+    {
+      "ticker": "TSLA",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 437.6199951171875,
+      "shares": 68.30886377629601,
+      "notional": 29893.324632243282,
+      "sentiment": -2.168907,
+      "weight": 0.02989332463224328
+    },
+    {
+      "ticker": "RDDT",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 155.00999450683594,
+      "shares": 176.70659316829042,
+      "notional": 27391.288036338392,
+      "sentiment": -1.9873719999999997,
+      "weight": 0.02739128803633839
+    },
+    {
+      "ticker": "ASTS",
+      "side": "long",
+      "entry_date": "2026-05-28",
+      "entry_price": 126.86499786376953,
+      "shares": 212.92448527600038,
+      "notional": 27012.664369684015,
+      "sentiment": 1.9599010000000003,
+      "weight": 0.027012664369684015
+    },
+    {
+      "ticker": "JPM",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 297.57000732421875,
+      "shares": 87.98864715096654,
+      "notional": 26182.782377161213,
+      "sentiment": -1.8996889999999997,
+      "weight": 0.026182782377161214
+    },
+    {
+      "ticker": "CRSR",
+      "side": "long",
+      "entry_date": "2026-05-28",
+      "entry_price": 11.09000015258789,
+      "shares": 2103.020070035091,
+      "notional": 23322.492897584554,
+      "sentiment": 1.692161,
+      "weight": 0.023322492897584556
+    },
+    {
+      "ticker": "UBER",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 70.16999816894531,
+      "shares": 313.18672856476456,
+      "notional": 21976.312169927503,
+      "sentiment": -1.5944889999999998,
+      "weight": 0.021976312169927504
+    },
+    {
+      "ticker": "DELL",
+      "side": "long",
+      "entry_date": "2026-05-28",
+      "entry_price": 317.0299987792969,
+      "shares": 66.84687370090721,
+      "notional": 21192.464287798426,
+      "sentiment": 1.537617,
+      "weight": 0.021192464287798425
+    },
+    {
+      "ticker": "APP",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 562.1599731445312,
+      "shares": 37.10518138598947,
+      "notional": 20859.0477714708,
+      "sentiment": -1.513426,
+      "weight": 0.0208590477714708
+    },
+    {
+      "ticker": "WWW",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 17.790000915527344,
+      "shares": 989.9379319946419,
+      "notional": 17610.996716499925,
+      "sentiment": -1.277764,
+      "weight": 0.017610996716499926
+    },
+    {
+      "ticker": "NBIS",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 230.3800048828125,
+      "shares": 71.1693683188232,
+      "notional": 16395.999420797172,
+      "sentiment": -1.18961,
+      "weight": 0.016395999420797173
+    },
+    {
+      "ticker": "RKLB",
+      "side": "long",
+      "entry_date": "2026-05-28",
+      "entry_price": 147.1699981689453,
+      "shares": 108.08394993833208,
+      "notional": 15906.71471451671,
+      "sentiment": 1.15411,
+      "weight": 0.01590671471451671
+    },
+    {
+      "ticker": "SLV",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 66.55000305175781,
+      "shares": 237.83560969181892,
+      "notional": 15827.960550807229,
+      "sentiment": -1.148396,
+      "weight": 0.015827960550807228
+    },
+    {
+      "ticker": "BETA",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 16.75,
+      "shares": 919.2792557208323,
+      "notional": 15397.927533323942,
+      "sentiment": -1.117195,
+      "weight": 0.015397927533323943
+    },
+    {
+      "ticker": "CAPS",
+      "side": "short",
+      "entry_date": "2026-05-28",
+      "entry_price": 0.3100000023841858,
+      "shares": 47773.927302629585,
+      "notional": 14809.91757771709,
+      "sentiment": -1.074532,
+      "weight": 0.01480991757771709
+    },
+    {
+      "ticker": "TEAM",
+      "side": "long",
+      "entry_date": "2026-05-28",
+      "entry_price": 90.98999786376953,
+      "shares": 156.69359199614826,
+      "notional": 14257.549600995904,
+      "sentiment": 1.034455,
+      "weight": 0.014257549600995904
+    },
+    {
+      "ticker": "BOOM",
+      "side": "long",
+      "entry_date": "2026-05-28",
+      "entry_price": 7.190000057220459,
+      "shares": 1918.4706631906442,
+      "notional": 13793.804178116505,
+      "sentiment": 1.000808,
+      "weight": 0.013793804178116504
+    },
+    {
+      "ticker": "NOK",
+      "side": "long",
+      "entry_date": "2026-05-28",
+      "entry_price": 15.819999694824219,
+      "shares": 861.1179252678545,
+      "notional": 13622.885314945122,
+      "sentiment": 0.9884069999999999,
+      "weight": 0.013622885314945123
+    }
+  ],
+  "positions": {
+    "long": {
+      "SNDK": {
+        "ticker": "SNDK",
+        "side": "long",
+        "entry_date": "2026-05-28",
+        "entry_price": 1596.31005859375,
+        "shares": 30.323258095401613,
+        "notional": 48405.32190702395,
+        "sentiment": 3.5120430000000002,
+        "weight": 0.04840532190702395
+      },
+      "TGT": {
+        "ticker": "TGT",
+        "side": "long",
+        "entry_date": "2026-05-28",
+        "entry_price": 129.75999450683594,
+        "shares": 356.48230180320576,
+        "notional": 46257.14152376821,
+        "sentiment": 3.3561820000000004,
+        "weight": 0.04625714152376821
+      },
+      "ASTS": {
+        "ticker": "ASTS",
+        "side": "long",
+        "entry_date": "2026-05-28",
+        "entry_price": 126.86499786376953,
+        "shares": 212.92448527600038,
+        "notional": 27012.664369684015,
+        "sentiment": 1.9599010000000003,
+        "weight": 0.027012664369684015
+      },
+      "CRSR": {
+        "ticker": "CRSR",
+        "side": "long",
+        "entry_date": "2026-05-28",
+        "entry_price": 11.09000015258789,
+        "shares": 2103.020070035091,
+        "notional": 23322.492897584554,
+        "sentiment": 1.692161,
+        "weight": 0.023322492897584556
+      },
+      "DELL": {
+        "ticker": "DELL",
+        "side": "long",
+        "entry_date": "2026-05-28",
+        "entry_price": 317.0299987792969,
+        "shares": 66.84687370090721,
+        "notional": 21192.464287798426,
+        "sentiment": 1.537617,
+        "weight": 0.021192464287798425
+      },
+      "RKLB": {
+        "ticker": "RKLB",
+        "side": "long",
+        "entry_date": "2026-05-28",
+        "entry_price": 147.1699981689453,
+        "shares": 108.08394993833208,
+        "notional": 15906.71471451671,
+        "sentiment": 1.15411,
+        "weight": 0.01590671471451671
+      },
+      "TEAM": {
+        "ticker": "TEAM",
+        "side": "long",
+        "entry_date": "2026-05-28",
+        "entry_price": 90.98999786376953,
+        "shares": 156.69359199614826,
+        "notional": 14257.549600995904,
+        "sentiment": 1.034455,
+        "weight": 0.014257549600995904
+      },
+      "BOOM": {
+        "ticker": "BOOM",
+        "side": "long",
+        "entry_date": "2026-05-28",
+        "entry_price": 7.190000057220459,
+        "shares": 1918.4706631906442,
+        "notional": 13793.804178116505,
+        "sentiment": 1.000808,
+        "weight": 0.013793804178116504
+      },
+      "NOK": {
+        "ticker": "NOK",
+        "side": "long",
+        "entry_date": "2026-05-28",
+        "entry_price": 15.819999694824219,
+        "shares": 861.1179252678545,
+        "notional": 13622.885314945122,
+        "sentiment": 0.9884069999999999,
+        "weight": 0.013622885314945123
+      }
+    },
+    "short": {
+      "NVDA": {
+        "ticker": "NVDA",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 211.27999877929688,
+        "shares": 1137.1789091655805,
+        "notional": 240263.158540346,
+        "sentiment": -17.432267999999997,
+        "weight": 0.240263158540346
+      },
+      "MSFT": {
+        "ticker": "MSFT",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 412.9800109863281,
+        "shares": 288.0111926915253,
+        "notional": 118942.86552193158,
+        "sentiment": -8.629887,
+        "weight": 0.11894286552193159
+      },
+      "META": {
+        "ticker": "META",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 639.5,
+        "shares": 177.51970497867148,
+        "notional": 113523.85133386041,
+        "sentiment": -8.236711,
+        "weight": 0.1135238513338604
+      },
+      "GOOGL": {
+        "ticker": "GOOGL",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 388.0,
+        "shares": 89.03663775503539,
+        "notional": 34546.21544895373,
+        "sentiment": -2.5064969999999995,
+        "weight": 0.03454621544895373
+      },
+      "DRAM": {
+        "ticker": "DRAM",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 61.029998779296875,
+        "shares": 533.9915539632691,
+        "notional": 32589.50388653315,
+        "sentiment": -2.3645280000000004,
+        "weight": 0.03258950388653315
+      },
+      "HOOD": {
+        "ticker": "HOOD",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 74.84500122070312,
+        "shares": 401.0663263821543,
+        "notional": 30017.809687655255,
+        "sentiment": -2.177939,
+        "weight": 0.030017809687655255
+      },
+      "TSLA": {
+        "ticker": "TSLA",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 437.6199951171875,
+        "shares": 68.30886377629601,
+        "notional": 29893.324632243282,
+        "sentiment": -2.168907,
+        "weight": 0.02989332463224328
+      },
+      "RDDT": {
+        "ticker": "RDDT",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 155.00999450683594,
+        "shares": 176.70659316829042,
+        "notional": 27391.288036338392,
+        "sentiment": -1.9873719999999997,
+        "weight": 0.02739128803633839
+      },
+      "JPM": {
+        "ticker": "JPM",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 297.57000732421875,
+        "shares": 87.98864715096654,
+        "notional": 26182.782377161213,
+        "sentiment": -1.8996889999999997,
+        "weight": 0.026182782377161214
+      },
+      "UBER": {
+        "ticker": "UBER",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 70.16999816894531,
+        "shares": 313.18672856476456,
+        "notional": 21976.312169927503,
+        "sentiment": -1.5944889999999998,
+        "weight": 0.021976312169927504
+      },
+      "APP": {
+        "ticker": "APP",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 562.1599731445312,
+        "shares": 37.10518138598947,
+        "notional": 20859.0477714708,
+        "sentiment": -1.513426,
+        "weight": 0.0208590477714708
+      },
+      "WWW": {
+        "ticker": "WWW",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 17.790000915527344,
+        "shares": 989.9379319946419,
+        "notional": 17610.996716499925,
+        "sentiment": -1.277764,
+        "weight": 0.017610996716499926
+      },
+      "NBIS": {
+        "ticker": "NBIS",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 230.3800048828125,
+        "shares": 71.1693683188232,
+        "notional": 16395.999420797172,
+        "sentiment": -1.18961,
+        "weight": 0.016395999420797173
+      },
+      "SLV": {
+        "ticker": "SLV",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 66.55000305175781,
+        "shares": 237.83560969181892,
+        "notional": 15827.960550807229,
+        "sentiment": -1.148396,
+        "weight": 0.015827960550807228
+      },
+      "BETA": {
+        "ticker": "BETA",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 16.75,
+        "shares": 919.2792557208323,
+        "notional": 15397.927533323942,
+        "sentiment": -1.117195,
+        "weight": 0.015397927533323943
+      },
+      "CAPS": {
+        "ticker": "CAPS",
+        "side": "short",
+        "entry_date": "2026-05-28",
+        "entry_price": 0.3100000023841858,
+        "shares": 47773.927302629585,
+        "notional": 14809.91757771709,
+        "sentiment": -1.074532,
+        "weight": 0.01480991757771709
+      }
+    }
+  },
+  "today_profit": 0.0,
+  "total_profit": 0.0,
+  "total_investment": 1000000.0
+}

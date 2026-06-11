@@ -35,6 +35,10 @@ def load_sentiment(path: Path) -> list[dict]:
 
 
 def rolling_signals(rows: list[dict], trade_day: datetime, window_days: int) -> dict[str, float]:
+    # Strictly exclude the trade day. Daily sentiment rows are bucketed by
+    # the America/New_York 9:30am ET cutoff: pre-open items are assigned to
+    # the previous signal day, and items at/after open stay on that day so
+    # they can only affect the next trade generation.
     window_end = trade_day
     window_start = trade_day - timedelta(days=window_days)
     signals: dict[str, float] = defaultdict(float)
@@ -498,6 +502,7 @@ def simulate(
             "sentiment_file": str(sentiment_file),
             "warmup_days": window_days,
             "trading_calendar": "SPY market-open dates",
+            "signal_timing": "daily rows use America/New_York 9:30am ET cutoff buckets; trade day excludes same-day rows so post-open data is next-generation only",
         },
         "daily_data": daily_data,
         "portfolio_statistics": portfolio_statistics,

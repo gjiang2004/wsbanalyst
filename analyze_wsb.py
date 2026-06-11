@@ -22,7 +22,8 @@ import json
 import time
 import hashlib
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, time as dt_time, timedelta, timezone
+from zoneinfo import ZoneInfo
 from dataclasses import dataclass, field
 from collections import defaultdict, deque
 from typing import Iterator
@@ -80,6 +81,11 @@ MAX_SAMPLES    = 50   # max raw samples stored per ticker
 DECAY_WINDOW_DAYS = float(os.getenv("SENTIMENT_DECAY_WINDOW_DAYS", "14"))
 DECAY_FLOOR       = float(os.getenv("SENTIMENT_DECAY_FLOOR", "0.10"))
 DECAY_MIDPOINT    = float(os.getenv("SENTIMENT_DECAY_MIDPOINT", "0.55"))
+TRADING_TIMEZONE   = ZoneInfo(os.getenv("SIM_TRADING_TIMEZONE", "America/New_York"))
+MARKET_OPEN_TIME   = dt_time(
+    int(os.getenv("SIM_MARKET_OPEN_HOUR", "9")),
+    int(os.getenv("SIM_MARKET_OPEN_MINUTE", "30")),
+)
 
 # =============================================================================
 # BLACKLIST
@@ -872,6 +878,14 @@ def _parse_timestamp(value) -> float | None:
             continue
     return None  # unrecognised format — caller will use mid-window fallback
 
+
+def _signal_day_from_timestamp(ts: float | None, now_ts: float) -> str:
+    local_dt = datetime.fromtimestamp(ts if ts is not None else now_ts, tz=timezone.utc).astimezone(TRADING_TIMEZONE)
+    signal_day = local_dt.date()
+    if local_dt.time() < MARKET_OPEN_TIME:
+        signal_day -= timedelta(days=1)
+    return signal_day.strftime("%Y-%m-%d")
+
 # =============================================================================
 # MAIN
 # =============================================================================
@@ -991,11 +1005,12 @@ def run(
 
     for (text, upvotes, awards, ts, mentions, meta) in all_items:
         recency = recency_weight(ts, now_ts)
-        item_day = (
-            datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%d")
-            if ts is not None else
-            datetime.fromtimestamp(now_ts, tz=timezone.utc).strftime("%Y-%m-%d")
-        )
+        # Bucket by the 9:30am New York market-open cutoff, not UTC date.
+        # The simulator uses row day D only for trades generated after D.
+        # Therefore pre-open items on D are assigned to D-1 so they can be
+        # used for the D 9:30am plan, while items at/after 9:30am on D stay
+        # on D and can only affect the next trade generation.
+        item_day = _signal_day_from_timestamp(ts, now_ts)
         age_days = ((now_ts - ts) / 86_400.0) if ts is not None else 0.0
         in_aggregate_window = aggregate_window_days is None or age_days <= aggregate_window_days
         if in_aggregate_window:

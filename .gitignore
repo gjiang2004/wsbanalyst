@@ -27,6 +27,5 @@ wsb_posts_24h.json
 *.sqlite3-shm
 *.sqlite3-wal
 
-# Generated per-day simulation snapshots; frontend uses portfolio_total_investment.json
-frontend/src/portfolio_data/portfolio_*.json
-!frontend/src/portfolio_data/portfolio_total_investment.json
+# Generated simulation snapshots are intentionally tracked so GitHub Actions
+# updates expose both the summary and per-day trade plans.
