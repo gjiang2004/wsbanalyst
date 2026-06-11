@@ -617,3 +617,40 @@ def load_portfolio_result(run_id: str = "default", url: str | None = None) -> di
         cur.execute(f"SELECT payload FROM portfolio_runs WHERE id = {p}", (run_id,))
         row = cur.fetchone()
     return _loads(_row_get(row, "payload"), None) if row else None
+
+
+
+def load_finbert_cache(url: str | None = None) -> dict[str, tuple[str, float]]:
+    value = url or database_url()
+    with connect(value) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT cache_key, payload FROM finbert_cache")
+        rows = cur.fetchall()
+    cache: dict[str, tuple[str, float]] = {}
+    for row in rows:
+        key = str(_row_get(row, "cache_key") or "")
+        payload = _loads(_row_get(row, "payload"), {})
+        if not key or not isinstance(payload, dict):
+            continue
+        try:
+            cache[key] = (str(payload["label"]), float(payload["score"]))
+        except (KeyError, TypeError, ValueError):
+            continue
+    return cache
+
+
+def save_finbert_cache(cache: dict[str, tuple[str, float]], url: str | None = None) -> None:
+    value = url or database_url()
+    p = _placeholder(value)
+    payload_expr = _json_expr(p, value)
+    sql = f"""
+        INSERT INTO finbert_cache (cache_key, payload, updated_at)
+        VALUES ({p},{payload_expr},CURRENT_TIMESTAMP)
+        ON CONFLICT(cache_key) DO UPDATE SET
+            payload=excluded.payload,
+            updated_at=CURRENT_TIMESTAMP
+    """
+    with connect(value) as conn:
+        cur = conn.cursor()
+        for key, (label, score) in cache.items():
+            cur.execute(sql, (key, _json({"label": label, "score": score})))

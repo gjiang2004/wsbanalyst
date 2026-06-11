@@ -16,6 +16,7 @@ DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/wsb?sslmode=require
 WSB_API_STORAGE=db
 WSB_STORAGE=db
 SIM_STORAGE=db
+FINBERT_CACHE_STORAGE=db
 REDDIT_CLIENT_ID=...
 REDDIT_CLIENT_SECRET=...
 REDDIT_USER_AGENT=wsbanalyst scraper
@@ -103,6 +104,7 @@ The updater in DB mode stores:
 - raw Reddit posts/comments
 - 1D/3D/7D/14D sentiment snapshots
 - merged daily ticker sentiment history
+- FinBERT sentiment cache
 
 The simulator in DB mode reads daily ticker sentiment from DB and stores the full portfolio result in DB.
 

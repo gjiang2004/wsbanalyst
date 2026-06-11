@@ -4,7 +4,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     HF_HOME=/app/.cache/huggingface \
     WSB_STORAGE=db \
-    SIM_STORAGE=db
+    SIM_STORAGE=db \
+    FINBERT_CACHE_STORAGE=db
 
 WORKDIR /app
 

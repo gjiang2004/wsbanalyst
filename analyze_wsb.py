@@ -618,7 +618,19 @@ def _ticker_context(ticker: str, text: str) -> str:
     return ' '.join(weighted)[:512]
 
 
+def _use_db_sentiment_cache(cache_file: str | None) -> bool:
+    return str(cache_file or "").lower() == "db" or os.getenv("FINBERT_CACHE_STORAGE", "").strip().lower() == "db"
+
+
 def _load_sentiment_cache(cache_file: str | None) -> dict[str, tuple[str, float]]:
+    if _use_db_sentiment_cache(cache_file):
+        try:
+            import db_store
+            db_store.init_db()
+            return db_store.load_finbert_cache()
+        except Exception as exc:
+            print(f"  Warning: could not load DB sentiment cache: {exc}")
+            return {}
     if not cache_file or not os.path.exists(cache_file):
         return {}
     try:
@@ -636,6 +648,14 @@ def _load_sentiment_cache(cache_file: str | None) -> dict[str, tuple[str, float]
 
 
 def _write_sentiment_cache(cache_file: str | None, cache: dict[str, tuple[str, float]]) -> None:
+    if _use_db_sentiment_cache(cache_file):
+        try:
+            import db_store
+            db_store.init_db()
+            db_store.save_finbert_cache(cache)
+        except Exception as exc:
+            print(f"  Warning: could not save DB sentiment cache: {exc}")
+        return
     if not cache_file:
         return
     cache_dir = os.path.dirname(cache_file)
