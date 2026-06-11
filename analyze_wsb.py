@@ -886,6 +886,20 @@ def _signal_day_from_timestamp(ts: float | None, now_ts: float) -> str:
         signal_day -= timedelta(days=1)
     return signal_day.strftime("%Y-%m-%d")
 
+
+def _next_weekday(day):
+    candidate = day + timedelta(days=1)
+    while candidate.weekday() >= 5:
+        candidate += timedelta(days=1)
+    return candidate
+
+
+def _signal_anchor_timestamp(signal_day: str) -> float:
+    day = datetime.strptime(signal_day, "%Y-%m-%d").date()
+    anchor_day = _next_weekday(day)
+    anchor_dt = datetime.combine(anchor_day, MARKET_OPEN_TIME, tzinfo=TRADING_TIMEZONE)
+    return anchor_dt.astimezone(timezone.utc).timestamp()
+
 # =============================================================================
 # MAIN
 # =============================================================================
@@ -1004,13 +1018,17 @@ def run(
     daily_sentiment: dict[tuple[str, str], float] = defaultdict(float)
 
     for (text, upvotes, awards, ts, mentions, meta) in all_items:
-        recency = recency_weight(ts, now_ts)
+        aggregate_recency = recency_weight(ts, now_ts)
         # Bucket by the 9:30am New York market-open cutoff, not UTC date.
         # The simulator uses row day D only for trades generated after D.
         # Therefore pre-open items on D are assigned to D-1 so they can be
         # used for the D 9:30am plan, while items at/after 9:30am on D stay
-        # on D and can only affect the next trade generation.
+        # on D and can only affect the next trade generation. Daily simulation
+        # rows anchor decay to that historical generation cutoff, not to the
+        # current workflow run time, so old signal rows do not drift later.
         item_day = _signal_day_from_timestamp(ts, now_ts)
+        daily_anchor_ts = _signal_anchor_timestamp(item_day)
+        daily_recency = recency_weight(ts, daily_anchor_ts)
         age_days = ((now_ts - ts) / 86_400.0) if ts is not None else 0.0
         in_aggregate_window = aggregate_window_days is None or age_days <= aggregate_window_days
         if in_aggregate_window:
@@ -1027,21 +1045,22 @@ def run(
                 ratio = float(ratio) if ratio is not None else None
             except (TypeError, ValueError):
                 ratio = None
-            sv = semantic_value(label, score, m.confidence, upvotes, awards, recency, ratio)
+            daily_sv = semantic_value(label, score, m.confidence, upvotes, awards, daily_recency, ratio)
+            aggregate_sv = semantic_value(label, score, m.confidence, upvotes, awards, aggregate_recency, ratio)
             sample = {
                 **meta,
                 'text':            text[:1200],
                 'ticker':          m.ticker,
                 'sentiment':       label,
                 'sentiment_score': round(score, 3),
-                'semantic_value':  round(sv, 4),
-                'recency_weight':  round(recency, 4),
+                'semantic_value':  round(aggregate_sv, 4),
+                'recency_weight':  round(aggregate_recency, 4),
                 'confidence':      round(m.confidence, 3),
                 'method':          m.method,
             }
-            daily_sentiment[(m.ticker, item_day)] += sv
+            daily_sentiment[(m.ticker, item_day)] += daily_sv
             if in_aggregate_window:
-                data[m.ticker].update(m, label, score, sv, sample)
+                data[m.ticker].update(m, label, score, aggregate_sv, sample)
 
     # ── Build output ───────────────────────────────────────────────────────────
     tickers_out = []
@@ -1111,6 +1130,7 @@ def run(
             'recency_decay': {
                 'window_days': DECAY_WINDOW_DAYS,
                 'floor':       DECAY_FLOOR,
+                'daily_anchor': 'historical 9:30am America/New_York generation cutoff',
             },
         },
         'tickers': tickers_out,

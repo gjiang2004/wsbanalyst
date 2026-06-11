@@ -1,11 +1,17 @@
 import argparse
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, time as dt_time, timedelta
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from typing import Any
 
 TS_FORMAT = "%Y-%m-%d %H:%M:%S"
+TRADING_TIMEZONE = ZoneInfo(os.getenv("SIM_TRADING_TIMEZONE", "America/New_York"))
+MARKET_OPEN_TIME = dt_time(
+    int(os.getenv("SIM_MARKET_OPEN_HOUR", "9")),
+    int(os.getenv("SIM_MARKET_OPEN_MINUTE", "30")),
+)
 
 
 def _load_env() -> None:
@@ -168,27 +174,57 @@ def _load_daily_rows(path: Path) -> list[dict]:
     return rows if isinstance(rows, list) else []
 
 
+def _normalize_daily_row(row: dict, min_day: str | None = None) -> dict | None:
+    if not isinstance(row, dict):
+        return None
+    day = str(row.get("day") or "").strip()
+    ticker = str(row.get("ticker") or "").upper().strip()
+    if not day or not ticker or (min_day and day < min_day):
+        return None
+    try:
+        value = float(row.get("refined_sentiment"))
+    except (TypeError, ValueError):
+        return None
+    if value == 0:
+        return None
+    return {
+        "day": day,
+        "ticker": ticker,
+        "refined_sentiment": round(value, 6),
+    }
+
+
 def _clean_daily_rows(rows: list[dict], min_day: str | None = None) -> list[dict]:
     merged: dict[tuple[str, str], dict] = {}
     for row in rows:
-        if not isinstance(row, dict):
+        normalized = _normalize_daily_row(row, min_day=min_day)
+        if not normalized:
             continue
-        day = str(row.get("day") or "").strip()
-        ticker = str(row.get("ticker") or "").upper().strip()
-        if not day or not ticker or (min_day and day < min_day):
-            continue
-        try:
-            value = float(row.get("refined_sentiment"))
-        except (TypeError, ValueError):
-            continue
-        if value == 0:
-            continue
-        merged[(day, ticker)] = {
-            "day": day,
-            "ticker": ticker,
-            "refined_sentiment": round(value, 6),
-        }
+        merged[(normalized["day"], normalized["ticker"])] = normalized
     return [merged[key] for key in sorted(merged)]
+
+
+def _previous_weekday(day):
+    candidate = day - timedelta(days=1)
+    while candidate.weekday() >= 5:
+        candidate -= timedelta(days=1)
+    return candidate
+
+
+def _current_mutable_signal_day(now: datetime | None = None) -> str:
+    local_now = (now or datetime.now(TRADING_TIMEZONE)).astimezone(TRADING_TIMEZONE)
+    today = local_now.date()
+
+    if today.weekday() >= 5:
+        # Weekend posts/comments feed the next Monday 9:30am generation, so
+        # keep Friday and weekend signal buckets mutable until that open.
+        while today.weekday() != 4:
+            today -= timedelta(days=1)
+        return today.strftime("%Y-%m-%d")
+
+    if local_now.time() < MARKET_OPEN_TIME:
+        return _previous_weekday(today).strftime("%Y-%m-%d")
+    return today.strftime("%Y-%m-%d")
 
 
 def _write_daily_rows(path: Path, rows: list[dict]) -> None:
@@ -204,9 +240,30 @@ def _filter_daily_output(path: Path, min_day: str | None = None) -> int:
 
 
 def _merge_daily_history(current_path: Path, history_path: Path, min_day: str | None = None) -> int:
-    current_rows = _load_daily_rows(current_path)
-    history_rows = _load_daily_rows(history_path)
-    rows = _clean_daily_rows(history_rows + current_rows, min_day=min_day)
+    current_rows = _clean_daily_rows(_load_daily_rows(current_path), min_day=min_day)
+    history_rows = _clean_daily_rows(_load_daily_rows(history_path), min_day=min_day)
+    mutable_day = _current_mutable_signal_day()
+
+    # Preserve finalized signal days exactly. A row dated D is used for the
+    # next 9:30am ET trade generation, so once the clock has moved past that
+    # mutable signal bucket it must not be recalculated with a new now_ts, new
+    # scores, or newly fetched comments.
+    merged: dict[tuple[str, str], dict] = {
+        (row["day"], row["ticker"]): row
+        for row in history_rows
+        if row["day"] < mutable_day
+    }
+
+    current_mutable_days = {row["day"] for row in current_rows if row["day"] >= mutable_day}
+    for row in history_rows:
+        key = (row["day"], row["ticker"])
+        if row["day"] >= mutable_day and row["day"] not in current_mutable_days:
+            merged[key] = row
+    for row in current_rows:
+        if row["day"] >= mutable_day:
+            merged[(row["day"], row["ticker"])] = row
+
+    rows = [merged[key] for key in sorted(merged)]
     _write_daily_rows(history_path, rows)
     return len(rows)
 
