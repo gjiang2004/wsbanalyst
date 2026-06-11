@@ -1,0 +1,522 @@
+{
+  "date": "2026-06-11",
+  "starting_value": 1045968.6239373914,
+  "realized_pnl": 0.0,
+  "ending_value_before_rebalance": 1045968.6239373914,
+  "allocated_value": 1045968.6239373914,
+  "cash_after_rebalance": 0.0,
+  "exits": [],
+  "entries": [
+    {
+      "ticker": "GOOGL",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 157577.69887191107,
+      "sentiment": -79.29513299999999,
+      "weight": 0.15065241467639204
+    },
+    {
+      "ticker": "NVDA",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 101968.92923916035,
+      "sentiment": -51.312082000000004,
+      "weight": 0.09748756024374199
+    },
+    {
+      "ticker": "MSFT",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 94724.79877272008,
+      "sentiment": -47.666742,
+      "weight": 0.09056179755769617
+    },
+    {
+      "ticker": "AVGO",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 89131.33540406839,
+      "sentiment": -44.852039000000005,
+      "weight": 0.08521415782869939
+    },
+    {
+      "ticker": "META",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 67105.16378578979,
+      "sentiment": -33.768185,
+      "weight": 0.06415600071556879
+    },
+    {
+      "ticker": "LULU",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 47260.78633431538,
+      "sentiment": -23.782238000000003,
+      "weight": 0.04518375145557356
+    },
+    {
+      "ticker": "AAPL",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 41033.38653190255,
+      "sentiment": -20.648529999999997,
+      "weight": 0.03923003577051723
+    },
+    {
+      "ticker": "QQQ",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 40833.97193572049,
+      "sentiment": -20.548182,
+      "weight": 0.03903938512228708
+    },
+    {
+      "ticker": "ORCL",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 37907.47112542717,
+      "sentiment": -19.075529000000003,
+      "weight": 0.036241499274357006
+    },
+    {
+      "ticker": "HOOD",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 37072.951604008755,
+      "sentiment": -18.655588,
+      "weight": 0.03544365553189656
+    },
+    {
+      "ticker": "SNDK",
+      "side": "long",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 34055.26275234933,
+      "sentiment": 17.137048,
+      "weight": 0.03255858920906577
+    },
+    {
+      "ticker": "PDT",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 28651.98726913236,
+      "sentiment": -14.418050000000001,
+      "weight": 0.027392778916518805
+    },
+    {
+      "ticker": "MSTR",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 27056.616844455002,
+      "sentiment": -13.615239000000003,
+      "weight": 0.02586752243351664
+    },
+    {
+      "ticker": "SMCI",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 26896.537486811096,
+      "sentiment": -13.534685,
+      "weight": 0.02571447830391234
+    },
+    {
+      "ticker": "INTC",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 25925.60652181312,
+      "sentiment": -13.0461,
+      "weight": 0.02478621817949001
+    },
+    {
+      "ticker": "RDDT",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 23012.15784078719,
+      "sentiment": -11.580015,
+      "weight": 0.02200081084092311
+    },
+    {
+      "ticker": "AMZN",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 21566.787541164787,
+      "sentiment": -10.852686,
+      "weight": 0.020618962220855023
+    },
+    {
+      "ticker": "DRAM",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 20438.537481548552,
+      "sentiment": -10.284936,
+      "weight": 0.01954029692077259
+    },
+    {
+      "ticker": "TSLA",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 19990.5620941613,
+      "sentiment": -10.059508999999998,
+      "weight": 0.0191120093248207
+    },
+    {
+      "ticker": "BMNR",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 18202.27929117077,
+      "sentiment": -9.159622,
+      "weight": 0.01740231864953179
+    },
+    {
+      "ticker": "BTC",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 17767.32821182531,
+      "sentiment": -8.940749,
+      "weight": 0.0169864829644152
+    },
+    {
+      "ticker": "NFLX",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 17757.90277803797,
+      "sentiment": -8.936005999999999,
+      "weight": 0.016977471763150044
+    },
+    {
+      "ticker": "GOOG",
+      "side": "long",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 17088.74665989714,
+      "sentiment": 8.599278,
+      "weight": 0.016337723970695342
+    },
+    {
+      "ticker": "TSM",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 16757.61644557078,
+      "sentiment": -8.432649000000001,
+      "weight": 0.016021146392029673
+    },
+    {
+      "ticker": "SEEM",
+      "side": "short",
+      "entry_date": "2026-06-11",
+      "entry_price": null,
+      "shares": null,
+      "notional": 16184.201113642526,
+      "sentiment": -8.144099,
+      "weight": 0.015472931733572979
+    }
+  ],
+  "positions": {
+    "long": {
+      "SNDK": {
+        "ticker": "SNDK",
+        "side": "long",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 34055.26275234933,
+        "sentiment": 17.137048,
+        "weight": 0.03255858920906577
+      },
+      "GOOG": {
+        "ticker": "GOOG",
+        "side": "long",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 17088.74665989714,
+        "sentiment": 8.599278,
+        "weight": 0.016337723970695342
+      }
+    },
+    "short": {
+      "GOOGL": {
+        "ticker": "GOOGL",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 157577.69887191107,
+        "sentiment": -79.29513299999999,
+        "weight": 0.15065241467639204
+      },
+      "NVDA": {
+        "ticker": "NVDA",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 101968.92923916035,
+        "sentiment": -51.312082000000004,
+        "weight": 0.09748756024374199
+      },
+      "MSFT": {
+        "ticker": "MSFT",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 94724.79877272008,
+        "sentiment": -47.666742,
+        "weight": 0.09056179755769617
+      },
+      "AVGO": {
+        "ticker": "AVGO",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 89131.33540406839,
+        "sentiment": -44.852039000000005,
+        "weight": 0.08521415782869939
+      },
+      "META": {
+        "ticker": "META",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 67105.16378578979,
+        "sentiment": -33.768185,
+        "weight": 0.06415600071556879
+      },
+      "LULU": {
+        "ticker": "LULU",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 47260.78633431538,
+        "sentiment": -23.782238000000003,
+        "weight": 0.04518375145557356
+      },
+      "AAPL": {
+        "ticker": "AAPL",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 41033.38653190255,
+        "sentiment": -20.648529999999997,
+        "weight": 0.03923003577051723
+      },
+      "QQQ": {
+        "ticker": "QQQ",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 40833.97193572049,
+        "sentiment": -20.548182,
+        "weight": 0.03903938512228708
+      },
+      "ORCL": {
+        "ticker": "ORCL",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 37907.47112542717,
+        "sentiment": -19.075529000000003,
+        "weight": 0.036241499274357006
+      },
+      "HOOD": {
+        "ticker": "HOOD",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 37072.951604008755,
+        "sentiment": -18.655588,
+        "weight": 0.03544365553189656
+      },
+      "PDT": {
+        "ticker": "PDT",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 28651.98726913236,
+        "sentiment": -14.418050000000001,
+        "weight": 0.027392778916518805
+      },
+      "MSTR": {
+        "ticker": "MSTR",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 27056.616844455002,
+        "sentiment": -13.615239000000003,
+        "weight": 0.02586752243351664
+      },
+      "SMCI": {
+        "ticker": "SMCI",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 26896.537486811096,
+        "sentiment": -13.534685,
+        "weight": 0.02571447830391234
+      },
+      "INTC": {
+        "ticker": "INTC",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 25925.60652181312,
+        "sentiment": -13.0461,
+        "weight": 0.02478621817949001
+      },
+      "RDDT": {
+        "ticker": "RDDT",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 23012.15784078719,
+        "sentiment": -11.580015,
+        "weight": 0.02200081084092311
+      },
+      "AMZN": {
+        "ticker": "AMZN",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 21566.787541164787,
+        "sentiment": -10.852686,
+        "weight": 0.020618962220855023
+      },
+      "DRAM": {
+        "ticker": "DRAM",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 20438.537481548552,
+        "sentiment": -10.284936,
+        "weight": 0.01954029692077259
+      },
+      "TSLA": {
+        "ticker": "TSLA",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 19990.5620941613,
+        "sentiment": -10.059508999999998,
+        "weight": 0.0191120093248207
+      },
+      "BMNR": {
+        "ticker": "BMNR",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 18202.27929117077,
+        "sentiment": -9.159622,
+        "weight": 0.01740231864953179
+      },
+      "BTC": {
+        "ticker": "BTC",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 17767.32821182531,
+        "sentiment": -8.940749,
+        "weight": 0.0169864829644152
+      },
+      "NFLX": {
+        "ticker": "NFLX",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 17757.90277803797,
+        "sentiment": -8.936005999999999,
+        "weight": 0.016977471763150044
+      },
+      "TSM": {
+        "ticker": "TSM",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 16757.61644557078,
+        "sentiment": -8.432649000000001,
+        "weight": 0.016021146392029673
+      },
+      "SEEM": {
+        "ticker": "SEEM",
+        "side": "short",
+        "entry_date": "2026-06-11",
+        "entry_price": null,
+        "shares": null,
+        "notional": 16184.201113642526,
+        "sentiment": -8.144099,
+        "weight": 0.015472931733572979
+      }
+    }
+  },
+  "planned_only": true,
+  "pre_open_plan": true,
+  "today_profit": 0.0,
+  "total_profit": 45968.62393739144,
+  "total_investment": 1045968.6239373914
+}
