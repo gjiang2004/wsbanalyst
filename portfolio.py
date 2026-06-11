@@ -209,38 +209,6 @@ def build_trade_days(rows: list[dict], window_days: int) -> list[datetime]:
     return get_market_open_days(first_candidate, last_candidate)
 
 
-def build_planned_entries(signals: dict[str, float], day_s: str, account_value: float) -> list[dict]:
-    total_abs_signal = sum(abs(value) for value in signals.values())
-    if total_abs_signal <= 0 or account_value <= 0:
-        return []
-    entries = []
-    for ticker, signal in signals.items():
-        allocation = account_value * (abs(signal) / total_abs_signal)
-        entries.append({
-            "ticker": ticker,
-            "side": "long" if signal > 0 else "short",
-            "entry_date": day_s,
-            "entry_price": None,
-            "shares": None,
-            "notional": allocation,
-            "sentiment": signal,
-            "weight": allocation / account_value,
-        })
-    return entries
-
-
-def next_weekday_after(day: datetime, latest_sentiment_day: datetime) -> datetime | None:
-    candidate = day + timedelta(days=1)
-    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-    latest = latest_sentiment_day.replace(hour=0, minute=0, second=0, microsecond=0)
-    limit = min(today, latest + timedelta(days=1))
-    while candidate <= limit:
-        if candidate.weekday() < 5:
-            return candidate
-        candidate += timedelta(days=1)
-    return None
-
-
 def latest_existing_simulation_date(output_dir: Path) -> datetime | None:
     path = output_dir / "portfolio_total_investment.json"
     if not path.exists():
@@ -354,8 +322,7 @@ def simulate(
     if len(trade_days) < 2:
         raise SystemExit("Need at least two market-open days to simulate open-to-open returns")
 
-    planned_day = next_weekday_after(trade_days[-1], rows[-1]["day"])
-    newest_needed_day = planned_day or trade_days[-1]
+    newest_needed_day = trade_days[-1]
     if continue_existing:
         latest_existing = latest_existing_simulation_date(output_dir)
         existing = load_existing_simulation(output_dir)
@@ -496,38 +463,6 @@ def simulate(
     with (output_dir / f"portfolio_{final_day_s}.json").open("w", encoding="utf-8") as f:
         json.dump(final_record, f, indent=2)
 
-    if planned_day and planned_day.strftime(DATE_FMT) != final_day_s:
-        planned_day_s = planned_day.strftime(DATE_FMT)
-        planned_signals = select_signals(rolling_signals(rows, planned_day, window_days), max_positions)
-        future_entries = build_planned_entries(planned_signals, planned_day_s, account_value)
-        future_record = {
-            "date": planned_day_s,
-            "starting_value": account_value,
-            "realized_pnl": 0.0,
-            "ending_value_before_rebalance": account_value,
-            "allocated_value": sum(entry["notional"] for entry in future_entries),
-            "cash_after_rebalance": account_value - sum(entry["notional"] for entry in future_entries),
-            "exits": [],
-            "entries": future_entries,
-            "positions": {
-                "long": {p["ticker"]: p for p in future_entries if p["side"] == "long"},
-                "short": {p["ticker"]: p for p in future_entries if p["side"] == "short"},
-            },
-            "planned_only": True,
-            "pre_open_plan": True,
-            "today_profit": 0.0,
-            "total_profit": total_profit,
-            "total_investment": account_value,
-        }
-        daily_data.append(future_record)
-        portfolio_statistics.append({
-            "date": planned_day_s,
-            "investment": account_value,
-            "today_profit": 0.0,
-            "total_profit": total_profit,
-        })
-        with (output_dir / f"portfolio_{planned_day_s}.json").open("w", encoding="utf-8") as f:
-            json.dump(future_record, f, indent=2)
 
     result = {
         "meta": {
