@@ -1,0 +1,22 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements-api.txt .
+RUN pip install --no-cache-dir -r requirements-api.txt
+
+COPY backend ./backend
+COPY db_store.py inference.py analyze_wsb.py ticker_company_names.json ./
+COPY ticker_sentiment*.json ./
+COPY frontend/src/portfolio_data/portfolio_total_investment.json ./frontend/src/portfolio_data/portfolio_total_investment.json
+
+EXPOSE 8000
+
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "backend.api:app", "--bind=0.0.0.0:8000", "--timeout=600", "--access-logfile=-", "--error-logfile=-"]

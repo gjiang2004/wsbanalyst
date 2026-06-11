@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Brush,
   CartesianGrid,
@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import dayjs from "dayjs";
 import sampleData from "../../portfolio_data/portfolio_total_investment.json";
+import { apiUrl } from "../../lib/api";
 import "./Graph.css";
 
 interface PortfolioPoint {
@@ -70,7 +71,7 @@ interface SimulationData {
 
 type ChartPoint = PortfolioPoint;
 
-const simulation = sampleData as SimulationData;
+const staticSimulation = sampleData as SimulationData;
 
 const currency = (value?: number) =>
   typeof value === "number" && Number.isFinite(value)
@@ -102,6 +103,33 @@ const BrushHandle = ({ x = 0, y = 0, width = 10, height = 28 }: { x?: number; y?
 };
 
 const Graph = () => {
+  const [simulation, setSimulation] = useState<SimulationData>(staticSimulation);
+  const [portfolioLoading, setPortfolioLoading] = useState(false);
+  const [portfolioError, setPortfolioError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setPortfolioLoading(true);
+    setPortfolioError(null);
+    fetch(apiUrl("/portfolio"), { cache: "no-store" })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((payload: SimulationData) => {
+        if (!cancelled) setSimulation(payload);
+      })
+      .catch((error) => {
+        if (!cancelled) setPortfolioError(error instanceof Error ? error.message : "Portfolio API unavailable");
+      })
+      .finally(() => {
+        if (!cancelled) setPortfolioLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const chartData = useMemo<ChartPoint[]>(() => {
     const stats = Array.isArray(simulation.portfolio_statistics) ? simulation.portfolio_statistics : [];
     return stats
@@ -113,7 +141,7 @@ const Graph = () => {
         total_profit: entry.total_profit || 0,
       }))
       .sort((a, b) => a.date.localeCompare(b.date));
-  }, []);
+  }, [simulation]);
 
   const dailyByDate = useMemo(() => {
     const map = new Map<string, DailyRecord>();
@@ -122,13 +150,20 @@ const Graph = () => {
       if (row.date) map.set(row.date, row);
     });
     return map;
-  }, []);
+  }, [simulation]);
 
   const [selectedDate, setSelectedDate] = useState(() => chartData.length ? chartData[chartData.length - 1].date : "");
   const [showClosedTrades, setShowClosedTrades] = useState(true);
   const [showOpenTrades, setShowOpenTrades] = useState(true);
+  useEffect(() => {
+    if (chartData.length && !chartData.some((point) => point.date === selectedDate)) {
+      setSelectedDate(chartData[chartData.length - 1].date);
+    }
+  }, [chartData, selectedDate]);
+
   const selectedPoint = chartData.find((point) => point.date === selectedDate) || chartData[chartData.length - 1];
   const selectedDay = selectedPoint ? dailyByDate.get(selectedPoint.date) : undefined;
+  const initialCapital = simulation.meta?.initial_capital;
   const yAxisTicks = useMemo<number[]>(() => {
     const values = chartData.map((point) => point.investment).filter(Number.isFinite);
     if (!values.length) return [0, 1];
@@ -149,11 +184,10 @@ const Graph = () => {
   }, [chartData]);
   const yAxisDomain: [number, number] = [yAxisTicks[0], yAxisTicks[yAxisTicks.length - 1]];
 
-
   const stats = useMemo(() => {
     const first = chartData[0];
     const last = chartData.length ? chartData[chartData.length - 1] : undefined;
-    const initial = simulation.meta?.initial_capital || first?.investment || 1_000_000;
+    const initial = initialCapital || first?.investment || 1_000_000;
     const totalProfit = last ? last.investment - initial : 0;
     const returnPct = initial ? (totalProfit / initial) * 100 : 0;
     const bestDay = chartData.reduce<ChartPoint | undefined>((best, point) => {
@@ -166,7 +200,7 @@ const Graph = () => {
     }, undefined);
 
     return { first, last, initial, totalProfit, returnPct, bestDay, worstDay };
-  }, [chartData]);
+  }, [chartData, initialCapital]);
 
   const handleChartClick = (state: { activeLabel?: string } | null) => {
     if (state?.activeLabel) setSelectedDate(state.activeLabel);
@@ -255,6 +289,8 @@ const Graph = () => {
         <div>
           <h1>Simulation</h1>
           <p>Open-to-open sentiment rebalance using a rolling {simulation.meta?.rolling_sentiment_window_days || 7}-day WSB signal on market-open days only.</p>
+          {portfolioError && <p className="graph-data-note">Live API unavailable; showing bundled simulation data.</p>}
+          {portfolioLoading && <p className="graph-data-note">Refreshing live simulation data...</p>}
         </div>
       </div>
 

@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv
+yfinance
+google-genai
+google-generativeai
+gunicorn
+psycopg[binary]

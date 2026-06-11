@@ -22,11 +22,7 @@ def parse_date(value: str) -> datetime:
     return datetime.strptime(value, DATE_FMT)
 
 
-def load_sentiment(path: Path) -> list[dict]:
-    with path.open(encoding="utf-8") as f:
-        rows = json.load(f)
-    if not isinstance(rows, list):
-        raise SystemExit(f"Expected {path} to contain a JSON list")
+def normalize_sentiment_rows(rows: list[dict]) -> list[dict]:
     clean = []
     for row in rows:
         try:
@@ -38,6 +34,20 @@ def load_sentiment(path: Path) -> list[dict]:
         if ticker and math.isfinite(sentiment) and sentiment != 0:
             clean.append({"ticker": ticker, "day": day, "sentiment": sentiment})
     return sorted(clean, key=lambda row: row["day"])
+
+
+def load_sentiment(path: Path) -> list[dict]:
+    with path.open(encoding="utf-8") as f:
+        rows = json.load(f)
+    if not isinstance(rows, list):
+        raise SystemExit(f"Expected {path} to contain a JSON list")
+    return normalize_sentiment_rows(rows)
+
+
+def load_sentiment_from_db() -> list[dict]:
+    import db_store
+    db_store.init_db()
+    return normalize_sentiment_rows(db_store.load_daily_sentiment_rows())
 
 
 def rolling_signals(rows: list[dict], trade_day: datetime, window_days: int) -> dict[str, float]:
@@ -328,10 +338,17 @@ def simulate(
     window_days: int,
     max_positions: int,
     continue_existing: bool = False,
+    storage: str = "json",
+    db_run_id: str = "default",
 ) -> dict:
-    rows = load_sentiment(sentiment_file)
+    if storage == "db":
+        rows = load_sentiment_from_db()
+        sentiment_source = "database:daily_ticker_sentiment"
+    else:
+        rows = load_sentiment(sentiment_file)
+        sentiment_source = str(sentiment_file)
     if not rows:
-        raise SystemExit(f"No usable sentiment rows in {sentiment_file}")
+        raise SystemExit(f"No usable sentiment rows in {sentiment_source}")
 
     trade_days = build_trade_days(rows, window_days)
     if len(trade_days) < 2:
@@ -520,7 +537,7 @@ def simulate(
             "total_return_pct": (account_value / initial_capital - 1) * 100,
             "rolling_sentiment_window_days": window_days,
             "max_positions": max_positions,
-            "sentiment_file": str(sentiment_file),
+            "sentiment_file": sentiment_source,
             "warmup_days": window_days,
             "trading_calendar": "SPY market-open dates",
             "signal_timing": "daily rows use America/New_York 9:30am ET cutoff buckets; trade day excludes same-day rows so post-open data is next-generation only",
@@ -533,6 +550,10 @@ def simulate(
     }
     with (output_dir / "portfolio_total_investment.json").open("w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
+    if storage == "db":
+        import db_store
+        db_store.init_db()
+        db_store.save_portfolio_result(result, run_id=db_run_id)
     return result
 
 
@@ -544,6 +565,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--window-days", type=int, default=int(os.getenv("SIM_WINDOW_DAYS", "7")))
     parser.add_argument("--max-positions", type=int, default=int(os.getenv("SIM_MAX_POSITIONS", "25")))
     parser.add_argument("--continue-existing", action="store_true", help="Skip regeneration when the saved simulation is already current.")
+    parser.add_argument("--storage", choices=("json", "db"), default=os.getenv("SIM_STORAGE", "json"))
+    parser.add_argument("--db-run-id", default=os.getenv("SIM_DB_RUN_ID", "default"))
     return parser.parse_args()
 
 
@@ -556,6 +579,8 @@ if __name__ == "__main__":
         window_days=args.window_days,
         max_positions=args.max_positions,
         continue_existing=args.continue_existing,
+        storage=args.storage,
+        db_run_id=args.db_run_id,
     )
     meta = result["meta"]
     print(f"Final value: ${meta['final_value']:,.2f}")

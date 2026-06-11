@@ -48,6 +48,8 @@ SENTIMENT_WINDOW_FILES = {
 AVAILABLE_SENTIMENT_WINDOWS = tuple(sorted(SENTIMENT_WINDOW_FILES))
 COMPANY_CACHE_FILE = os.path.join(ROOT_DIR, "ticker_company_names.json")
 TOP_N = int(os.getenv("TOP_POSTS_LIMIT", "100"))
+API_STORAGE = os.getenv("WSB_API_STORAGE", "json").strip().lower()
+PORTFOLIO_JSON_FILE = os.path.join(ROOT_DIR, "frontend", "src", "portfolio_data", "portfolio_total_investment.json")
 
 
 def _alias_company_names() -> dict[str, str]:
@@ -227,6 +229,16 @@ def _read_sentiment_payload(path: str, mtime_ns: int) -> dict:
 
 
 def _load_sentiment_payload(window_days: int = 14) -> dict:
+    if API_STORAGE == "db":
+        try:
+            import db_store
+            db_store.init_db()
+            payload = db_store.load_sentiment_snapshot(window_days)
+            if payload and "tickers" in payload:
+                return payload
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to load sentiment from database: {e}")
+
     path = os.path.abspath(_sentiment_file_for_window(window_days))
     if not os.path.exists(path):
         raise HTTPException(status_code=404, detail=f"sentiment file not found at {path}")
@@ -361,6 +373,45 @@ async def top_posts(
             "aggregate_items_with_mentions": source_meta.get("aggregate_items_with_mentions"),
         },
     }
+
+
+
+
+def _load_portfolio_payload() -> dict:
+    if API_STORAGE == "db":
+        try:
+            import db_store
+            db_store.init_db()
+            payload = db_store.load_portfolio_result()
+            if payload:
+                return payload
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to load portfolio from database: {e}")
+
+    if not os.path.exists(PORTFOLIO_JSON_FILE):
+        raise HTTPException(status_code=404, detail=f"portfolio file not found at {PORTFOLIO_JSON_FILE}")
+    try:
+        with open(PORTFOLIO_JSON_FILE, encoding="utf-8") as f:
+            payload = json.load(f)
+        if "portfolio_statistics" not in payload:
+            raise KeyError("portfolio_statistics")
+        return payload
+    except (OSError, KeyError, json.JSONDecodeError) as e:
+        raise HTTPException(status_code=500, detail=f"Malformed portfolio file: {e}")
+
+
+@app.get("/portfolio")
+async def portfolio_summary():
+    return _load_portfolio_payload()
+
+
+@app.get("/portfolio/{day}")
+async def portfolio_day(day: str):
+    payload = _load_portfolio_payload()
+    for row in payload.get("daily_data") or []:
+        if str(row.get("date")) == day:
+            return row
+    raise HTTPException(status_code=404, detail=f"Portfolio day {day} not found")
 
 
 @app.get("/ticker/{ticker}")

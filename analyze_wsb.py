@@ -911,7 +911,9 @@ def run(
     min_mentions: int | None = None,
     min_confidence: float | None = None,
     sentiment_cache_file: str | None = None,
-) -> None:
+    save_db: bool = False,
+    db_window_days: int | None = None,
+) -> tuple[dict, list[dict]]:
     global FINBERT_MODEL, BATCH_SIZE, MIN_MENTIONS, MIN_CONFIDENCE
     if finbert_model is not None:
         FINBERT_MODEL = finbert_model
@@ -1137,8 +1139,9 @@ def run(
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
 
+    daily_rows: list[dict] = []
+    valid_output_tickers = {t['ticker'] for t in tickers_out}
     if daily_sentiment_file:
-        valid_output_tickers = {t['ticker'] for t in tickers_out}
         daily_rows = [
             {
                 'day': day,
@@ -1154,6 +1157,14 @@ def run(
             os.makedirs(daily_dir, exist_ok=True)
         with open(daily_sentiment_file, 'w', encoding='utf-8') as f:
             json.dump(daily_rows, f, indent=2, ensure_ascii=False)
+
+    if save_db:
+        import db_store
+        window = int(db_window_days or aggregate_window_days)
+        db_store.init_db()
+        db_store.save_sentiment_snapshot(window, output)
+        if daily_rows:
+            db_store.save_daily_sentiment_rows(daily_rows)
 
     # ── Summary table ──────────────────────────────────────────────────────────
     m = output['meta']
@@ -1174,6 +1185,9 @@ def run(
     print(f"\n  Saved → {output_file}")
     if daily_sentiment_file:
         print(f"  Daily sentiment → {daily_sentiment_file}")
+    if save_db:
+        print(f"  DB sentiment snapshot → {int(db_window_days or aggregate_window_days)} day(s)")
+    return output, daily_rows
 
 
 def parse_args() -> argparse.Namespace:
@@ -1187,6 +1201,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-mentions", type=int, default=MIN_MENTIONS)
     parser.add_argument("--min-confidence", type=float, default=MIN_CONFIDENCE)
     parser.add_argument("--sentiment-cache", default=os.getenv("FINBERT_SENTIMENT_CACHE", "finbert_sentiment_cache.json"))
+    parser.add_argument("--db-output", action="store_true", help="Also save the sentiment output to the configured database.")
+    parser.add_argument("--db-window-days", type=int, default=None, help="Window key to use when saving --db-output.")
     return parser.parse_args()
 
 

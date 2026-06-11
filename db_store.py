@@ -114,6 +114,7 @@ def init_db(url: str | None = None) -> None:
     postgres = using_postgres(value)
     post_raw_type = "JSONB" if postgres else "TEXT"
     comment_raw_type = "JSONB" if postgres else "TEXT"
+    payload_type = "JSONB" if postgres else "TEXT"
     now_expr = "CURRENT_TIMESTAMP"
 
     with connect(value) as conn:
@@ -158,6 +159,67 @@ def init_db(url: str | None = None) -> None:
                 key TEXT PRIMARY KEY,
                 value TEXT NOT NULL,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS sentiment_snapshots (
+                window_days INTEGER PRIMARY KEY,
+                payload {payload_type} NOT NULL,
+                generated_at TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT {now_expr}
+            )
+        """)
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_sentiment_snapshots_updated ON sentiment_snapshots(updated_at)")
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS daily_ticker_sentiment (
+                day TEXT NOT NULL,
+                ticker TEXT NOT NULL,
+                refined_sentiment REAL NOT NULL,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (day, ticker)
+            )
+        """)
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_daily_ticker_sentiment_day ON daily_ticker_sentiment(day)")
+        cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS portfolio_runs (
+                id TEXT PRIMARY KEY,
+                payload {payload_type} NOT NULL,
+                generated_at TIMESTAMP DEFAULT {now_expr},
+                updated_at TIMESTAMP DEFAULT {now_expr}
+            )
+        """)
+        cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS portfolio_daily_values (
+                run_id TEXT NOT NULL,
+                day TEXT NOT NULL,
+                investment REAL,
+                today_profit REAL,
+                total_profit REAL,
+                payload {payload_type} NOT NULL,
+                updated_at TIMESTAMP DEFAULT {now_expr},
+                PRIMARY KEY (run_id, day)
+            )
+        """)
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_portfolio_daily_values_day ON portfolio_daily_values(day)")
+        cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS portfolio_trades (
+                run_id TEXT NOT NULL,
+                day TEXT NOT NULL,
+                trade_index INTEGER NOT NULL,
+                trade_type TEXT NOT NULL,
+                ticker TEXT,
+                side TEXT,
+                payload {payload_type} NOT NULL,
+                updated_at TIMESTAMP DEFAULT {now_expr},
+                PRIMARY KEY (run_id, day, trade_type, trade_index)
+            )
+        """)
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_portfolio_trades_ticker ON portfolio_trades(ticker)")
+        cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS finbert_cache (
+                cache_key TEXT PRIMARY KEY,
+                payload {payload_type} NOT NULL,
+                updated_at TIMESTAMP DEFAULT {now_expr}
             )
         """)
 
@@ -385,3 +447,173 @@ def _comment_from_row(row: Any) -> dict:
         "created_at": str(row["created_at"]) if row["created_at"] is not None else None,
     })
     return comment
+
+
+def _json_expr(value: str, url: str | None = None) -> str:
+    return f"CAST({value} AS JSONB)" if using_postgres(url) else value
+
+
+def _row_get(row: Any, key: str, default: Any = None) -> Any:
+    try:
+        return row[key]
+    except (KeyError, IndexError, TypeError):
+        return default
+
+
+def save_sentiment_snapshot(window_days: int, payload: dict, url: str | None = None) -> None:
+    value = url or database_url()
+    p = _placeholder(value)
+    payload_expr = _json_expr(p, value)
+    generated_at = (payload.get("meta") or {}).get("generated_at")
+    sql = f"""
+        INSERT INTO sentiment_snapshots (window_days, payload, generated_at, updated_at)
+        VALUES ({p},{payload_expr},{p},CURRENT_TIMESTAMP)
+        ON CONFLICT(window_days) DO UPDATE SET
+            payload=excluded.payload,
+            generated_at=excluded.generated_at,
+            updated_at=CURRENT_TIMESTAMP
+    """
+    with connect(value) as conn:
+        conn.cursor().execute(sql, (int(window_days), _json(payload), generated_at))
+
+
+def load_sentiment_snapshot(window_days: int, url: str | None = None) -> dict | None:
+    value = url or database_url()
+    p = _placeholder(value)
+    with connect(value) as conn:
+        cur = conn.cursor()
+        cur.execute(f"SELECT payload FROM sentiment_snapshots WHERE window_days = {p}", (int(window_days),))
+        row = cur.fetchone()
+    return _loads(_row_get(row, "payload"), None) if row else None
+
+
+def save_daily_sentiment_rows(rows: list[dict], replace_from_day: str | None = None, url: str | None = None) -> None:
+    value = url or database_url()
+    p = _placeholder(value)
+    sql = f"""
+        INSERT INTO daily_ticker_sentiment (day, ticker, refined_sentiment, updated_at)
+        VALUES ({p},{p},{p},CURRENT_TIMESTAMP)
+        ON CONFLICT(day, ticker) DO UPDATE SET
+            refined_sentiment=excluded.refined_sentiment,
+            updated_at=CURRENT_TIMESTAMP
+    """
+    with connect(value) as conn:
+        cur = conn.cursor()
+        if replace_from_day:
+            cur.execute(f"DELETE FROM daily_ticker_sentiment WHERE day >= {p}", (replace_from_day,))
+        for row in rows:
+            day = str(row.get("day") or "").strip()
+            ticker = str(row.get("ticker") or "").upper().strip()
+            if not day or not ticker:
+                continue
+            try:
+                refined = float(row.get("refined_sentiment"))
+            except (TypeError, ValueError):
+                continue
+            cur.execute(sql, (day, ticker, refined))
+
+
+def load_daily_sentiment_rows(min_day: str | None = None, max_day: str | None = None, url: str | None = None) -> list[dict]:
+    value = url or database_url()
+    p = _placeholder(value)
+    clauses = []
+    params: list[Any] = []
+    if min_day:
+        clauses.append(f"day >= {p}")
+        params.append(min_day)
+    if max_day:
+        clauses.append(f"day <= {p}")
+        params.append(max_day)
+    where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+    with connect(value) as conn:
+        cur = conn.cursor()
+        cur.execute(
+            f"SELECT day, ticker, refined_sentiment FROM daily_ticker_sentiment {where} ORDER BY day, ticker",
+            tuple(params),
+        )
+        rows = cur.fetchall()
+    return [
+        {
+            "day": str(_row_get(row, "day")),
+            "ticker": str(_row_get(row, "ticker")).upper(),
+            "refined_sentiment": float(_row_get(row, "refined_sentiment", 0.0)),
+        }
+        for row in rows
+    ]
+
+
+def save_portfolio_result(result: dict, run_id: str = "default", url: str | None = None) -> None:
+    value = url or database_url()
+    p = _placeholder(value)
+    payload_expr = _json_expr(p, value)
+    run_sql = f"""
+        INSERT INTO portfolio_runs (id, payload, generated_at, updated_at)
+        VALUES ({p},{payload_expr},CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)
+        ON CONFLICT(id) DO UPDATE SET
+            payload=excluded.payload,
+            updated_at=CURRENT_TIMESTAMP
+    """
+    daily_sql = f"""
+        INSERT INTO portfolio_daily_values (
+            run_id, day, investment, today_profit, total_profit, payload, updated_at
+        ) VALUES ({p},{p},{p},{p},{p},{payload_expr},CURRENT_TIMESTAMP)
+        ON CONFLICT(run_id, day) DO UPDATE SET
+            investment=excluded.investment,
+            today_profit=excluded.today_profit,
+            total_profit=excluded.total_profit,
+            payload=excluded.payload,
+            updated_at=CURRENT_TIMESTAMP
+    """
+    trade_sql = f"""
+        INSERT INTO portfolio_trades (
+            run_id, day, trade_index, trade_type, ticker, side, payload, updated_at
+        ) VALUES ({p},{p},{p},{p},{p},{p},{payload_expr},CURRENT_TIMESTAMP)
+        ON CONFLICT(run_id, day, trade_type, trade_index) DO UPDATE SET
+            ticker=excluded.ticker,
+            side=excluded.side,
+            payload=excluded.payload,
+            updated_at=CURRENT_TIMESTAMP
+    """
+    daily_records = result.get("daily_data") or []
+    with connect(value) as conn:
+        cur = conn.cursor()
+        cur.execute(run_sql, (run_id, _json(result)))
+        cur.execute(f"DELETE FROM portfolio_daily_values WHERE run_id = {p}", (run_id,))
+        cur.execute(f"DELETE FROM portfolio_trades WHERE run_id = {p}", (run_id,))
+        stats_by_day = {
+            str(row.get("date")): row
+            for row in result.get("portfolio_statistics") or []
+            if row.get("date")
+        }
+        for record in daily_records:
+            day = str(record.get("date") or "").strip()
+            if not day:
+                continue
+            stat = stats_by_day.get(day, {})
+            investment = record.get("total_investment", stat.get("investment"))
+            today_profit = record.get("today_profit", stat.get("today_profit"))
+            total_profit = record.get("total_profit", stat.get("total_profit"))
+            cur.execute(daily_sql, (run_id, day, investment, today_profit, total_profit, _json(record)))
+            trades = []
+            trades.extend(("entry", trade) for trade in record.get("entries") or [])
+            trades.extend(("exit", trade) for trade in record.get("exits") or [])
+            for index, (trade_type, trade) in enumerate(trades):
+                cur.execute(trade_sql, (
+                    run_id,
+                    day,
+                    index,
+                    trade_type,
+                    trade.get("ticker"),
+                    trade.get("side"),
+                    _json(trade),
+                ))
+
+
+def load_portfolio_result(run_id: str = "default", url: str | None = None) -> dict | None:
+    value = url or database_url()
+    p = _placeholder(value)
+    with connect(value) as conn:
+        cur = conn.cursor()
+        cur.execute(f"SELECT payload FROM portfolio_runs WHERE id = {p}", (run_id,))
+        row = cur.fetchone()
+    return _loads(_row_get(row, "payload"), None) if row else None

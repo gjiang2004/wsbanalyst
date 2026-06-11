@@ -268,6 +268,23 @@ def _merge_daily_history(current_path: Path, history_path: Path, min_day: str | 
     return len(rows)
 
 
+
+
+def _parse_day_list(value: str) -> list[int]:
+    days: list[int] = []
+    for part in str(value or "").split(","):
+        part = part.strip()
+        if not part:
+            continue
+        try:
+            day = int(float(part))
+        except ValueError:
+            continue
+        if day > 0 and day not in days:
+            days.append(day)
+    return days
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Refresh a rolling WSB post store and regenerate ticker sentiment JSON."
@@ -294,6 +311,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--comment-refresh-days", type=float, default=float(os.getenv("WSB_COMMENT_REFRESH_DAYS", "3")))
     parser.add_argument("--max-comment-refresh-posts", type=int, default=int(os.getenv("WSB_MAX_COMMENT_REFRESH_POSTS", "75")))
     parser.add_argument("--sentiment-cache", default=os.getenv("FINBERT_SENTIMENT_CACHE", "finbert_sentiment_cache.json"))
+    parser.add_argument("--top-window-days", default=os.getenv("TOP_POSTS_WINDOW_DAYS", ""), help="Comma-separated aggregate windows to regenerate after the main run, for example 1,3,7.")
     parser.add_argument("--rebuild", action="store_true", help="Ignore existing store and scrape the full window.")
     parser.add_argument("--skip-analysis", action="store_true", help="Only update the rolling Reddit post store/state; skip FinBERT sentiment output.")
     return parser.parse_args()
@@ -421,7 +439,7 @@ def main() -> None:
 
     print(f"Analyzing sentiment into {output_path}...")
     analyze_wsb.DECAY_WINDOW_DAYS = args.aggregate_days
-    analyze_wsb.run(
+    sentiment_payload, _daily_rows = analyze_wsb.run(
         input_file=str(store_path),
         output_file=str(output_path),
         daily_sentiment_file=args.daily_output,
@@ -431,6 +449,8 @@ def main() -> None:
         min_mentions=args.min_mentions,
         min_confidence=args.min_confidence,
         sentiment_cache_file=args.sentiment_cache,
+        save_db=use_database,
+        db_window_days=int(args.aggregate_days),
     )
     min_daily_day = str(args.min_daily_output_day or "").strip() or None
     daily_rows = _filter_daily_output(Path(args.daily_output), min_day=min_daily_day)
@@ -439,6 +459,29 @@ def main() -> None:
         Path(args.daily_history_output),
         min_day=min_daily_day,
     )
+    if use_database and db_store:
+        db_store.save_sentiment_snapshot(int(args.aggregate_days), sentiment_payload)
+        db_store.save_daily_sentiment_rows(_load_daily_rows(Path(args.daily_history_output)))
+
+    extra_windows = [day for day in _parse_day_list(args.top_window_days) if day != int(args.aggregate_days)]
+    for day in extra_windows:
+        extra_output = output_path.with_name(f"{output_path.stem}_{day}d{output_path.suffix}")
+        print(f"Analyzing {day}-day Top Posts sentiment into {extra_output}...")
+        analyze_wsb.DECAY_WINDOW_DAYS = float(day)
+        analyze_wsb.run(
+            input_file=str(store_path),
+            output_file=str(extra_output),
+            daily_sentiment_file="",
+            aggregate_window_days=float(day),
+            finbert_model=args.finbert_model,
+            batch_size=args.batch_size,
+            min_mentions=args.min_mentions,
+            min_confidence=args.min_confidence,
+            sentiment_cache_file=args.sentiment_cache,
+            save_db=use_database,
+            db_window_days=day,
+        )
+    analyze_wsb.DECAY_WINDOW_DAYS = args.aggregate_days
 
     print(
         f"Done. Updated {output_path}, {args.daily_output} ({daily_rows} daily rows), and "
