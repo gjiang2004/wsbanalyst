@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type KeyboardEvent } from 'react';
 import './wsbchatbot.css';
 import char from '../../assets/aigirl.jpg';
 import char2 from '../../assets/wojak.jpg';
@@ -15,14 +15,13 @@ interface Message {
 const CHAT_ERROR_MESSAGE =
   'Chat is not responding right now. Check that the backend is running and the chat provider is configured.';
 
-export const WsbChatbot: React.FC = () => {
+export const WsbChatbot = () => {
   const [message, setMessage]             = useState<string>('');
   const [messages, setMessages]           = useState<Message[]>([]);
   const [isStreaming, setIsStreaming]      = useState(false);
   const [isSidebarOpen, setIsSidebarOpen]  = useState(true);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const chatWindowRef  = useRef<HTMLDivElement | null>(null);
 
   // Load conversation history once on mount
   useEffect(() => {
@@ -139,7 +138,7 @@ export const WsbChatbot: React.FC = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') sendMessage();
   };
 
@@ -148,7 +147,7 @@ export const WsbChatbot: React.FC = () => {
       <Sidebar onToggle={setIsSidebarOpen} />
       <div className={`chat-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
         <div className="chat-box">
-          <div className="chat-window" ref={chatWindowRef}>
+          <div className="chat-window">
             <div className="aiman">
               <div className="image-container" />
               <p>A personalized WSB AI companion to chat with!</p>

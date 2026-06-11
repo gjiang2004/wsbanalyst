@@ -61,19 +61,19 @@ def select_signals(signals: dict[str, float], max_positions: int) -> dict[str, f
     return dict(ranked)
 
 
-def extract_open_series(data: pd.DataFrame, ticker: str | None = None) -> pd.Series:
+def extract_price_series(data: pd.DataFrame, field: str, ticker: str | None = None) -> pd.Series:
     if data.empty:
         return pd.Series(dtype=float)
     if isinstance(data.columns, pd.MultiIndex):
-        if ticker and (ticker, "Open") in data.columns:
-            return data[(ticker, "Open")].dropna()
-        if ticker and ("Open", ticker) in data.columns:
-            return data[("Open", ticker)].dropna()
+        if ticker and (ticker, field) in data.columns:
+            return data[(ticker, field)].dropna()
+        if ticker and (field, ticker) in data.columns:
+            return data[(field, ticker)].dropna()
         for column in data.columns:
-            if isinstance(column, tuple) and "Open" in column:
+            if isinstance(column, tuple) and field in column:
                 return data[column].dropna()
         return pd.Series(dtype=float)
-    return data.get("Open", pd.Series(dtype=float)).dropna()
+    return data.get(field, pd.Series(dtype=float)).dropna()
 
 
 def get_market_open_days(start: datetime, end: datetime, calendar_ticker: str = "SPY") -> list[datetime]:
@@ -89,7 +89,7 @@ def get_market_open_days(start: datetime, end: datetime, calendar_ticker: str = 
     )
     if data.empty:
         return []
-    open_series = extract_open_series(data, calendar_ticker)
+    open_series = extract_price_series(data, "Open", calendar_ticker)
     return [datetime.strptime(index.strftime(DATE_FMT), DATE_FMT) for index in open_series.index]
 
 
@@ -113,30 +113,15 @@ def get_open_prices(tickers: list[str], start: datetime, end: datetime) -> dict[
 
     if isinstance(data.columns, pd.MultiIndex):
         for ticker in tickers:
-            series = extract_open_series(data, ticker)
+            series = extract_price_series(data, "Open", ticker)
             for idx, value in series.items():
                 prices[ticker][idx.strftime(DATE_FMT)] = float(value)
     else:
-        series = extract_open_series(data, tickers[0])
+        series = extract_price_series(data, "Open", tickers[0])
         ticker = tickers[0]
         for idx, value in series.items():
             prices[ticker][idx.strftime(DATE_FMT)] = float(value)
     return prices
-
-
-def extract_close_series(data: pd.DataFrame, ticker: str | None = None) -> pd.Series:
-    if data.empty:
-        return pd.Series(dtype=float)
-    if isinstance(data.columns, pd.MultiIndex):
-        if ticker and (ticker, "Close") in data.columns:
-            return data[(ticker, "Close")].dropna()
-        if ticker and ("Close", ticker) in data.columns:
-            return data[("Close", ticker)].dropna()
-        for column in data.columns:
-            if isinstance(column, tuple) and "Close" in column:
-                return data[column].dropna()
-        return pd.Series(dtype=float)
-    return data.get("Close", pd.Series(dtype=float)).dropna()
 
 
 def get_latest_prices(tickers: list[str]) -> dict[str, float]:
@@ -156,11 +141,11 @@ def get_latest_prices(tickers: list[str]) -> dict[str, float]:
         return prices
     if isinstance(data.columns, pd.MultiIndex):
         for ticker in tickers:
-            series = extract_close_series(data, ticker)
+            series = extract_price_series(data, "Close", ticker)
             if not series.empty:
                 prices[ticker] = float(series.iloc[-1])
     else:
-        series = extract_close_series(data, tickers[0])
+        series = extract_price_series(data, "Close", tickers[0])
         if not series.empty:
             prices[tickers[0]] = float(series.iloc[-1])
     return prices
@@ -183,7 +168,7 @@ def is_trade_still_open(entry_day: datetime, now: datetime | None = None) -> boo
 
 
 def mark_to_market(entries: list[dict]) -> tuple[float, str | None]:
-    tickers = [entry["ticker"] for entry in entries if entry.get("entry_price") and entry.get("shares")]
+    tickers = sorted({entry["ticker"] for entry in entries if entry.get("entry_price") and entry.get("shares")})
     latest_prices = get_latest_prices(tickers)
     total_unrealized = 0.0
     marked_at = current_market_time().strftime("%Y-%m-%d %H:%M:%S %Z")

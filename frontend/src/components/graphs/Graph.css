@@ -193,17 +193,47 @@
   white-space: nowrap;
 }
 
-.chart-scroll {
+.chart-frame {
   width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-bottom: 0.35rem;
-  scrollbar-color: rgba(94, 234, 212, 0.45) rgba(255, 255, 255, 0.06);
+  min-width: 0;
+  height: 430px;
 }
 
-.chart-inner {
-  height: 390px;
-  min-width: 100%;
+.chart-frame .recharts-brush rect:first-child {
+  rx: 5px;
+  stroke: transparent !important;
+}
+
+.chart-frame .recharts-brush-slide {
+  fill: transparent !important;
+  stroke: rgba(94, 234, 212, 0.75) !important;
+  stroke-width: 1.5px;
+  fill-opacity: 0 !important;
+}
+
+.chart-frame .recharts-brush-traveller,
+.chart-frame .recharts-brush-traveller:focus,
+.chart-frame .recharts-brush-traveller:focus-visible {
+  outline: none;
+}
+
+.chart-frame .chart-brush-handle-outline {
+  fill: transparent;
+  stroke: rgba(94, 234, 212, 0.85);
+  stroke-width: 1.5px;
+}
+
+.chart-frame .chart-brush-handle-body {
+  fill: #bffbf2;
+  stroke: rgba(94, 234, 212, 0.95);
+  stroke-width: 1px;
+}
+
+.chart-frame .chart-brush-handle line {
+  fill: none;
+  stroke: rgba(11, 16, 32, 0.82);
+  stroke-width: 1.4px;
+  stroke-linecap: round;
 }
 
 .day-value {

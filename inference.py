@@ -73,38 +73,28 @@ _gemini_model = None
 _provider_error: str | None = None
 
 
-def search_ticker(query: str) -> str | None:
-    try:
-        results = yf.Search(query, max_results=1).quotes
-        if results:
-            return results[0].get("symbol")
-    except Exception:
-        pass
-    return None
-
-
 def _known_tickers() -> set[str]:
     return {str(row.get("ticker", "")).upper() for row in _load_sentiment_rows() if row.get("ticker")}
 
 
-def _alias_map() -> dict[str, str]:
+def _alias_map(known: set[str] | None = None) -> dict[str, str]:
     try:
         import analyze_wsb
     except Exception:
         return {}
-    known = _known_tickers()
+    known_tickers = _known_tickers() if known is None else known
     aliases = getattr(analyze_wsb, "MANUAL_ALIASES", {})
     return {
         str(alias).lower(): str(ticker).upper()
         for alias, ticker in aliases.items()
-        if not known or str(ticker).upper() in known
+        if not known_tickers or str(ticker).upper() in known_tickers
     }
 
 
 def extract_candidates(text: str) -> list[str]:
     found = []
     known_tickers = _known_tickers()
-    aliases = _alias_map()
+    aliases = _alias_map(known_tickers)
     lowered = text.lower()
 
     for alias, ticker in sorted(aliases.items(), key=lambda item: len(item[0]), reverse=True):
@@ -209,9 +199,9 @@ def _mentions_term(text: str, term: str, allow_dollar_prefix: bool = False) -> b
     return bool(re.search(rf"(?<![A-Za-z0-9]){prefix}{re.escape(term)}(?![A-Za-z0-9])", text, re.IGNORECASE))
 
 
-def _ticker_search_terms(tickers: list[str]) -> dict[str, list[tuple[str, bool]]]:
+def _ticker_search_terms(tickers: list[str], aliases: dict[str, str] | None = None) -> dict[str, list[tuple[str, bool]]]:
     aliases_by_ticker: dict[str, list[tuple[str, bool]]] = {ticker.upper(): [(ticker.upper(), True)] for ticker in tickers}
-    for alias, ticker in _alias_map().items():
+    for alias, ticker in (aliases or _alias_map()).items():
         ticker = ticker.upper()
         if ticker in aliases_by_ticker:
             aliases_by_ticker[ticker].append((alias, False))
@@ -235,7 +225,7 @@ def get_collected_post_context(tickers: list[str], max_items: int = 6) -> list[s
         return []
 
     wanted = [t.upper() for t in tickers]
-    terms_by_ticker = _ticker_search_terms(wanted)
+    terms_by_ticker = _ticker_search_terms(wanted, _alias_map(set(wanted)))
     matches: list[dict] = []
     for post in posts:
         title = str(post.get("title") or "")

@@ -26,12 +26,10 @@ interface SentimentSample {
   permalink?: string;
   text: string;
   upvotes: number;
-  awards: number;
   sentiment: 'positive' | 'negative' | 'neutral';
   sentiment_score: number;
   semantic_value: number;
   confidence: number;
-  method: string;
 }
 
 interface TickerDetailData {
@@ -40,8 +38,6 @@ interface TickerDetailData {
   asset_type: string;
   summary: TickerSummary;
   semantic_score: number;
-  positive_score: number;
-  negative_score: number;
   avg_confidence: number;
   detection_methods: Record<string, number>;
   positive_samples: SentimentSample[];

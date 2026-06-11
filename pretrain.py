@@ -52,9 +52,8 @@ def is_good_text(text: str, min_len: int = 20, max_len: int = 1200) -> bool:
 
 
 def clean_text(text: str) -> str:
-    text = re.sub(r"https?://\S+", "", text)
     text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)  # [label](url) -> keep label
-    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", "", text)      # [](url) -> remove entirely
+    text = re.sub(r"https?://\S+", "", text)
     text = re.sub(r"/?u/[A-Za-z0-9_-]+", "", text)         # u/username -> remove entirely, r/subreddit kept
     text = re.sub(r"\s{2,}", " ", text)
     return text.strip()

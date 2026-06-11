@@ -219,17 +219,24 @@ def _sentiment_file_for_window(window_days: int) -> str:
     return SENTIMENT_WINDOW_FILES[normalized]
 
 
+@lru_cache(maxsize=8)
+def _read_sentiment_payload(path: str, mtime_ns: int) -> dict:
+    _ = mtime_ns
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
 def _load_sentiment_payload(window_days: int = 14) -> dict:
     path = os.path.abspath(_sentiment_file_for_window(window_days))
     if not os.path.exists(path):
         raise HTTPException(status_code=404, detail=f"sentiment file not found at {path}")
     try:
-        with open(path, encoding="utf-8") as f:
-            payload = json.load(f)
+        stat = os.stat(path)
+        payload = _read_sentiment_payload(path, stat.st_mtime_ns)
         if "tickers" not in payload:
             raise KeyError("tickers")
         return payload
-    except (KeyError, json.JSONDecodeError) as e:
+    except (OSError, KeyError, json.JSONDecodeError) as e:
         raise HTTPException(status_code=500, detail=f"Malformed sentiment file: {e}")
 
 

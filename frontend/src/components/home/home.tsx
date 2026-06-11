@@ -35,7 +35,7 @@ const featureCards = [
 
 const pipelineItems = [
   '28-day raw Reddit bank',
-  '14-day active sentiment window',
+  '1/3/7/14-day sentiment views',
   '15-minute incremental updates',
   'Nightly score refresh',
 ];
@@ -87,8 +87,8 @@ export const Home = () => {
               <strong>28d</strong>
             </div>
             <div>
-              <span>Signal</span>
-              <strong>14d</strong>
+              <span>Simulation</span>
+              <strong>7d</strong>
             </div>
             <div>
               <span>Cadence</span>
@@ -123,8 +123,8 @@ export const Home = () => {
         <div className="pipeline-copy">
           <h2>Built for rolling data, not stale snapshots.</h2>
           <p>
-            The sentiment pages focus on the active two-week conversation, while the simulator keeps enough prior data
-            to warm up its signal before opening trades.
+            The sentiment pages can switch between 1, 3, 7, and 14 days, while the simulator uses a faster 7-day signal
+            before opening trades.
           </p>
         </div>
         <div className="pipeline-list">

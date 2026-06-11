@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './topposts.css';
 import { TrendingUp, TrendingDown, Activity, RefreshCw, AlertCircle, ChevronsUpDown, ChevronDown, ChevronUp, Search, Filter, CalendarDays } from 'lucide-react';
@@ -193,25 +193,51 @@ export const TopPosts = () => {
   const [typeFilter, setTypeFilter] = useState('All');
   const [sentimentFilter, setSentimentFilter] = useState<'All' | 'bullish' | 'bearish' | 'neutral'>('All');
   const [windowDays, setWindowDays] = useState<WindowDays>(14);
+  const requestIdRef = useRef(0);
+  const abortRef = useRef<AbortController | null>(null);
 
   const fetchData = useCallback(async () => {
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
+    abortRef.current?.abort();
+
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     setLoading(true);
     setError(null);
+    setData(null);
+
     try {
-      const res = await fetch(apiUrl(`/top-posts?limit=${FULL_SENTIMENT_LIMIT}&window_days=${windowDays}`));
+      const params = new URLSearchParams({
+        limit: String(FULL_SENTIMENT_LIMIT),
+        window_days: String(windowDays),
+      });
+      const res = await fetch(apiUrl(`/top-posts?${params.toString()}`), {
+        cache: 'no-store',
+        signal: controller.signal,
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const json: SentimentData & { error?: string } = await res.json();
+      if (requestId !== requestIdRef.current) return;
       if (json.error) throw new Error(json.error);
       setData(json);
       setLastUpdated(new Date());
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Unknown error');
+      if (e instanceof DOMException && e.name === 'AbortError') return;
+      if (requestId === requestIdRef.current) {
+        setError(e instanceof Error ? e.message : 'Unknown error');
+      }
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) {
+        setLoading(false);
+      }
     }
   }, [windowDays]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
+
+  useEffect(() => () => abortRef.current?.abort(), []);
 
   // Reset sort when tab changes
   useEffect(() => {
@@ -280,7 +306,7 @@ export const TopPosts = () => {
 
   return (
     <div className="tp-layout">
-      <Sidebar onToggle={() => {}} />
+      <Sidebar />
       <main className="tp-main">
 
         {/* Header */}

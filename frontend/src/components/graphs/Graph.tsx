@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import {
+  Brush,
   CartesianGrid,
   Line,
   LineChart,
@@ -33,9 +34,7 @@ interface Trade {
   weight?: number;
   sentiment?: number;
   pnl?: number;
-  current_price?: number;
   current_unrealized_pnl?: number;
-  current_value?: number;
   price?: number;
   cost?: number;
 }
@@ -69,9 +68,7 @@ interface SimulationData {
   portfolio_statistics?: PortfolioPoint[];
 }
 
-interface ChartPoint extends PortfolioPoint {
-  formattedValue: string;
-}
+type ChartPoint = PortfolioPoint;
 
 const simulation = sampleData as SimulationData;
 
@@ -92,6 +89,18 @@ const tradeLabel = (trade: Trade, fallback: "entry" | "exit") => {
   return fallback === "exit" ? "Close" : "Open";
 };
 
+const BrushHandle = ({ x = 0, y = 0, width = 10, height = 28 }: { x?: number; y?: number; width?: number; height?: number }) => {
+  const lineY = Math.floor(y + height / 2) - 1;
+  return (
+    <g className="chart-brush-handle">
+      <rect className="chart-brush-handle-outline" x={x - 2} y={y - 2} width={width + 4} height={height + 4} rx={5} />
+      <rect className="chart-brush-handle-body" x={x} y={y} width={width} height={height} rx={4} />
+      <line x1={x + 2} y1={lineY} x2={x + width - 2} y2={lineY} />
+      <line x1={x + 2} y1={lineY + 3} x2={x + width - 2} y2={lineY + 3} />
+    </g>
+  );
+};
+
 const Graph = () => {
   const chartData = useMemo<ChartPoint[]>(() => {
     const stats = Array.isArray(simulation.portfolio_statistics) ? simulation.portfolio_statistics : [];
@@ -102,7 +111,6 @@ const Graph = () => {
         investment: entry.investment,
         today_profit: entry.today_profit || 0,
         total_profit: entry.total_profit || 0,
-        formattedValue: currency(entry.investment),
       }))
       .sort((a, b) => a.date.localeCompare(b.date));
   }, []);
@@ -121,7 +129,6 @@ const Graph = () => {
   const [showOpenTrades, setShowOpenTrades] = useState(true);
   const selectedPoint = chartData.find((point) => point.date === selectedDate) || chartData[chartData.length - 1];
   const selectedDay = selectedPoint ? dailyByDate.get(selectedPoint.date) : undefined;
-  const chartWidth = Math.max(820, chartData.length * 54);
   const yAxisTicks = useMemo<number[]>(() => {
     const values = chartData.map((point) => point.investment).filter(Number.isFinite);
     if (!values.length) return [0, 1];
@@ -172,11 +179,13 @@ const Graph = () => {
 
     return (
       <div className="trade-list">
-        {trades.map((trade, index) => (
+        {trades.map((trade, index) => {
+          const label = tradeLabel(trade, fallback);
+          return (
           <article className="trade-row" key={`${title}-${trade.ticker || index}-${index}`}>
             <div>
               <strong>{trade.ticker || "Unknown"}</strong>
-              <span className={tradeLabel(trade, fallback).toLowerCase()}>{tradeLabel(trade, fallback)}</span>
+              <span className={label.toLowerCase()}>{label}</span>
             </div>
             <dl>
               <div>
@@ -199,7 +208,8 @@ const Graph = () => {
               </div>
             </dl>
           </article>
-        ))}
+          );
+        })}
       </div>
     );
   };
@@ -244,7 +254,7 @@ const Graph = () => {
       <div className="graph-header">
         <div>
           <h1>Simulation</h1>
-          <p>Open-to-open sentiment rebalance using a rolling {simulation.meta?.rolling_sentiment_window_days || 14}-day WSB signal on market-open days only.</p>
+          <p>Open-to-open sentiment rebalance using a rolling {simulation.meta?.rolling_sentiment_window_days || 7}-day WSB signal on market-open days only.</p>
         </div>
       </div>
 
@@ -276,15 +286,14 @@ const Graph = () => {
         <div className="chart-title-row">
           <div>
             <h2>Account Value by Day</h2>
-            <p>Scroll horizontally as the backtest grows. Click a day to inspect the rebalance.</p>
+            <p>Drag the range selector to zoom the timeline. Click a day to inspect the rebalance.</p>
           </div>
           <div className="selected-pill">{selectedPoint ? dayjs(selectedPoint.date).format("MMM D, YYYY") : "--"}</div>
         </div>
 
-        <div className="chart-scroll" role="region" aria-label="Scrollable simulation chart">
-          <div className="chart-inner" style={{ width: chartWidth }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 20, right: 28, left: 22, bottom: 34 }} onClick={handleChartClick}>
+        <div className="chart-frame" role="region" aria-label="Interactive simulation chart">
+          <ResponsiveContainer width="100%" height={430}>
+              <LineChart data={chartData} margin={{ top: 20, right: 28, left: 22, bottom: 54 }} onClick={handleChartClick}>
                 <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
                 <XAxis
                   dataKey="date"
@@ -292,7 +301,8 @@ const Graph = () => {
                   tick={{ fill: "rgba(255,255,255,0.62)", fontSize: 12 }}
                   axisLine={{ stroke: "rgba(255,255,255,0.16)" }}
                   tickLine={false}
-                  minTickGap={18}
+                  interval="preserveStartEnd"
+                  minTickGap={28}
                 />
                 <YAxis
                   dataKey="investment"
@@ -333,9 +343,17 @@ const Graph = () => {
                     strokeWidth={3}
                   />
                 )}
+                <Brush
+                  dataKey="date"
+                  height={28}
+                  travellerWidth={10}
+                  traveller={BrushHandle}
+                  tickFormatter={(date) => dayjs(String(date)).format("M/D")}
+                  stroke="transparent"
+                  fill="rgba(255,255,255,0.09)"
+                />
               </LineChart>
             </ResponsiveContainer>
-          </div>
         </div>
       </section>
 

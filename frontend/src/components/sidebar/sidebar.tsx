@@ -6,7 +6,7 @@ import wsbLogo from '../../assets/WSB.png';
 import { pageHome, pageTopPosts, pageTrading, pageWsbChatbot } from '../../router/router';
 
 interface SidebarProps {
-  onToggle: (state: boolean) => void;
+  onToggle?: (state: boolean) => void;
 }
 
 const SIDEBAR_STORAGE_KEY = 'wsb-sidebar-open';
@@ -21,7 +21,7 @@ export const Sidebar = ({ onToggle }: SidebarProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => window.localStorage.getItem(SIDEBAR_STORAGE_KEY) !== 'false');
 
   useEffect(() => {
-    onToggle(isSidebarOpen);
+    onToggle?.(isSidebarOpen);
     window.localStorage.setItem(SIDEBAR_STORAGE_KEY, String(isSidebarOpen));
   }, [isSidebarOpen, onToggle]);
 
