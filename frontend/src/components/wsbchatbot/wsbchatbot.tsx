@@ -12,6 +12,9 @@ interface Message {
   text: string;
 }
 
+const CHAT_ERROR_MESSAGE =
+  'Chat is not responding right now. Check that the backend is running and the chat provider is configured.';
+
 export const WsbChatbot: React.FC = () => {
   const [message, setMessage]             = useState<string>('');
   const [messages, setMessages]           = useState<Message[]>([]);
@@ -24,22 +27,54 @@ export const WsbChatbot: React.FC = () => {
   // Load conversation history once on mount
   useEffect(() => {
     fetch(apiUrl('/history'))
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error('History request failed: ' + r.status);
+        return r.json();
+      })
       .then(data => {
+        const history = Array.isArray(data.history) ? data.history : [];
         setMessages(
-          data.history.map((m: { role: string; text: string }) => ({
+          history.map((m: { role: string; text: string }) => ({
             sender: m.role === 'user' ? 'user' : 'bot',
             text:   m.text,
           }))
         );
       })
-      .catch(e => console.error('Error fetching history:', e));
+      .catch(e => {
+        console.error('Error fetching history:', e);
+        setMessages([{ sender: 'bot', text: CHAT_ERROR_MESSAGE }]);
+      });
   }, []);
 
   // Scroll to bottom whenever messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  const replaceLastBotMessage = (text: string) => {
+    setMessages(prev => {
+      const updated = [...prev];
+      const lastIndex = updated.length - 1;
+      if (lastIndex >= 0 && updated[lastIndex].sender === 'bot') {
+        updated[lastIndex] = { ...updated[lastIndex], text };
+      }
+      return updated;
+    });
+  };
+
+  const appendToLastBotMessage = (token: string) => {
+    setMessages(prev => {
+      const updated = [...prev];
+      const lastIndex = updated.length - 1;
+      if (lastIndex >= 0 && updated[lastIndex].sender === 'bot') {
+        updated[lastIndex] = {
+          ...updated[lastIndex],
+          text: updated[lastIndex].text + token,
+        };
+      }
+      return updated;
+    });
+  };
 
   const sendMessage = async () => {
     if (!message.trim() || isStreaming) return;
@@ -61,31 +96,44 @@ export const WsbChatbot: React.FC = () => {
         body:    JSON.stringify({ message: userText }),
       });
 
-      const reader  = res.body!.getReader();
+      if (!res.ok) {
+        let detail = '';
+        try {
+          detail = await res.text();
+        } catch {
+          detail = '';
+        }
+        throw new Error('Chat request failed: ' + res.status + (detail ? ' ' + detail : ''));
+      }
+      if (!res.body) throw new Error('Chat response did not include a stream body.');
+
+      const reader  = res.body.getReader();
       const decoder = new TextDecoder();
+      let buffer = '';
+      let finished = false;
 
-      while (true) {
+      while (!finished) {
         const { done, value } = await reader.read();
-        if (done) break;
+        buffer += decoder.decode(value || new Uint8Array(), { stream: !done });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
 
-        for (const line of decoder.decode(value, { stream: true }).split('\n')) {
+        for (const line of lines) {
           if (!line.startsWith('data: ')) continue;
           const raw = line.slice(6).trim();
-          if (raw === '[DONE]') break;
+          if (raw === '[DONE]') {
+            finished = true;
+            break;
+          }
 
-          const token = JSON.parse(raw);
-          setMessages(prev => {
-            const updated = [...prev];
-            updated[updated.length - 1] = {
-              ...updated[updated.length - 1],
-              text: updated[updated.length - 1].text + token,
-            };
-            return updated;
-          });
+          appendToLastBotMessage(JSON.parse(raw));
         }
+
+        if (done) break;
       }
     } catch (e) {
       console.error('Error sending message:', e);
+      replaceLastBotMessage(CHAT_ERROR_MESSAGE);
     } finally {
       setIsStreaming(false);
     }

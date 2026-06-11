@@ -136,6 +136,11 @@ async def chat_endpoint(req: ChatRequest):
     )
 
 
+@app.get("/chat/status")
+async def chat_status():
+    return _get_inference().provider_status()
+
+
 @app.get("/history")
 async def history():
     return {
