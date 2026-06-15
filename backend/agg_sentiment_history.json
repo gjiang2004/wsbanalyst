@@ -9906,8 +9906,28 @@
   },
   {
     "day": "2026-06-15",
+    "ticker": "AAPL",
+    "refined_sentiment": -0.54468
+  },
+  {
+    "day": "2026-06-15",
+    "ticker": "AMD",
+    "refined_sentiment": -1.266069
+  },
+  {
+    "day": "2026-06-15",
+    "ticker": "AMZN",
+    "refined_sentiment": 1.098592
+  },
+  {
+    "day": "2026-06-15",
     "ticker": "APPS",
-    "refined_sentiment": -0.632079
+    "refined_sentiment": -0.797595
+  },
+  {
+    "day": "2026-06-15",
+    "ticker": "ASTS",
+    "refined_sentiment": -2.336931
   },
   {
     "day": "2026-06-15",
@@ -9916,18 +9936,28 @@
   },
   {
     "day": "2026-06-15",
+    "ticker": "CUZ",
+    "refined_sentiment": -0.918405
+  },
+  {
+    "day": "2026-06-15",
     "ticker": "META",
     "refined_sentiment": -1.573584
   },
   {
     "day": "2026-06-15",
+    "ticker": "MRVL",
+    "refined_sentiment": -0.818769
+  },
+  {
+    "day": "2026-06-15",
     "ticker": "MSFT",
-    "refined_sentiment": -2.424044
+    "refined_sentiment": -2.773373
   },
   {
     "day": "2026-06-15",
     "ticker": "MUU",
-    "refined_sentiment": 1.477664
+    "refined_sentiment": 1.398453
   },
   {
     "day": "2026-06-15",
@@ -9936,13 +9966,28 @@
   },
   {
     "day": "2026-06-15",
+    "ticker": "NBIS",
+    "refined_sentiment": -0.979857
+  },
+  {
+    "day": "2026-06-15",
     "ticker": "NVDA",
-    "refined_sentiment": -2.062533
+    "refined_sentiment": -6.794647
+  },
+  {
+    "day": "2026-06-15",
+    "ticker": "ODTE",
+    "refined_sentiment": -1.684037
   },
   {
     "day": "2026-06-15",
     "ticker": "SMR",
     "refined_sentiment": -0.543933
+  },
+  {
+    "day": "2026-06-15",
+    "ticker": "SNDK",
+    "refined_sentiment": 0.442073
   },
   {
     "day": "2026-06-15",
@@ -9952,11 +9997,16 @@
   {
     "day": "2026-06-15",
     "ticker": "SPCX",
-    "refined_sentiment": -1.241452
+    "refined_sentiment": -0.042929
   },
   {
     "day": "2026-06-15",
     "ticker": "TGT",
-    "refined_sentiment": -1.653381
+    "refined_sentiment": -6.107824
+  },
+  {
+    "day": "2026-06-15",
+    "ticker": "WBD",
+    "refined_sentiment": -0.59398
   }
 ]
