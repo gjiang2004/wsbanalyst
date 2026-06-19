@@ -16123,13 +16123,7 @@
           "shares": 706.4948284003143,
           "notional": 266927.8812407294,
           "sentiment": -153.108723,
-          "weight": 0.25604007264742384,
-          "current_price": 379.04998779296875,
-          "current_mark_price": 379.04998779296875,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -868.9748402052694,
-          "current_trade_result": -868.9748402052694,
-          "current_value": 266058.90640052414
+          "weight": 0.25604007264742384
         },
         {
           "ticker": "SPCX",
@@ -16139,13 +16133,7 @@
           "shares": 555.5010112826519,
           "notional": 104650.83517648788,
           "sentiment": -60.027284,
-          "weight": 0.10038219805534883,
-          "current_price": 184.97000122070312,
-          "current_mark_price": 184.97000122070312,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": 1899.8124414339388,
-          "current_trade_result": 1899.8124414339388,
-          "current_value": 106550.64761792182
+          "weight": 0.10038219805534883
         },
         {
           "ticker": "TSLA",
@@ -16155,13 +16143,7 @@
           "shares": 253.67640182201643,
           "notional": 100988.57711366263,
           "sentiment": -57.926627999999994,
-          "weight": 0.0968693210336572,
-          "current_price": 400.42999267578125,
-          "current_mark_price": 400.42999267578125,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -591.0626099459574,
-          "current_trade_result": -591.0626099459574,
-          "current_value": 100397.51450371667
+          "weight": 0.0968693210336572
         },
         {
           "ticker": "NVDA",
@@ -16171,13 +16153,7 @@
           "shares": 278.35569598897433,
           "notional": 57711.48695907855,
           "sentiment": -33.103069,
-          "weight": 0.055357474254505296,
-          "current_price": 210.22999572753906,
-          "current_mark_price": 210.22999572753906,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -807.2298194196858,
-          "current_trade_result": -807.2298194196858,
-          "current_value": 56904.25713965887
+          "weight": 0.055357474254505296
         },
         {
           "ticker": "META",
@@ -16187,13 +16163,7 @@
           "shares": 93.9521789213534,
           "notional": 53817.687817855964,
           "sentiment": -30.869602,
-          "weight": 0.051622500559142276,
-          "current_price": 577.219970703125,
-          "current_mark_price": 577.219970703125,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -413.38614662240263,
-          "current_trade_result": -413.38614662240263,
-          "current_value": 53404.30167123356
+          "weight": 0.051622500559142276
         },
         {
           "ticker": "GOOGL",
@@ -16203,13 +16173,7 @@
           "shares": 119.81129685067711,
           "notional": 43820.98182313515,
           "sentiment": -25.135533,
-          "weight": 0.042033553472663465,
-          "current_price": 367.989990234375,
-          "current_mark_price": 367.989990234375,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -268.3761349133209,
-          "current_trade_result": -268.3761349133209,
-          "current_value": 43552.60568822183
+          "weight": 0.042033553472663465
         },
         {
           "ticker": "AAPL",
@@ -16219,13 +16183,7 @@
           "shares": 136.4588379447391,
           "notional": 40679.74218079741,
           "sentiment": -23.333731,
-          "weight": 0.03902044288081121,
-          "current_price": 297.8900146484375,
-          "current_mark_price": 297.8900146484375,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": 30.016946530324688,
-          "current_trade_result": 30.016946530324688,
-          "current_value": 40709.759127327736
+          "weight": 0.03902044288081121
         },
         {
           "ticker": "AMZN",
@@ -16235,13 +16193,7 @@
           "shares": 156.1776958102817,
           "notional": 37501.38755537844,
           "sentiment": -21.51064,
-          "weight": 0.03597173120105365,
-          "current_price": 244.3524932861328,
-          "current_mark_price": 244.3524932861328,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -661.0218115471154,
-          "current_trade_result": -661.0218115471154,
-          "current_value": 36840.365743831324
+          "weight": 0.03597173120105365
         },
         {
           "ticker": "HOOD",
@@ -16251,13 +16203,7 @@
           "shares": 345.3932764678483,
           "notional": 37242.02898108911,
           "sentiment": -21.361873,
-          "weight": 0.035722951688422364,
-          "current_price": 108.16999816894531,
-          "current_mark_price": 108.16999816894531,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -119.1611020040596,
-          "current_trade_result": -119.1611020040596,
-          "current_value": 37122.86787908505
+          "weight": 0.035722951688422364
         },
         {
           "ticker": "TGT",
@@ -16267,13 +16213,7 @@
           "shares": 272.0586814709764,
           "notional": 35095.569909755955,
           "sentiment": -20.130673,
-          "weight": 0.03366404523771996,
-          "current_price": 130.72999572753906,
-          "current_mark_price": 130.72999572753906,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -470.6603565846999,
-          "current_trade_result": -470.6603565846999,
-          "current_value": 34624.90955317125
+          "weight": 0.03366404523771996
         },
         {
           "ticker": "ASTS",
@@ -16283,13 +16223,7 @@
           "shares": 311.2057087125123,
           "notional": 26545.847902901754,
           "sentiment": -15.226588,
-          "weight": 0.02546306063627996,
-          "current_price": 80.66999816894531,
-          "current_mark_price": 80.66999816894531,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": 1440.8839508980566,
-          "current_trade_result": 1440.8839508980566,
-          "current_value": 27986.73185379981
+          "weight": 0.02546306063627996
         },
         {
           "ticker": "NFLX",
@@ -16299,13 +16233,7 @@
           "shares": 325.49632691889775,
           "notional": 25040.4325292044,
           "sentiment": -14.363088000000001,
-          "weight": 0.02401905014230536,
-          "current_price": 77.33000183105469,
-          "current_mark_price": 77.33000183105469,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -130.1990274355384,
-          "current_trade_result": -130.1990274355384,
-          "current_value": 24910.233501768864
+          "weight": 0.02401905014230536
         },
         {
           "ticker": "ARR",
@@ -16315,13 +16243,7 @@
           "shares": 1328.6253136931591,
           "notional": 22281.04711883068,
           "sentiment": 12.780316000000001,
-          "weight": 0.021372218205340486,
-          "current_price": 16.75,
-          "current_mark_price": 16.75,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -26.573114470265324,
-          "current_trade_result": -26.573114470265324,
-          "current_value": 22254.474004360414
+          "weight": 0.021372218205340486
         },
         {
           "ticker": "ADBE",
@@ -16331,13 +16253,7 @@
           "shares": 113.56428735029922,
           "notional": 21986.046724159332,
           "sentiment": -12.611104999999998,
-          "weight": 0.021089250678188266,
-          "current_price": 195.16000366210938,
-          "current_mark_price": 195.16000366210938,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -177.16001100990587,
-          "current_trade_result": -177.16001100990587,
-          "current_value": 21808.886713149426
+          "weight": 0.021089250678188266
         },
         {
           "ticker": "TSM",
@@ -16347,13 +16263,7 @@
           "shares": 41.76966551965581,
           "notional": 18331.871007219986,
           "sentiment": -10.515085000000001,
-          "weight": 0.017584126328934486,
-          "current_price": 462.2200012207031,
-          "current_mark_price": 462.2200012207031,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -974.9038402636829,
-          "current_trade_result": -974.9038402636829,
-          "current_value": 17356.967166956303
+          "weight": 0.017584126328934486
         },
         {
           "ticker": "SPCE",
@@ -16363,13 +16273,7 @@
           "shares": 5159.475537867135,
           "notional": 17954.974970186817,
           "sentiment": -10.298898999999999,
-          "weight": 0.017222603627544332,
-          "current_price": 3.559999942779541,
-          "current_mark_price": 3.559999942779541,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -412.7576493926263,
-          "current_trade_result": -412.7576493926263,
-          "current_value": 17542.21732079419
+          "weight": 0.017222603627544332
         },
         {
           "ticker": "PLTR",
@@ -16379,13 +16283,7 @@
           "shares": 133.13421888313312,
           "notional": 17419.280711117066,
           "sentiment": -9.991627000000001,
-          "weight": 0.016708759976699444,
-          "current_price": 128.49000549316406,
-          "current_mark_price": 128.49000549316406,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": 312.8641954951851,
-          "current_trade_result": 312.8641954951851,
-          "current_value": 17732.14490661225
+          "weight": 0.016708759976699444
         },
         {
           "ticker": "RKLB",
@@ -16395,13 +16293,7 @@
           "shares": 146.26717507570717,
           "notional": 15918.256931312408,
           "sentiment": -9.130646,
-          "weight": 0.015268961946458857,
-          "current_price": 107.30000305175781,
-          "current_mark_price": 107.30000305175781,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": 223.78859931703428,
-          "current_trade_result": 223.78859931703428,
-          "current_value": 16142.045530629443
+          "weight": 0.015268961946458857
         },
         {
           "ticker": "DRAM",
@@ -16411,13 +16303,7 @@
           "shares": 207.65231562258415,
           "notional": 15625.836750599457,
           "sentiment": 8.962915,
-          "weight": 0.014988469388074544,
-          "current_price": 76.82499694824219,
-          "current_mark_price": 76.82499694824219,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": 327.05176340099354,
-          "current_trade_result": 327.05176340099354,
-          "current_value": 15952.888514000451
+          "weight": 0.014988469388074544
         },
         {
           "ticker": "IPOS",
@@ -16427,13 +16313,7 @@
           "shares": 602.406607005701,
           "notional": 15277.03192134439,
           "sentiment": -8.762842000000001,
-          "weight": 0.01465389207300682,
-          "current_price": 25.684799194335938,
-          "current_mark_price": 25.684799194335938,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -195.66081293828356,
-          "current_trade_result": -195.66081293828356,
-          "current_value": 15081.371108406107
+          "weight": 0.01465389207300682
         },
         {
           "ticker": "SPOT",
@@ -16443,13 +16323,7 @@
           "shares": 33.00345498973514,
           "notional": 14906.340601526035,
           "sentiment": -8.550215,
-          "weight": 0.014298321002592993,
-          "current_price": 467.82000732421875,
-          "current_mark_price": 467.82000732421875,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -533.3359534963818,
-          "current_trade_result": -533.3359534963818,
-          "current_value": 14373.004648029653
+          "weight": 0.014298321002592993
         },
         {
           "ticker": "INTC",
@@ -16459,13 +16333,7 @@
           "shares": 112.6612247340603,
           "notional": 14849.87575714467,
           "sentiment": -8.517826999999999,
-          "weight": 0.014244159321204632,
-          "current_price": 133.8000030517578,
-          "current_mark_price": 133.8000030517578,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -224.19645608737093,
-          "current_trade_result": -224.19645608737093,
-          "current_value": 14625.679301057298
+          "weight": 0.014244159321204632
         },
         {
           "ticker": "SNDK",
@@ -16475,13 +16343,7 @@
           "shares": 6.4356963619238075,
           "notional": 13159.357926137596,
           "sentiment": 7.548153,
-          "weight": 0.012622596574552256,
-          "current_price": 2183.510009765625,
-          "current_mark_price": 2183.510009765625,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": 893.049499935253,
-          "current_trade_result": 893.049499935253,
-          "current_value": 14052.407426072848
+          "weight": 0.012622596574552256
         },
         {
           "ticker": "MRVL",
@@ -16491,13 +16353,7 @@
           "shares": 41.49369695780521,
           "notional": 12675.079660352243,
           "sentiment": -7.270373,
-          "weight": 0.012158071693236372,
-          "current_price": 310.8500061035156,
-          "current_mark_price": 310.8500061035156,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -223.23629223893423,
-          "current_trade_result": -223.23629223893423,
-          "current_value": 12451.843368113308
+          "weight": 0.012158071693236372
         },
         {
           "ticker": "NBIS",
@@ -16507,13 +16363,7 @@
           "shares": 40.63174424313758,
           "notional": 12116.3866292966,
           "sentiment": 6.949909,
-          "weight": 0.011622167374833273,
-          "current_price": 287.0799865722656,
-          "current_mark_price": 287.0799865722656,
-          "current_marked_at": "2026-06-19 06:00:46 EDT",
-          "current_unrealized_pnl": -451.82603756893053,
-          "current_trade_result": -451.82603756893053,
-          "current_value": 11664.56059172767
+          "weight": 0.011622167374833273
         }
       ],
       "positions": {
@@ -16526,13 +16376,7 @@
             "shares": 1328.6253136931591,
             "notional": 22281.04711883068,
             "sentiment": 12.780316000000001,
-            "weight": 0.021372218205340486,
-            "current_price": 16.75,
-            "current_mark_price": 16.75,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -26.573114470265324,
-            "current_trade_result": -26.573114470265324,
-            "current_value": 22254.474004360414
+            "weight": 0.021372218205340486
           },
           "DRAM": {
             "ticker": "DRAM",
@@ -16542,13 +16386,7 @@
             "shares": 207.65231562258415,
             "notional": 15625.836750599457,
             "sentiment": 8.962915,
-            "weight": 0.014988469388074544,
-            "current_price": 76.82499694824219,
-            "current_mark_price": 76.82499694824219,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": 327.05176340099354,
-            "current_trade_result": 327.05176340099354,
-            "current_value": 15952.888514000451
+            "weight": 0.014988469388074544
           },
           "SNDK": {
             "ticker": "SNDK",
@@ -16558,13 +16396,7 @@
             "shares": 6.4356963619238075,
             "notional": 13159.357926137596,
             "sentiment": 7.548153,
-            "weight": 0.012622596574552256,
-            "current_price": 2183.510009765625,
-            "current_mark_price": 2183.510009765625,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": 893.049499935253,
-            "current_trade_result": 893.049499935253,
-            "current_value": 14052.407426072848
+            "weight": 0.012622596574552256
           },
           "NBIS": {
             "ticker": "NBIS",
@@ -16574,13 +16406,7 @@
             "shares": 40.63174424313758,
             "notional": 12116.3866292966,
             "sentiment": 6.949909,
-            "weight": 0.011622167374833273,
-            "current_price": 287.0799865722656,
-            "current_mark_price": 287.0799865722656,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -451.82603756893053,
-            "current_trade_result": -451.82603756893053,
-            "current_value": 11664.56059172767
+            "weight": 0.011622167374833273
           }
         },
         "short": {
@@ -16592,13 +16418,7 @@
             "shares": 706.4948284003143,
             "notional": 266927.8812407294,
             "sentiment": -153.108723,
-            "weight": 0.25604007264742384,
-            "current_price": 379.04998779296875,
-            "current_mark_price": 379.04998779296875,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -868.9748402052694,
-            "current_trade_result": -868.9748402052694,
-            "current_value": 266058.90640052414
+            "weight": 0.25604007264742384
           },
           "SPCX": {
             "ticker": "SPCX",
@@ -16608,13 +16428,7 @@
             "shares": 555.5010112826519,
             "notional": 104650.83517648788,
             "sentiment": -60.027284,
-            "weight": 0.10038219805534883,
-            "current_price": 184.97000122070312,
-            "current_mark_price": 184.97000122070312,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": 1899.8124414339388,
-            "current_trade_result": 1899.8124414339388,
-            "current_value": 106550.64761792182
+            "weight": 0.10038219805534883
           },
           "TSLA": {
             "ticker": "TSLA",
@@ -16624,13 +16438,7 @@
             "shares": 253.67640182201643,
             "notional": 100988.57711366263,
             "sentiment": -57.926627999999994,
-            "weight": 0.0968693210336572,
-            "current_price": 400.42999267578125,
-            "current_mark_price": 400.42999267578125,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -591.0626099459574,
-            "current_trade_result": -591.0626099459574,
-            "current_value": 100397.51450371667
+            "weight": 0.0968693210336572
           },
           "NVDA": {
             "ticker": "NVDA",
@@ -16640,13 +16448,7 @@
             "shares": 278.35569598897433,
             "notional": 57711.48695907855,
             "sentiment": -33.103069,
-            "weight": 0.055357474254505296,
-            "current_price": 210.22999572753906,
-            "current_mark_price": 210.22999572753906,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -807.2298194196858,
-            "current_trade_result": -807.2298194196858,
-            "current_value": 56904.25713965887
+            "weight": 0.055357474254505296
           },
           "META": {
             "ticker": "META",
@@ -16656,13 +16458,7 @@
             "shares": 93.9521789213534,
             "notional": 53817.687817855964,
             "sentiment": -30.869602,
-            "weight": 0.051622500559142276,
-            "current_price": 577.219970703125,
-            "current_mark_price": 577.219970703125,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -413.38614662240263,
-            "current_trade_result": -413.38614662240263,
-            "current_value": 53404.30167123356
+            "weight": 0.051622500559142276
           },
           "GOOGL": {
             "ticker": "GOOGL",
@@ -16672,13 +16468,7 @@
             "shares": 119.81129685067711,
             "notional": 43820.98182313515,
             "sentiment": -25.135533,
-            "weight": 0.042033553472663465,
-            "current_price": 367.989990234375,
-            "current_mark_price": 367.989990234375,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -268.3761349133209,
-            "current_trade_result": -268.3761349133209,
-            "current_value": 43552.60568822183
+            "weight": 0.042033553472663465
           },
           "AAPL": {
             "ticker": "AAPL",
@@ -16688,13 +16478,7 @@
             "shares": 136.4588379447391,
             "notional": 40679.74218079741,
             "sentiment": -23.333731,
-            "weight": 0.03902044288081121,
-            "current_price": 297.8900146484375,
-            "current_mark_price": 297.8900146484375,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": 30.016946530324688,
-            "current_trade_result": 30.016946530324688,
-            "current_value": 40709.759127327736
+            "weight": 0.03902044288081121
           },
           "AMZN": {
             "ticker": "AMZN",
@@ -16704,13 +16488,7 @@
             "shares": 156.1776958102817,
             "notional": 37501.38755537844,
             "sentiment": -21.51064,
-            "weight": 0.03597173120105365,
-            "current_price": 244.3524932861328,
-            "current_mark_price": 244.3524932861328,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -661.0218115471154,
-            "current_trade_result": -661.0218115471154,
-            "current_value": 36840.365743831324
+            "weight": 0.03597173120105365
           },
           "HOOD": {
             "ticker": "HOOD",
@@ -16720,13 +16498,7 @@
             "shares": 345.3932764678483,
             "notional": 37242.02898108911,
             "sentiment": -21.361873,
-            "weight": 0.035722951688422364,
-            "current_price": 108.16999816894531,
-            "current_mark_price": 108.16999816894531,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -119.1611020040596,
-            "current_trade_result": -119.1611020040596,
-            "current_value": 37122.86787908505
+            "weight": 0.035722951688422364
           },
           "TGT": {
             "ticker": "TGT",
@@ -16736,13 +16508,7 @@
             "shares": 272.0586814709764,
             "notional": 35095.569909755955,
             "sentiment": -20.130673,
-            "weight": 0.03366404523771996,
-            "current_price": 130.72999572753906,
-            "current_mark_price": 130.72999572753906,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -470.6603565846999,
-            "current_trade_result": -470.6603565846999,
-            "current_value": 34624.90955317125
+            "weight": 0.03366404523771996
           },
           "ASTS": {
             "ticker": "ASTS",
@@ -16752,13 +16518,7 @@
             "shares": 311.2057087125123,
             "notional": 26545.847902901754,
             "sentiment": -15.226588,
-            "weight": 0.02546306063627996,
-            "current_price": 80.66999816894531,
-            "current_mark_price": 80.66999816894531,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": 1440.8839508980566,
-            "current_trade_result": 1440.8839508980566,
-            "current_value": 27986.73185379981
+            "weight": 0.02546306063627996
           },
           "NFLX": {
             "ticker": "NFLX",
@@ -16768,13 +16528,7 @@
             "shares": 325.49632691889775,
             "notional": 25040.4325292044,
             "sentiment": -14.363088000000001,
-            "weight": 0.02401905014230536,
-            "current_price": 77.33000183105469,
-            "current_mark_price": 77.33000183105469,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -130.1990274355384,
-            "current_trade_result": -130.1990274355384,
-            "current_value": 24910.233501768864
+            "weight": 0.02401905014230536
           },
           "ADBE": {
             "ticker": "ADBE",
@@ -16784,13 +16538,7 @@
             "shares": 113.56428735029922,
             "notional": 21986.046724159332,
             "sentiment": -12.611104999999998,
-            "weight": 0.021089250678188266,
-            "current_price": 195.16000366210938,
-            "current_mark_price": 195.16000366210938,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -177.16001100990587,
-            "current_trade_result": -177.16001100990587,
-            "current_value": 21808.886713149426
+            "weight": 0.021089250678188266
           },
           "TSM": {
             "ticker": "TSM",
@@ -16800,13 +16548,7 @@
             "shares": 41.76966551965581,
             "notional": 18331.871007219986,
             "sentiment": -10.515085000000001,
-            "weight": 0.017584126328934486,
-            "current_price": 462.2200012207031,
-            "current_mark_price": 462.2200012207031,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -974.9038402636829,
-            "current_trade_result": -974.9038402636829,
-            "current_value": 17356.967166956303
+            "weight": 0.017584126328934486
           },
           "SPCE": {
             "ticker": "SPCE",
@@ -16816,13 +16558,7 @@
             "shares": 5159.475537867135,
             "notional": 17954.974970186817,
             "sentiment": -10.298898999999999,
-            "weight": 0.017222603627544332,
-            "current_price": 3.559999942779541,
-            "current_mark_price": 3.559999942779541,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -412.7576493926263,
-            "current_trade_result": -412.7576493926263,
-            "current_value": 17542.21732079419
+            "weight": 0.017222603627544332
           },
           "PLTR": {
             "ticker": "PLTR",
@@ -16832,13 +16568,7 @@
             "shares": 133.13421888313312,
             "notional": 17419.280711117066,
             "sentiment": -9.991627000000001,
-            "weight": 0.016708759976699444,
-            "current_price": 128.49000549316406,
-            "current_mark_price": 128.49000549316406,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": 312.8641954951851,
-            "current_trade_result": 312.8641954951851,
-            "current_value": 17732.14490661225
+            "weight": 0.016708759976699444
           },
           "RKLB": {
             "ticker": "RKLB",
@@ -16848,13 +16578,7 @@
             "shares": 146.26717507570717,
             "notional": 15918.256931312408,
             "sentiment": -9.130646,
-            "weight": 0.015268961946458857,
-            "current_price": 107.30000305175781,
-            "current_mark_price": 107.30000305175781,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": 223.78859931703428,
-            "current_trade_result": 223.78859931703428,
-            "current_value": 16142.045530629443
+            "weight": 0.015268961946458857
           },
           "IPOS": {
             "ticker": "IPOS",
@@ -16864,13 +16588,7 @@
             "shares": 602.406607005701,
             "notional": 15277.03192134439,
             "sentiment": -8.762842000000001,
-            "weight": 0.01465389207300682,
-            "current_price": 25.684799194335938,
-            "current_mark_price": 25.684799194335938,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -195.66081293828356,
-            "current_trade_result": -195.66081293828356,
-            "current_value": 15081.371108406107
+            "weight": 0.01465389207300682
           },
           "SPOT": {
             "ticker": "SPOT",
@@ -16880,13 +16598,7 @@
             "shares": 33.00345498973514,
             "notional": 14906.340601526035,
             "sentiment": -8.550215,
-            "weight": 0.014298321002592993,
-            "current_price": 467.82000732421875,
-            "current_mark_price": 467.82000732421875,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -533.3359534963818,
-            "current_trade_result": -533.3359534963818,
-            "current_value": 14373.004648029653
+            "weight": 0.014298321002592993
           },
           "INTC": {
             "ticker": "INTC",
@@ -16896,13 +16608,7 @@
             "shares": 112.6612247340603,
             "notional": 14849.87575714467,
             "sentiment": -8.517826999999999,
-            "weight": 0.014244159321204632,
-            "current_price": 133.8000030517578,
-            "current_mark_price": 133.8000030517578,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -224.19645608737093,
-            "current_trade_result": -224.19645608737093,
-            "current_value": 14625.679301057298
+            "weight": 0.014244159321204632
           },
           "MRVL": {
             "ticker": "MRVL",
@@ -16912,26 +16618,20 @@
             "shares": 41.49369695780521,
             "notional": 12675.079660352243,
             "sentiment": -7.270373,
-            "weight": 0.012158071693236372,
-            "current_price": 310.8500061035156,
-            "current_mark_price": 310.8500061035156,
-            "current_marked_at": "2026-06-19 06:00:46 EDT",
-            "current_unrealized_pnl": -223.23629223893423,
-            "current_trade_result": -223.23629223893423,
-            "current_value": 12451.843368113308
+            "weight": 0.012158071693236372
           }
         }
       },
       "planned_only": true,
-      "trade_status": "open_mark_to_market",
+      "trade_status": "closed",
       "trade_close_time": "2026-06-19 09:30:00 EDT",
-      "current_marked_at": "2026-06-19 06:00:46 EDT",
-      "current_unrealized_pnl": -2422.254619133645,
-      "current_trade_result": -2422.254619133645,
-      "marked_account_value": 1040101.5912801701,
-      "today_profit": 13360.913736641953,
-      "total_profit": 40101.59128017015,
-      "total_investment": 1040101.5912801701
+      "current_marked_at": null,
+      "current_unrealized_pnl": 0.0,
+      "current_trade_result": 0.0,
+      "marked_account_value": 1042523.8458993038,
+      "today_profit": 15783.168355775597,
+      "total_profit": 42523.84589930379,
+      "total_investment": 1042523.8458993038
     }
   ],
   "portfolio_statistics": [
@@ -17051,9 +16751,9 @@
     },
     {
       "date": "2026-06-18",
-      "investment": 1040101.5912801701,
-      "today_profit": 13360.913736641953,
-      "total_profit": 40101.59128017015
+      "investment": 1042523.8458993038,
+      "today_profit": 15783.168355775597,
+      "total_profit": 42523.84589930379
     }
   ],
   "initial_investment_date": "2026-05-21",
