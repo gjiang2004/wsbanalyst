@@ -11481,22 +11481,102 @@
   },
   {
     "day": "2026-06-19",
+    "ticker": "AAPL",
+    "refined_sentiment": -0.769231
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "AMC",
+    "refined_sentiment": -0.274152
+  },
+  {
+    "day": "2026-06-19",
     "ticker": "ASTS",
     "refined_sentiment": -0.332403
   },
   {
     "day": "2026-06-19",
+    "ticker": "BRO",
+    "refined_sentiment": -0.762691
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "DRAM",
+    "refined_sentiment": 0.485251
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "GOOGL",
+    "refined_sentiment": -0.618524
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "INTC",
+    "refined_sentiment": -0.821684
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "JOBY",
+    "refined_sentiment": 0.543463
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "MID",
+    "refined_sentiment": -0.4295
+  },
+  {
+    "day": "2026-06-19",
     "ticker": "MSFT",
-    "refined_sentiment": -0.762943
+    "refined_sentiment": -1.875931
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "NBIS",
+    "refined_sentiment": 0.352271
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "PDT",
+    "refined_sentiment": -0.612413
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "PFE",
+    "refined_sentiment": -0.550807
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "RIVN",
+    "refined_sentiment": -0.251444
   },
   {
     "day": "2026-06-19",
     "ticker": "SNDK",
-    "refined_sentiment": -0.768756
+    "refined_sentiment": -0.514742
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "SPCX",
+    "refined_sentiment": -1.994592
   },
   {
     "day": "2026-06-19",
     "ticker": "TGT",
-    "refined_sentiment": -0.54826
+    "refined_sentiment": -3.130269
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "THO",
+    "refined_sentiment": -0.503963
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "TSLA",
+    "refined_sentiment": -0.502078
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "UPS",
+    "refined_sentiment": -0.378961
   }
 ]
