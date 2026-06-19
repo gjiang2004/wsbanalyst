@@ -11482,7 +11482,7 @@
   {
     "day": "2026-06-19",
     "ticker": "AAPL",
-    "refined_sentiment": -0.378843
+    "refined_sentiment": -0.577851
   },
   {
     "day": "2026-06-19",
@@ -11496,8 +11496,18 @@
   },
   {
     "day": "2026-06-19",
+    "ticker": "ASML",
+    "refined_sentiment": 1.315371
+  },
+  {
+    "day": "2026-06-19",
     "ticker": "ASTS",
     "refined_sentiment": -0.332403
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "AVGO",
+    "refined_sentiment": 0.466416
   },
   {
     "day": "2026-06-19",
@@ -11507,12 +11517,22 @@
   {
     "day": "2026-06-19",
     "ticker": "BBY",
-    "refined_sentiment": 0.865878
+    "refined_sentiment": 1.12763
   },
   {
     "day": "2026-06-19",
     "ticker": "BRO",
     "refined_sentiment": -0.762691
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "BTC",
+    "refined_sentiment": -0.746601
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "CRWV",
+    "refined_sentiment": -0.571351
   },
   {
     "day": "2026-06-19",
@@ -11527,12 +11547,22 @@
   {
     "day": "2026-06-19",
     "ticker": "GOOGL",
-    "refined_sentiment": -0.718084
+    "refined_sentiment": -0.868209
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "HACK",
+    "refined_sentiment": -0.262641
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "HOOD",
+    "refined_sentiment": 0.640895
   },
   {
     "day": "2026-06-19",
     "ticker": "INTC",
-    "refined_sentiment": 0.322975
+    "refined_sentiment": 0.729505
   },
   {
     "day": "2026-06-19",
@@ -11542,27 +11572,42 @@
   {
     "day": "2026-06-19",
     "ticker": "KEEL",
-    "refined_sentiment": 0.702203
+    "refined_sentiment": 0.762616
   },
   {
     "day": "2026-06-19",
     "ticker": "META",
-    "refined_sentiment": 0.425938
+    "refined_sentiment": 0.696602
   },
   {
     "day": "2026-06-19",
     "ticker": "MID",
-    "refined_sentiment": -1.470422
+    "refined_sentiment": -1.581473
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "MRVL",
+    "refined_sentiment": -0.42265
   },
   {
     "day": "2026-06-19",
     "ticker": "MSFT",
-    "refined_sentiment": -2.616333
+    "refined_sentiment": -2.526311
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "MSTU",
+    "refined_sentiment": -0.750543
   },
   {
     "day": "2026-06-19",
     "ticker": "NBIS",
-    "refined_sentiment": 1.206023
+    "refined_sentiment": 1.880514
+  },
+  {
+    "day": "2026-06-19",
+    "ticker": "ORCL",
+    "refined_sentiment": -0.88494
   },
   {
     "day": "2026-06-19",
@@ -11581,6 +11626,11 @@
   },
   {
     "day": "2026-06-19",
+    "ticker": "RCAT",
+    "refined_sentiment": -0.731476
+  },
+  {
+    "day": "2026-06-19",
     "ticker": "RENT",
     "refined_sentiment": -0.49483
   },
@@ -11596,18 +11646,23 @@
   },
   {
     "day": "2026-06-19",
+    "ticker": "SEEM",
+    "refined_sentiment": -0.508974
+  },
+  {
+    "day": "2026-06-19",
     "ticker": "SNDK",
-    "refined_sentiment": -0.173905
+    "refined_sentiment": -0.066068
   },
   {
     "day": "2026-06-19",
     "ticker": "SOXL",
-    "refined_sentiment": -0.348476
+    "refined_sentiment": -0.450399
   },
   {
     "day": "2026-06-19",
     "ticker": "SPCX",
-    "refined_sentiment": -1.994592
+    "refined_sentiment": -2.437721
   },
   {
     "day": "2026-06-19",
@@ -11617,7 +11672,7 @@
   {
     "day": "2026-06-19",
     "ticker": "TGT",
-    "refined_sentiment": -4.077357
+    "refined_sentiment": -4.332147
   },
   {
     "day": "2026-06-19",
@@ -11632,12 +11687,12 @@
   {
     "day": "2026-06-19",
     "ticker": "TSM",
-    "refined_sentiment": 0.690979
+    "refined_sentiment": 0.910796
   },
   {
     "day": "2026-06-19",
     "ticker": "TTWO",
-    "refined_sentiment": -0.711096
+    "refined_sentiment": -1.081473
   },
   {
     "day": "2026-06-19",
