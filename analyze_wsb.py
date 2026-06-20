@@ -221,7 +221,28 @@ REQUIRE_PREFIX: frozenset[str] = frozenset({
     'MAN',   # MAN Group          — "the man behind"
     'MAP',   # WisdomTree ETF     — "road map"
     'MAR',   # Marriott           — "it will mar"
+    # WSB slang / abbreviations that collide with real tickers
+    'PDT',   # ServiceNow? no — "Pattern Day Trader rule"
+    'EOD',   #                   — "end of day" ($75k EOD)
+    'IPOS',  # Renaissance IPO?  — plural of "IPO"
+    'SEMI',  #                   — "semiconductors" / "semis"
+    'BRO',   # Brown & Brown      — "thank you bro"
+    'DTE',   # DTE Energy         — "30 DTE calls" (days to expiration)
+    'EUV',   # (chip tech)        — EUV lithography, not a ticker
     # Common 4-letter words that are real but highly ambiguous tickers
+    'LEAD',  # Siren DIVCON ETF   — "lead to", "in the lead" (very common false positive)
+    'GLAD',  # Gladstone Capital  — "glad it worked out" (very common false positive)
+    'MINE',  # (obscure)          — possessive "mine are all calls"
+    'SIZE',  # (obscure)          — "position size"
+    'OWNS',  # (obscure)          — verb "owns"
+    'SEEM',  # (obscure)          — "seem"
+    'TINY',  # 180 Degree Capital — adjective "tiny pullback/float"
+    'PLUS',  # ePlus Inc          — conjunction "plus another $30k"
+    'LOAN',  # Manhattan Bridge   — noun "loan"
+    'SELF',  # Global Self Storage — "self-defense", "by self"
+    # NASA intentionally NOT guarded: it's the Tema Space Innovators ETF
+    # (launched 2026, hot SpaceX-IPO trade) and most bare mentions are the ETF.
+    'BOOM',  # DMC Global         — noun "boom"
     'REAL',  # Realty Income      — adjective
     'GOLF',  # Acushnet           — sport
     'BOOT',  # BOOT Barn (wait — BOOT is blacklisted, this is redundant but harmless)
