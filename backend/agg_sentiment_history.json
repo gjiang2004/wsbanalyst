@@ -11502,7 +11502,7 @@
   {
     "day": "2026-06-19",
     "ticker": "ASML",
-    "refined_sentiment": -0.145881
+    "refined_sentiment": -0.217857
   },
   {
     "day": "2026-06-19",
@@ -11522,12 +11522,12 @@
   {
     "day": "2026-06-19",
     "ticker": "BBY",
-    "refined_sentiment": 1.402139
+    "refined_sentiment": 1.416256
   },
   {
     "day": "2026-06-19",
     "ticker": "BLK",
-    "refined_sentiment": -0.933866
+    "refined_sentiment": -0.83884
   },
   {
     "day": "2026-06-19",
@@ -11537,7 +11537,7 @@
   {
     "day": "2026-06-19",
     "ticker": "BROS",
-    "refined_sentiment": -1.475856
+    "refined_sentiment": -1.477576
   },
   {
     "day": "2026-06-19",
@@ -11572,17 +11572,17 @@
   {
     "day": "2026-06-19",
     "ticker": "DSM",
-    "refined_sentiment": 0.897326
+    "refined_sentiment": 0.974526
   },
   {
     "day": "2026-06-19",
     "ticker": "EUV",
-    "refined_sentiment": -0.435839
+    "refined_sentiment": -0.354996
   },
   {
     "day": "2026-06-19",
     "ticker": "FCF",
-    "refined_sentiment": 3.956146
+    "refined_sentiment": 3.960099
   },
   {
     "day": "2026-06-19",
@@ -11617,7 +11617,7 @@
   {
     "day": "2026-06-19",
     "ticker": "INTC",
-    "refined_sentiment": -0.814295
+    "refined_sentiment": -0.838794
   },
   {
     "day": "2026-06-19",
@@ -11637,7 +11637,7 @@
   {
     "day": "2026-06-19",
     "ticker": "MAX",
-    "refined_sentiment": 1.867294
+    "refined_sentiment": 1.859466
   },
   {
     "day": "2026-06-19",
@@ -11677,7 +11677,7 @@
   {
     "day": "2026-06-19",
     "ticker": "NBIS",
-    "refined_sentiment": 2.370915
+    "refined_sentiment": 2.445375
   },
   {
     "day": "2026-06-19",
@@ -11702,7 +11702,7 @@
   {
     "day": "2026-06-19",
     "ticker": "PLTR",
-    "refined_sentiment": -1.151905
+    "refined_sentiment": -1.020152
   },
   {
     "day": "2026-06-19",
@@ -11812,12 +11812,12 @@
   {
     "day": "2026-06-19",
     "ticker": "TINY",
-    "refined_sentiment": -0.58601
+    "refined_sentiment": -0.739462
   },
   {
     "day": "2026-06-19",
     "ticker": "TMC",
-    "refined_sentiment": 1.805676
+    "refined_sentiment": 1.961024
   },
   {
     "day": "2026-06-19",
@@ -11832,7 +11832,7 @@
   {
     "day": "2026-06-19",
     "ticker": "TSM",
-    "refined_sentiment": 0.168384
+    "refined_sentiment": 0.098956
   },
   {
     "day": "2026-06-19",
@@ -11852,12 +11852,12 @@
   {
     "day": "2026-06-20",
     "ticker": "AAPL",
-    "refined_sentiment": -1.894939
+    "refined_sentiment": -2.48
   },
   {
     "day": "2026-06-20",
     "ticker": "ABNB",
-    "refined_sentiment": -2.401389
+    "refined_sentiment": -2.614993
   },
   {
     "day": "2026-06-20",
@@ -11876,6 +11876,11 @@
   },
   {
     "day": "2026-06-20",
+    "ticker": "GLAD",
+    "refined_sentiment": 0.512427
+  },
+  {
+    "day": "2026-06-20",
     "ticker": "GOOGL",
     "refined_sentiment": 0.685376
   },
@@ -11883,6 +11888,26 @@
     "day": "2026-06-20",
     "ticker": "INTC",
     "refined_sentiment": 0.685376
+  },
+  {
+    "day": "2026-06-20",
+    "ticker": "MAX",
+    "refined_sentiment": -0.683373
+  },
+  {
+    "day": "2026-06-20",
+    "ticker": "MSFT",
+    "refined_sentiment": -0.71389
+  },
+  {
+    "day": "2026-06-20",
+    "ticker": "NVDA",
+    "refined_sentiment": 0.432722
+  },
+  {
+    "day": "2026-06-20",
+    "ticker": "QQQ",
+    "refined_sentiment": 0.889515
   },
   {
     "day": "2026-06-20",
@@ -11897,7 +11922,7 @@
   {
     "day": "2026-06-20",
     "ticker": "SIZE",
-    "refined_sentiment": -0.295779
+    "refined_sentiment": 0.330172
   },
   {
     "day": "2026-06-20",
@@ -11907,11 +11932,21 @@
   {
     "day": "2026-06-20",
     "ticker": "SPCX",
-    "refined_sentiment": -1.596585
+    "refined_sentiment": -2.370194
+  },
+  {
+    "day": "2026-06-20",
+    "ticker": "USO",
+    "refined_sentiment": 0.004629
   },
   {
     "day": "2026-06-20",
     "ticker": "V",
-    "refined_sentiment": -0.267204
+    "refined_sentiment": -0.423509
+  },
+  {
+    "day": "2026-06-20",
+    "ticker": "WTI",
+    "refined_sentiment": 0.533908
   }
 ]
