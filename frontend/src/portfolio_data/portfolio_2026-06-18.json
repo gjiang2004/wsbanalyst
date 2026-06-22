@@ -1,5 +1,6 @@
 {
   "date": "2026-06-18",
+  "next_trade_date": "2026-06-22",
   "starting_value": 1026740.6775435281,
   "realized_pnl": 15783.168355775597,
   "ending_value_before_rebalance": 1042523.8458993038,
@@ -840,13 +841,6 @@
       }
     }
   },
-  "planned_only": true,
-  "trade_status": "closed",
-  "trade_close_time": "2026-06-19 09:30:00 EDT",
-  "current_marked_at": null,
-  "current_unrealized_pnl": 0.0,
-  "current_trade_result": 0.0,
-  "marked_account_value": 1042523.8458993038,
   "today_profit": 15783.168355775597,
   "total_profit": 42523.84589930379,
   "total_investment": 1042523.8458993038
