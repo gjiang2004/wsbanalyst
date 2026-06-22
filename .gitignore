@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+.azure-deploy.env
 
 # Python
 __pycache__/
