@@ -13388,5 +13388,25 @@
     "day": "2026-06-23",
     "ticker": "WWW",
     "refined_sentiment": 1.228116
+  },
+  {
+    "day": "2026-06-24",
+    "ticker": "GOOG",
+    "refined_sentiment": 0.563415
+  },
+  {
+    "day": "2026-06-24",
+    "ticker": "MSFT",
+    "refined_sentiment": 0.500562
+  },
+  {
+    "day": "2026-06-24",
+    "ticker": "NVDA",
+    "refined_sentiment": 0.797242
+  },
+  {
+    "day": "2026-06-24",
+    "ticker": "RKLB",
+    "refined_sentiment": -1.001783
   }
 ]
