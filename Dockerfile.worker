@@ -17,6 +17,10 @@ COPY requirements-worker.txt .
 RUN pip install --no-cache-dir -r requirements-worker.txt
 
 COPY analyze_wsb.py db_store.py getdata.py portfolio.py update_sentiment.py ./
-COPY ticker_company_names.json ./
+COPY ticker_company_names.json worker_entrypoint.sh ./
+RUN chmod +x worker_entrypoint.sh
 
-CMD ["python", "update_sentiment.py", "--storage", "db", "--scrape-days", "1", "--window-days", "28", "--aggregate-days", "14", "--top-window-days", "1,3,7", "--request-delay", "0.05", "--overlap-minutes", "30", "--score-refresh-days", "3", "--max-score-refresh", "100", "--comment-refresh-days", "3", "--max-comment-refresh-posts", "40"]
+# The entrypoint selects update_sentiment.py args from WSB_JOB_MODE
+# (incremental default, or nightly) and then regenerates the portfolio
+# simulation. Pass explicit CLI args to override the mode.
+ENTRYPOINT ["./worker_entrypoint.sh"]

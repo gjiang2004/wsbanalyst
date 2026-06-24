@@ -227,8 +227,8 @@ def init_db(url: str | None = None) -> None:
 def count_posts(url: str | None = None) -> int:
     with connect(url) as conn:
         cur = conn.cursor()
-        cur.execute("SELECT COUNT(*) FROM reddit_posts")
-        return int(cur.fetchone()[0])
+        cur.execute("SELECT COUNT(*) AS n FROM reddit_posts")
+        return int(_row_get(cur.fetchone(), "n", 0) or 0)
 
 
 def save_posts(posts: list[dict], subreddit: str = "wallstreetbets", url: str | None = None) -> None:
