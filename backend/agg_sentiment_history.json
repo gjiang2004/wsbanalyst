@@ -14328,5 +14328,110 @@
     "day": "2026-06-25",
     "ticker": "ZONE",
     "refined_sentiment": -0.487745
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "AMD",
+    "refined_sentiment": -0.511449
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "AMZN",
+    "refined_sentiment": -0.397139
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "ASIC",
+    "refined_sentiment": -0.333307
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "ASTS",
+    "refined_sentiment": -0.719041
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "GME",
+    "refined_sentiment": -0.6897
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "GPUS",
+    "refined_sentiment": 0.474127
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "HOOD",
+    "refined_sentiment": 0.921557
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "JAN",
+    "refined_sentiment": -0.565556
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "LUNR",
+    "refined_sentiment": 0.832089
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "META",
+    "refined_sentiment": -0.392893
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "MSFT",
+    "refined_sentiment": -1.081511
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "MSTR",
+    "refined_sentiment": -0.720831
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "NBIS",
+    "refined_sentiment": -0.57188
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "NVDA",
+    "refined_sentiment": -2.019295
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "RKLB",
+    "refined_sentiment": -0.842605
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "SHIP",
+    "refined_sentiment": -1.00934
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "SNDK",
+    "refined_sentiment": 0.506937
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "SPCE",
+    "refined_sentiment": -0.34974
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "SPCX",
+    "refined_sentiment": -2.237483
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "TGT",
+    "refined_sentiment": -1.524756
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "TSLA",
+    "refined_sentiment": -0.454405
   }
 ]
