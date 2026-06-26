@@ -14347,12 +14347,27 @@
   {
     "day": "2026-06-26",
     "ticker": "ASTS",
-    "refined_sentiment": -0.719041
+    "refined_sentiment": 0.373191
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "COIN",
+    "refined_sentiment": 0.988328
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "DRAM",
+    "refined_sentiment": 0.879169
   },
   {
     "day": "2026-06-26",
     "ticker": "GME",
     "refined_sentiment": -0.6897
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "GOOGL",
+    "refined_sentiment": 1.121355
   },
   {
     "day": "2026-06-26",
@@ -14372,7 +14387,7 @@
   {
     "day": "2026-06-26",
     "ticker": "LUNR",
-    "refined_sentiment": 0.832089
+    "refined_sentiment": 0.928422
   },
   {
     "day": "2026-06-26",
@@ -14382,12 +14397,17 @@
   {
     "day": "2026-06-26",
     "ticker": "MSFT",
-    "refined_sentiment": -1.081511
+    "refined_sentiment": -0.791109
   },
   {
     "day": "2026-06-26",
     "ticker": "MSTR",
-    "refined_sentiment": -0.720831
+    "refined_sentiment": -0.044749
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "MSTZ",
+    "refined_sentiment": 0.564985
   },
   {
     "day": "2026-06-26",
@@ -14397,12 +14417,17 @@
   {
     "day": "2026-06-26",
     "ticker": "NVDA",
-    "refined_sentiment": -2.019295
+    "refined_sentiment": -2.323486
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "PLTR",
+    "refined_sentiment": 0.474989
   },
   {
     "day": "2026-06-26",
     "ticker": "RKLB",
-    "refined_sentiment": -0.842605
+    "refined_sentiment": -0.940155
   },
   {
     "day": "2026-06-26",
@@ -14411,8 +14436,13 @@
   },
   {
     "day": "2026-06-26",
+    "ticker": "SMCI",
+    "refined_sentiment": -0.337129
+  },
+  {
+    "day": "2026-06-26",
     "ticker": "SNDK",
-    "refined_sentiment": 0.506937
+    "refined_sentiment": 1.647022
   },
   {
     "day": "2026-06-26",
@@ -14422,7 +14452,7 @@
   {
     "day": "2026-06-26",
     "ticker": "SPCX",
-    "refined_sentiment": -2.237483
+    "refined_sentiment": -2.72261
   },
   {
     "day": "2026-06-26",
@@ -14433,5 +14463,10 @@
     "day": "2026-06-26",
     "ticker": "TSLA",
     "refined_sentiment": -0.454405
+  },
+  {
+    "day": "2026-06-26",
+    "ticker": "WEN",
+    "refined_sentiment": 0.535134
   }
 ]
