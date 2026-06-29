@@ -19,4 +19,6 @@ COPY frontend/src/portfolio_data/portfolio_total_investment.json ./frontend/src/
 
 EXPOSE 8000
 
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "backend.api:app", "--bind=0.0.0.0:8000", "--timeout=600", "--access-logfile=-", "--error-logfile=-"]
+# Multiple workers so a slow cold-cache request (DB load + occasional yfinance
+# company-name lookup) can't starve concurrent requests and cause timeouts.
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "backend.api:app", "--bind=0.0.0.0:8000", "--workers=4", "--timeout=120", "--graceful-timeout=30", "--access-logfile=-", "--error-logfile=-"]

@@ -229,6 +229,8 @@ REQUIRE_PREFIX: frozenset[str] = frozenset({
     'BRO',   # Brown & Brown      — "thank you bro"
     'DTE',   # DTE Energy         — "30 DTE calls" (days to expiration)
     'EUV',   # (chip tech)        — EUV lithography, not a ticker
+    'GL',    # Globe Life         — "GL" = "good luck" (very common WSB false positive)
+    'AVDV',  # Avantis Intl ETF   — obscure; bare AVDV mentions are noise, not the ETF
     # Common 4-letter words that are real but highly ambiguous tickers
     'LEAD',  # Siren DIVCON ETF   — "lead to", "in the lead" (very common false positive)
     'GLAD',  # Gladstone Capital  — "glad it worked out" (very common false positive)
@@ -954,6 +956,7 @@ def run(
     sentiment_cache_file: str | None = None,
     save_db: bool = False,
     db_window_days: int | None = None,
+    daily_min_day: str | None = None,
 ) -> tuple[dict, list[dict]]:
     global FINBERT_MODEL, BATCH_SIZE, MIN_MENTIONS, MIN_CONFIDENCE
     if finbert_model is not None:
@@ -1204,8 +1207,14 @@ def run(
         window = int(db_window_days or aggregate_window_days)
         db_store.init_db()
         db_store.save_sentiment_snapshot(window, output)
-        if daily_rows:
-            db_store.save_daily_sentiment_rows(daily_rows)
+        # Apply the same floor as the JSON daily outputs so stray old-timestamp
+        # posts in the scrape window can't leak pre-floor days into the DB
+        # history (which would drag the simulation start date back in time).
+        db_daily_rows = daily_rows
+        if daily_min_day:
+            db_daily_rows = [r for r in daily_rows if str(r.get("day", "")) >= daily_min_day]
+        if db_daily_rows:
+            db_store.save_daily_sentiment_rows(db_daily_rows)
 
     # ── Summary table ──────────────────────────────────────────────────────────
     m = output['meta']

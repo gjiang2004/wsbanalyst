@@ -451,6 +451,7 @@ def main() -> None:
         sentiment_cache_file=args.sentiment_cache,
         save_db=use_database,
         db_window_days=int(args.aggregate_days),
+        daily_min_day=str(args.min_daily_output_day or "").strip() or None,
     )
     min_daily_day = str(args.min_daily_output_day or "").strip() or None
     daily_rows = _filter_daily_output(Path(args.daily_output), min_day=min_daily_day)
